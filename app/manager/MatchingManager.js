@@ -1,0 +1,423 @@
+const Validator = require('validator');
+const Sequelize = require('sequelize');
+
+const Constant = require('../utils/Constant');
+const Pieces = require('../utils/Pieces');
+
+const Model = require('../models/index');
+const Matching = Model.Matching
+const Processes = Model.Processes
+const LabResult = Model.LabResult;
+const EnterpriseProfile = Model.EnterpriseProfile;
+const moment = require('moment');
+const MatchHashtag = require('../models/MatchHashtag');
+
+Matching.hasMany(Processes, {foreignKey: 'mid'});
+Processes.belongsTo(Matching, {foreignKey: 'mid'});
+Matching.belongsTo(LabResult, {foreignKey: 'resultId'});
+Matching.belongsTo(EnterpriseProfile, {foreignKey: 'profileId'});
+LabResult.belongsToMany(EnterpriseProfile, { through: Matching, foreignKey: 'profileId' });
+EnterpriseProfile.belongsToMany(LabResult, { through: Matching, foreignKey: 'resultId' });
+
+module.exports = {
+    test: function(accessUserId, accessUserType, id, callback) {
+        try {
+            let attributes = ['profile_id', 'hashtag_id', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            let data = [];
+
+            MatchHashtag.findAll({
+                where: {profile_id: {[Sequelize.Op.ne]: null}},
+                attributes: [Sequelize.fn('DISTINCT', Sequelize.col('profile_id')) ,'profile_id', 'hashtag_id']
+            }).then(result=>{
+                "use strict";
+                
+                for (var i of result.values()) {
+                    data.push([i.profile_id, i.hashtag_id])
+                }
+
+                this.matching(data)
+
+                if(result){
+                    return callback(null, null, 200, null, result);
+                }else{
+                    return callback(4, 'find_one_matching_fail', 404, null, null);
+                }
+
+               
+            }).catch(function(error) {
+                "use strict";
+                return callback(4, 'find_one_matching_fail', 400, error, null);
+            });
+        }catch(error){
+            return callback(4, 'find_one_matching_fail', 400, error, null);
+        }
+    },
+
+    matching: function (data) {
+        let profiles = [];
+        let hashtags = [];
+        let total = [];
+        
+        for (var i of data) {
+            profiles.push(i[0])
+        };
+
+        profiles = profiles.filter(function (item, index) {
+            return profiles.indexOf(item) === index;
+        });
+
+        for (var i of profiles) {
+            for (var j of data) {
+                if(i == j[0])
+                hashtags.push(j[1])
+            }
+            total.push([i, hashtags]);
+            hashtags = []
+        };
+
+        total = total.map(arrObj => {
+            return {
+                profile_id: arrObj[0],
+                hashtag_id: arrObj[1]
+            }
+        })
+
+        console.log(total)
+    },
+
+    getOne: function(accessUserId, accessUserType, id, callback) {
+        try {
+            if ( !( Pieces.VariableBaseTypeChecking(id,'string') && Validator.isInt(id) )
+                && !Pieces.VariableBaseTypeChecking(id,'number') ){
+                return callback(4, 'invalid_matching_id', 400, 'matching id is incorrect', null);
+            }
+
+            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
+                where.createdBy = accessUserId;
+                where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
+            }
+
+            let where = {};
+            let attributes = ['id', 'status','type','isCompany', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+
+            where = {id: id};
+            
+            Matching.findOne({
+                where: where,
+                include: [{
+                    model: EnterpriseProfile,
+                    attributes: ['id', 'title']
+                },
+                {
+                    model: LabResult,
+                    attributes: ['id', 'title']
+                },
+                {
+                    model: Processes, 
+                    attributes: ['id', 'step']
+                }],
+                attributes: attributes
+            }).then(result=>{
+                "use strict";
+                if(result){
+                    return callback(null, null, 200, null, result);
+                }else{
+                    return callback(4, 'find_one_matching_fail', 404, null, null);
+                }
+            }).catch(function(error) {
+                "use strict";
+                return callback(4, 'find_one_matching_fail', 400, error, null);
+            });
+        }catch(error){
+            return callback(4, 'find_one_matching_fail', 400, error, null);
+        }
+    },
+
+    getStatistic: function(accessUserId, accessUserType, callback) {
+        try {
+            let final = {};
+            final = {activated: 0, deleted: 0, total: 0};
+            if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
+                return callback(null, null, 200, null, final);
+            }
+
+            Matching.count({
+                where:{},
+            }).then(function(total){
+                "use strict";
+                final.total = total;
+                Matching.count({
+                    where:{status: 1},
+                }).then(function(status){
+                    final.activated = status;
+                    Matching.count({
+                        where:{status: 0},
+                    }).then(function(status1) {
+                        final.deleted = status1;
+                        return callback(null, null, 200, null, final);
+                    }).catch(function(error) {
+                        "use strict";
+                        return callback(4, 'count_matching_fail', 400, error, null);
+                    });
+                }).catch(function(error){
+                    "use strict";
+                    return callback(4, 'count_matching_fail', 400, error, null);
+                });
+            }).catch(function(error){
+                "use strict";
+                return callback(4, 'count_matching_fail', 400, error, null);
+            });
+        }catch(error){
+            return callback(4, 'statistic_matching_fail', 400, error, null);
+        }
+    },
+
+    getAll: function(accessUserId, accessUserType, queryContent, callback) {
+        try {
+            if(accessUserType < Constant.USER_TYPE.MODERATOR) {
+                return callback(4, 'invalid_user_type', 400, null, null);
+            }
+
+            let where;
+            let con1 = {};
+            let page = 1;
+            let perPage = Constant.DEFAULT_PAGING_SIZE;
+            let sort = [];
+            let attributes = ['id', 'status','type','isCompany', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+
+            // this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
+            // if( Pieces.VariableBaseTypeChecking(queryContent.q, 'string') ){
+            //     where.name = {[Sequelize.Op.like]: queryContent.q};
+            // }
+
+            if( (Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))
+                || (Pieces.VariableBaseTypeChecking(queryContent['page'], 'number')) ){
+                page = parseInt(queryContent['page']);
+                if(page === 0){
+                    page = 1;
+                }
+            }
+
+            if( (Pieces.VariableBaseTypeChecking(queryContent['perPage'], 'string') && Validator.isInt(queryContent['perPage']))
+                || (Pieces.VariableBaseTypeChecking(queryContent['perPage'], 'number')) ){
+                perPage = parseInt(queryContent['perPage']);
+                if(perPage <= 0){
+                    perPage = Constant.DEFAULT_PAGING_SIZE;
+                }
+            }
+
+            Pieces.splitAndAssignValueForSort(sort, queryContent['sort']);
+            if(sort.length <= 0){
+                sort.push(['updatedAt', 'DESC']);
+            }
+
+            let offset = perPage * (page - 1);
+            
+            Matching.findAndCountAll({
+                where: where,
+                limit: perPage,
+                offset: offset,
+                order: sort,
+                include: [
+                    {
+                    model: EnterpriseProfile,
+                    attributes: ['id', 'title']
+                },
+                {
+                    model: LabResult,
+                    attributes: ['id', 'title']
+                },
+                {
+                    model: Processes, 
+                    attributes: ['id', 'step']
+                }],
+                // attributes: attributes
+            }).then((data) => {
+                let pages = Math.ceil(data.count / perPage);
+                let matching = data.rows;
+                let output = {
+                    data: matching,
+                    pages: {
+                        current: page,
+                        prev: page - 1,
+                        hasPrev: false,
+                        next: (page + 1) > pages ? 0 : (page + 1),
+                        hasNext: false,
+                        total: pages
+                    },
+                    items: {
+                        begin: ((page * perPage) - perPage) + 1,
+                        end: page * perPage,
+                        total: data.count
+                    }
+                };
+                output.pages.hasNext = (output.pages.next !== 0);
+                output.pages.hasPrev = (output.pages.prev !== 0);
+                return callback(null, null, 200, null, output);
+            }).catch(function(error) {
+                return callback(4, 'find_and_count_all_matching_fail', 420, error, null);
+            });
+        } catch(error) {
+            return callback(4, 'get_all_matching_fail', 400, error, null);
+        }
+    },
+
+    create: function (accessUserId, accessUserType, data, callback) {
+        try {
+            if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
+                return callback(4, 'invalid_user_right', 403, 'you must be admin to do this process', null);
+            }
+
+            let queryObj = {};
+            let where = {};
+            let query = {}
+
+            queryObj.createdBy = accessUserId;
+            queryObj.updatedBy = accessUserId;
+            queryObj.createdAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+
+            query.createdBy = accessUserId;
+            query.updatedBy = accessUserId;
+            query.createdAt = moment(Date.now()).add(7, "hour");
+            query.updatedAt = moment(Date.now()).add(7, "hour");
+            query.step = 1;
+
+            queryObj.profileId = data.profileId;
+            queryObj.resultId = data.resultId;
+            queryObj.status = Constant.STATUS.YES;
+            queryObj.type = data.type;
+            queryObj.isCompany = data.isCompany;
+
+            where.profileId = data.profileId;
+            where.resultId = data.resultId;
+
+            console.log(data.profileId)
+
+            Matching.findOne({where: where}).then(result=>{
+                "use strict";
+                if ( result && (result.status !== 9 || result.status !== 10) ) {
+                    return callback(4, 'matching_exist', 400, null);
+                } else {
+                    Matching.create(queryObj).then(matching => {
+                        "use strict";
+                        query.mid = matching.id;
+                        Processes.create(query).then(result =>{
+                            "use strict";
+                            return callback(null, null, 200, null, matching);
+                        }).catch(function(error){
+                            "use strict";
+                            return callback(4, 'create_matching_fail', 420, error, null);
+                        });
+                    }).catch(function(error) {
+                        "use strict";
+                        return callback(4, 'create_matching_fail', 400, error, null);
+                    });
+                }
+            }).catch(function(error) {
+                "use strict";
+                return callback(4, 'find_one_matching_fail', 400, error, null);
+            });
+            }catch(error) {
+                return callback(4, 'create_matching_fail', 400, error, null);
+        }
+    },
+
+    update: function (accessUserId, accessUserType, matchingId, updateData, callback) {
+        try {
+            if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
+                return callback(1, 'invalid_user_type', 403, null, null);
+            }
+
+            let queryObj = {};
+            let where = {};
+            let match;
+            let whereProcess = {};
+
+            if ( !( Pieces.VariableBaseTypeChecking(matchingId,'string')
+                    && Validator.isInt(matchingId) )
+                && !Pieces.VariableBaseTypeChecking(matchingId,'number') ){
+                return callback(4, 'invalid_matching_id', 400, 'matching id is incorrect', null);
+            }
+
+            queryObj.status = updateData.step;
+
+            queryObj.updatedBy = accessUserId;
+            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+
+            where.id = matchingId;
+            
+            whereProcess.step = updateData.step;
+            whereProcess.mid = matchingId;
+
+            let query = {}
+            query.createdBy = accessUserId;
+            query.updatedBy = accessUserId;
+            query.createdAt = moment(Date.now()).add(7, "hour");
+            query.updatedAt = moment(Date.now()).add(7, "hour");
+            query.step = updateData.step;
+            query.mid = matchingId;
+            query.note = updateData.note;
+
+            Matching.update(
+                queryObj,
+                {where: where}).then(matching=>{
+                    "use strict";
+                    Processes.findOne({where: whereProcess}).then(result=>{
+                        "use strict";
+                        if ( result ) {
+                            return callback(4, 'processes_exist', 400, null);
+                        } else {
+                            Processes.create(query).then(result1 =>{
+                                "use strict";
+                                return callback(null, null, 200, null, matching);
+                            }).catch(function(error){
+                                "use strict";
+                                return callback(4, 'create_processes_fail', 420, error, null);
+                            });
+                        }
+                    }).catch(function(error) {
+                        "use strict";
+                        return callback(4, 'find_one_matching_fail', 400, error, null);
+                    });
+            }).catch(function(error){
+                "use strict";
+                return callback(4, 'update_matching_fail', 420, error, null);
+            });
+        }catch(error){
+            return callback(4, 'update_matching_fail', 400, error, null);
+        }
+    },
+
+    deletes: function (accessUserId, accessUserType, ids, callback) {
+        try {
+            if ( !Pieces.VariableBaseTypeChecking(ids,'string')
+                    || !Validator.isJSON(ids) ) {
+                return callback(4, 'invalid_matching_ids', 400, 'matching id list is not a json array string');
+            }
+            if(accessUserType < Constant.USER_TYPE.MODERATOR){
+                return callback(4, 'invalid_user_right', 403, null);
+            }
+
+            let idLists = Pieces.safelyParseJSON(ids);
+
+            let where = {id: {[Sequelize.Op.in]: idLists}};
+
+            let queryObj = {status: Constant.STATUS.NO};
+
+            Matching.update(queryObj, {where: where}).then(result=>{
+                "use strict";
+                if ( result && (result.length > 0) && result[0] > 0 ) {
+                    return callback(null, null, 200, null);
+                } else {
+                    return callback(4, 'invalid_matching_request', 404, null);
+                }
+            }).catch(function(error){
+                "use strict";
+                return callback(4, 'update_matching_fail', 420, error);
+            });
+        }catch(error){
+            return callback(4, 'deletes_matching_fail', 400, error);
+        }
+    },
+}
