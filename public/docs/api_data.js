@@ -999,14 +999,14 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "mainsubject",
             "description": "<p>category's name</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
-            "optional": false,
+            "optional": true,
             "field": "status",
             "description": "<p>category's status</p>"
           }
@@ -1291,21 +1291,21 @@ define({ "api": [
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "value",
             "description": "<p>Hashtag's value</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "type",
             "description": "<p>Hashtag's type <br/> 1: location <br/> 2: type <br/> 3: description</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "status",
             "description": "<p>Hashtag's status</p>"
           }
@@ -1844,56 +1844,56 @@ define({ "api": [
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "title",
             "description": "<p>labresult's title</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "description",
             "description": "<p>labresult's description</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "status",
             "description": "<p>status of labresult</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "stakeholder_name",
             "description": "<p>Company's name</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "subcategory",
             "description": "<p>subcategory's name</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "hashtag_id",
             "description": "<p>hashtag id</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "value",
             "description": "<p>hashtag's value</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "type",
             "description": "<p>hashtag's type</p>"
           }
@@ -2324,6 +2324,266 @@ define({ "api": [
   {
     "type": "GET",
     "url": "/v1/auth/matching/:id",
+    "title": "Get the matchest one of your requirement",
+    "version": "1.0.0",
+    "name": "getOne",
+    "group": "Matching",
+    "permission": [
+      {
+        "name": "type of user < 3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Auto find the matchest one of your requirement</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of requirement, on paramss</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/matching/automatching/10",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>the ID of matching result</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>result's title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>result's description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>result's status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "subcategory",
+            "description": "<p>subcategory of result</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "hashtag",
+            "description": "<p>hashtag of result</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "percent_matching",
+            "description": "<p>percent matching</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"id\": 12,\n                \"title\": \"Title 1\",\n                \"description\": \"Sản phẩm công nghệ cao\",\n                \"status\": 1,\n                \"createdAt\": \"2020-10-24T16:25:37.000Z\",\n                \"updatedAt\": \"2020-10-24T16:37:52.000Z\",\n                \"createdBy\": 1,\n                \"updatedBy\": 1,\n                \"subcategory\": {\n                    \"id\": 1,\n                    \"subject\": \"Hóa hữu cơ\"\n                },\n               \"match_hashtags\": [\n                {\n                    \"hashtag_id\": 26,\n                    \"hashtag\": {\n                        \"value\": \"năng lực nghiên cứu\",\n                        \"type\": 2\n                    }\n                }],\n                \"percent_matching\": 50},\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/Matching.js",
+    "groupTitle": "Matching"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/auth/matching/:id",
+    "title": "Get recommendation list",
+    "version": "1.0.0",
+    "name": "getOne",
+    "group": "Matching",
+    "permission": [
+      {
+        "name": "type of user < 3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get list match with your requirement</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of requirement, on paramss</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/matching/recommendation/10",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>the ID of matching result</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>result's title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>result's description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>result's status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "subcategory",
+            "description": "<p>subcategory of result</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "hashtag",
+            "description": "<p>hashtag of result</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "percent_matching_list",
+            "description": "<p>percent matching list with id</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"id\": 12,\n                \"title\": \"Title 1\",\n                \"description\": \"Sản phẩm công nghệ cao\",\n                \"status\": 1,\n                \"createdAt\": \"2020-10-24T16:25:37.000Z\",\n                \"updatedAt\": \"2020-10-24T16:37:52.000Z\",\n                \"createdBy\": 1,\n                \"updatedBy\": 1,\n                \"subcategory\": {\n                    \"id\": 1,\n                    \"subject\": \"Hóa hữu cơ\"\n                },\n               \"match_hashtags\": [\n                {\n                    \"hashtag_id\": 26,\n                    \"hashtag\": {\n                        \"value\": \"năng lực nghiên cứu\",\n                        \"type\": 2\n                    }\n                }],\n                \"percent_matching_list\": [\n                    [\n                        12,\n                        0.5\n                    ],\n                    [\n                        1,\n                        0.3333\n                    ],\n                    [\n                        5,\n                        0.1667\n                    ]\n                ]\n            },\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/Matching.js",
+    "groupTitle": "Matching"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/auth/matching/:id",
     "title": "Get One",
     "version": "1.0.0",
     "name": "getOne",
@@ -2355,7 +2615,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "id",
-            "description": "<p>ID of matching, on params</p>"
+            "description": "<p>ID of matching, on paramss</p>"
           }
         ]
       }
@@ -3119,58 +3379,51 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "string",
-            "optional": false,
+            "optional": true,
             "field": "title",
             "description": "<p>title of meeting</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
-            "optional": false,
+            "optional": true,
             "field": "description",
             "description": "<p>meeting's description</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "category_id",
             "description": "<p>category's id</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
-            "optional": false,
+            "optional": true,
             "field": "begin",
             "description": "<p>begin date</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "end",
             "description": "<p>end date</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "status",
             "description": "<p>1: actived <br/> 0: expired</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "limited",
             "description": "<p>maximun number of people attend</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "currentAttend",
-            "description": "<p>number of people have register</p>"
           }
         ]
       }
@@ -3742,49 +3995,49 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "string",
-            "optional": false,
+            "optional": true,
             "field": "title",
             "description": "<p>profile's title</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
-            "optional": false,
+            "optional": true,
             "field": "delete_ids",
             "description": "<p>Hashtag's list that deleted</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
-            "optional": false,
+            "optional": true,
             "field": "ids",
             "description": "<p>Hashtag's list that added to table</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "cid",
             "description": "<p>company's id</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "subcategory_id",
             "description": "<p>subcategory's id</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "description",
             "description": "<p>profile's description</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "status",
             "description": "<p>status of profile</p>"
           }
@@ -4780,21 +5033,21 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "string",
-            "optional": false,
+            "optional": true,
             "field": "subject",
             "description": "<p>subcategory's title</p>"
           },
           {
             "group": "Parameter",
             "type": "string",
-            "optional": false,
+            "optional": true,
             "field": "categoryid",
             "description": "<p>category's id</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "status",
             "description": "<p>status of category</p>"
           }
@@ -5679,20 +5932,6 @@ define({ "api": [
             "optional": false,
             "field": "id",
             "description": "<p>ID of user, on params</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "phone",
-            "description": "<p>phone of user</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "email",
-            "description": "<p>email of user</p>"
           },
           {
             "group": "Parameter",

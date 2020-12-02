@@ -318,8 +318,7 @@ module.exports = {
                 queryObj,
                 {where: where}).then(result=>{
                     "use strict";
-                    MatchHashtag.update(
-                        deleteObj,
+                    MatchHashtag.destroy(
                         {where: deletewhere}).then(data => {
                             "use strict";
                             const convertedData = match.map(arrObj => {

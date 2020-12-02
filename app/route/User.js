@@ -7,8 +7,7 @@ const sendGrid = require('../config/SendMail');
 
 
 module.exports = function (app) {
-    // app.post('/single/user/test', UserCtrl.test);
-    // app.post('/multiple/user/testing', UserCtrl.uploadMultipleFiles);
+    app.post('/v1/test', UserCtrl.test);
 
     // app.post('/v1/user/upload', UserCtrl.uploadImageToFirebase);
 

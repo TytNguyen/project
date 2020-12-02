@@ -1,4 +1,5 @@
 let DBConnectorSetting = [
+    
     {
         host: '127.0.0.1',
         port: '3306',
@@ -18,11 +19,11 @@ let DBConnectorSetting = [
     {
         host: 'db4free.net',
         port: '3306',
-        username: 'gemini',
-        password: '48429e5d',
-        database: 'image_archive',
+        username: 'tytnguyen',
+        password: '1q2w3e4r5t',
+        database: 'exchangeweb',
         dialect: 'mysql'
-    }
+    },
 ];
 
 module.exports = DBConnectorSetting;

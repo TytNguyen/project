@@ -17,14 +17,14 @@ module.exports = function(app) {
      * curl -i http://localhost:3000/v1/auth/labresult/2
      *
      * @apiSuccess {String} id the ID of labresult
-     * @apiSuccess {String} title labresult's title
-     * @apiSuccess {String} description labresult's description
-     * @apiSuccess {String} status status of labresult
-     * @apiSuccess {String} stakeholder_name Company's name
-     * @apiSuccess {String} subcategory subcategory's name
-     * @apiSuccess {String} hashtag_id hashtag id
-     * @apiSuccess {String} value hashtag's value
-     * @apiSuccess {String} type hashtag's type
+     * @apiSuccess {String} [title] labresult's title
+     * @apiSuccess {String} [description] labresult's description
+     * @apiSuccess {String} [status] status of labresult
+     * @apiSuccess {String} [stakeholder_name] Company's name
+     * @apiSuccess {String} [subcategory] subcategory's name
+     * @apiSuccess {String} [hashtag_id] hashtag id
+     * @apiSuccess {String} [value] hashtag's value
+     * @apiSuccess {String} [type] hashtag's type
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK

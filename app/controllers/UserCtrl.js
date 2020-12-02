@@ -14,41 +14,14 @@ const cloudinary = require('../middlewares/Cloudinary')
 
 
 module.exports = {
-    // test: function(req, res) {
-    //     let imageDetails = {}
-
-
-    //     let data = req.body;
-    //     let file = req.file;
-    //     UserManager.test(data, file, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-    //         if (errorCode) {
-    //             return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-    //         }
-    //         return Rest.sendSuccessOne(res, result, httpCode);
-    //     })
-    // },
-
-    uploadMultipleFiles: function(req, res) {
-        //req.files chính là khi upload multiple images
-        let res_promises = req.files.map(file => {
-            cloudinary.uploadMultiple(file.path, 'user', function (errorCode, errorMessage, httpCode, errorDescription, result) {
-                if (errorCode) {
-                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-                }
-                return Rest.sendSuccessOne(res, result, httpCode);
-            })
-        })
-        
-        // Promise.all get imgas
-        Promise.all(res_promises)
-        .then(async (arrImg) => {
-           //arrImg chính là array mà chúng ta đã upload 
-           // các bạn có thể sử dụng arrImg để save vào database, hay hơn thì sử dụng mongodb
-           res.json(req.files)
-        })
-        .catch((error) => {
-            console.error('> Error>', error);
-        })
+    test: function(req, res) {
+        let files = req.files;
+        UserManager.test( files, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+            if (errorCode) {
+                return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+            }
+            return Rest.sendSuccessOne(res, result, httpCode);
+        })        
     },
 
     uploadImageToFirebase: function (req, res) {
@@ -65,9 +38,11 @@ module.exports = {
     createByAdmin: function (req, res) {
         let accessUserId = req.body.accessUserId || '';
         let accessUserType = req.body.accessUserType || '';
-        let file = req.file;
-
         let Data = req.body || '';
+        let file = req.files;
+        
+
+        console.log(Data)
 
         UserManager.createByAdmin(accessUserId, accessUserType, Data, file, function (errorCode, errorMessage, httpCode, errorDescription, user) {
             if (errorCode) {
@@ -82,8 +57,8 @@ module.exports = {
 
     create: function (req, res) {
         let data = req.body || '';
-        let file = req.file;
-        console.log(req.body)
+        let file = req.files;
+        console.log(file)
         UserManager.create(data, file, function (errorCode, errorMessage, httpCode, errorDescription, user) {
             if (errorCode) {
                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
@@ -134,7 +109,7 @@ module.exports = {
     update: function (req, res) {
         let accessUserId = req.body.accessUserId || '';
         let accessUserType = req.body.accessUserType || '';
-        let image = req.file;
+        let file = req.files;
 
         let id = req.params.id || '';
 
@@ -149,7 +124,7 @@ module.exports = {
         }else {
             let data = req.body || '';
 
-            UserManager.update( accessUserId, accessUserType, id, data, image, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+            UserManager.update( accessUserId, accessUserType, id, data, file, function (errorCode, errorMessage, httpCode, errorDescription, result) {
                 if (errorCode) {
                     return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
                 } else {
@@ -200,7 +175,7 @@ module.exports = {
             if ( errorCode ) {
                 return Rest.sendError( res, errorCode, errorMessage, httpCode, errorDescription );
             }
-            JsonWebToken.sign({ id: result.id, loginName: result.email, type: result.type, displayName: result.displayName, phone: result.phone }, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
+            JsonWebToken.sign({ id: result.id, loginName: result.email, type: result.type, displayName: result.displayName, phone: result.phone, avatar: result.avatar}, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
                 if( error )
                 {
                     return Rest.sendError( res, 4000, 'create_token_fail', 400, error );

@@ -9,8 +9,13 @@ const Matching = Model.Matching
 const Processes = Model.Processes
 const LabResult = Model.LabResult;
 const EnterpriseProfile = Model.EnterpriseProfile;
+const Stakeholder = Model.Stakeholder;
+const SubCategory = Model.SubCategory;
+const Hashtag = Model.Hashtag;
+
 const moment = require('moment');
 const MatchHashtag = require('../models/MatchHashtag');
+const { resolve } = require('path');
 
 Matching.hasMany(Processes, {foreignKey: 'mid'});
 Processes.belongsTo(Matching, {foreignKey: 'mid'});
@@ -19,31 +24,86 @@ Matching.belongsTo(EnterpriseProfile, {foreignKey: 'profileId'});
 LabResult.belongsToMany(EnterpriseProfile, { through: Matching, foreignKey: 'profileId' });
 EnterpriseProfile.belongsToMany(LabResult, { through: Matching, foreignKey: 'resultId' });
 
+// LabResult.belongsTo(Stakeholder, {foreignKey: 'lid'});
+// Stakeholder.hasMany(LabResult, {foreignKey: 'lid'});
+
+LabResult.belongsTo(SubCategory, {foreignKey: 'subcategory_id'});
+SubCategory.hasMany(LabResult, {foreignKey: 'subcategory_id'});
+
+MatchHashtag.belongsTo(LabResult, {foreignKey: 'result_id'});
+MatchHashtag.belongsTo(Hashtag, {foreignKey: 'hashtag_id'});
+LabResult.belongsToMany(Hashtag, {through: MatchHashtag, foreignKey: 'result_id'});
+Hashtag.belongsToMany(LabResult, {through: MatchHashtag, foreignKey: 'hashtag_id'});
+
 module.exports = {
-    test: function(accessUserId, accessUserType, id, callback) {
+    autoMatching: function(accessUserId, accessUserType, id, callback) {
         try {
-            let attributes = ['profile_id', 'hashtag_id', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
-            let data = [];
+            let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            let product = [];
+            let profile = [];
 
             MatchHashtag.findAll({
-                where: {profile_id: {[Sequelize.Op.ne]: null}},
-                attributes: [Sequelize.fn('DISTINCT', Sequelize.col('profile_id')) ,'profile_id', 'hashtag_id']
+                where: {result_id: {[Sequelize.Op.ne]: null}},
+                attributes: [Sequelize.fn('DISTINCT', Sequelize.col('result_id', 'hashtag_id')) ,'result_id', 'hashtag_id']
             }).then(result=>{
                 "use strict";
                 
-                for (var i of result.values()) {
-                    data.push([i.profile_id, i.hashtag_id])
-                }
+                MatchHashtag.findAll({
+                    where: {profile_id: id},
+                    attributes: [Sequelize.fn('DISTINCT', Sequelize.col('hashtag_id')), 'hashtag_id']
+                }).then(data=>{
+                    "use strict";
+                    for (var i of data.values()) {
+                        profile.push(i.hashtag_id)
+                    }
 
-                this.matching(data)
+                    for (var i of result.values()) {
+                        product.push([i.result_id, i.hashtag_id])
+                    }
+    
+                    let test = this.matching(product, profile);
 
-                if(result){
-                    return callback(null, null, 200, null, result);
-                }else{
-                    return callback(4, 'find_one_matching_fail', 404, null, null);
-                }
+                    LabResult.findOne({
+                        where: {id: test[0]},
+                        include: [
+                        //     {
+                        //     model: Stakeholder,
+                        //     attributes: ['id', 'name']
+                        // },
+                        {
+                            model: SubCategory,
+                            attributes: ['id', 'subject']
+                        },
+                        {
+                            model: MatchHashtag,
+                            include: [{
+                                model: Hashtag,
+                                attributes: ["value", "type"] 
+                            }],
+                            attributes: ["hashtag_id"]
+                        }],
+                        attributes: attributes
+                    }).then(result=>{
+                        "use strict";
+                        if(result){
+                            let output = {
+                                data: result,
+                                percent_matching: test[1]*100}  ;
+                            return callback(null, null, 200, null, output);
+                        }else{
+                            return callback(4, 'find_one_labresult_fail', 404, null, null);
+                        }
+                    }).catch(function(error) {
+                        "use strict";
+                        return callback(4, 'find_one_labresult_fail', 400, error, null);
+                    });
 
-               
+                // return callback(null, null, 200, null, result);
+
+                }).catch(function(error) {
+                    "use strict";
+                    return callback(4, 'find_one_matching_fail', 400, error, null);
+                });
             }).catch(function(error) {
                 "use strict";
                 return callback(4, 'find_one_matching_fail', 400, error, null);
@@ -53,36 +113,89 @@ module.exports = {
         }
     },
 
-    matching: function (data) {
-        let profiles = [];
-        let hashtags = [];
-        let total = [];
-        
-        for (var i of data) {
-            profiles.push(i[0])
-        };
+    recommend: function(accessUserId, accessUserType, id, callback) {
+        try {
+            let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            let product = [];
+            let profile = [];
 
-        profiles = profiles.filter(function (item, index) {
-            return profiles.indexOf(item) === index;
-        });
+            MatchHashtag.findAll({
+                where: {result_id: {[Sequelize.Op.ne]: null}},
+                attributes: [Sequelize.fn('DISTINCT', Sequelize.col('result_id', 'hashtag_id')) ,'result_id', 'hashtag_id']
+            }).then(result=>{
+                "use strict";
+                
+                MatchHashtag.findAll({
+                    where: {profile_id: id},
+                    attributes: [Sequelize.fn('DISTINCT', Sequelize.col('hashtag_id')), 'hashtag_id']
+                }).then(data=>{
+                    "use strict";
+                    for (var i of data.values()) {
+                        profile.push(i.hashtag_id)
+                    }
 
-        for (var i of profiles) {
-            for (var j of data) {
-                if(i == j[0])
-                hashtags.push(j[1])
-            }
-            total.push([i, hashtags]);
-            hashtags = []
-        };
+                    for (var i of result.values()) {
+                        product.push([i.result_id, i.hashtag_id])
+                    }
+    
+                    let test = this.recommendation(product, profile);
+                    let ids = []
 
-        total = total.map(arrObj => {
-            return {
-                profile_id: arrObj[0],
-                hashtag_id: arrObj[1]
-            }
-        })
+                    for (var i of test) {
+                        ids.push(i[0])
+                    }
 
-        console.log(total)
+                    console.log(ids)
+
+                    LabResult.findAll({
+                        where: {id: {[Sequelize.Op.in]: ids}},
+                        include: [
+                        //     {
+                        //     model: Stakeholder,
+                        //     attributes: ['id', 'name']
+                        // },
+                        {
+                            model: SubCategory,
+                            attributes: ['id', 'subject']
+                        },
+                        {
+                            model: MatchHashtag,
+                            include: [{
+                                model: Hashtag,
+                                attributes: ["value", "type"] 
+                            }],
+                            attributes: ["hashtag_id"]
+                        }],
+                        attributes: attributes,
+                        order: [Sequelize.literal(("FIELD(LabResult.id,"+ids.join(',')+")"))] 
+                    }).then(result=>{
+                        "use strict";
+                        if(result){
+                            let output = {
+                                data: result,
+                                percent_matching_list: test}  ;
+                            return callback(null, null, 200, null, output);
+                        }else{
+                            return callback(4, 'find_one_labresult_fail', 404, null, null);
+                        }
+                    }).catch(function(error) {
+                        "use strict";
+                        return callback(4, 'find_one_labresult_fail', 400, error, null);
+                    });
+
+                // return callback(null, null, 200, null, result);
+
+                }).catch(function(error) {
+                    "use strict";
+                    return callback(4, 'find_one_matching_fail', 400, error, null);
+                });
+            }).catch(function(error) {
+                "use strict";
+                return callback(4, 'find_one_matching_fail', 400, error, null);
+            });
+        }catch(error){
+            return callback(4, 'find_one_matching_fail', 400, error, null);
+        }
     },
 
     getOne: function(accessUserId, accessUserType, id, callback) {
@@ -333,6 +446,7 @@ module.exports = {
             let where = {};
             let match;
             let whereProcess = {};
+            let query = {}
 
             if ( !( Pieces.VariableBaseTypeChecking(matchingId,'string')
                     && Validator.isInt(matchingId) )
@@ -341,7 +455,6 @@ module.exports = {
             }
 
             queryObj.status = updateData.step;
-
             queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now()).add(7, "hour");
 
@@ -350,11 +463,11 @@ module.exports = {
             whereProcess.step = updateData.step;
             whereProcess.mid = matchingId;
 
-            let query = {}
             query.createdBy = accessUserId;
             query.updatedBy = accessUserId;
             query.createdAt = moment(Date.now()).add(7, "hour");
             query.updatedAt = moment(Date.now()).add(7, "hour");
+
             query.step = updateData.step;
             query.mid = matchingId;
             query.note = updateData.note;
@@ -419,5 +532,113 @@ module.exports = {
         }catch(error){
             return callback(4, 'deletes_matching_fail', 400, error);
         }
+    },
+
+    matching: function (data, profile) {
+        let results = [];
+        let hashtags = [];
+        let total = [];
+        let count = 0;
+        let largest = 0;
+        let largest_id = 0;
+
+        for (var i of data) {
+            results.push(i[0])
+        };
+
+        results = results.filter(function (item, index) {
+            return results.indexOf(item) === index;
+        });
+
+        for (var i of results) {
+            for (var j of data) {
+                if(i == j[0])
+                hashtags.push(j[1])
+            }
+            total.push([i, hashtags]);
+            hashtags = []
+        };
+
+        total = total.map(arrObj => {
+            return {
+                product_id: arrObj[0],
+                hashtag_id: arrObj[1]
+            }
+        })
+
+        for (var value of total) {
+            for (var i of value.hashtag_id) {
+                for (var j of profile) {
+                    if (i === j) {
+                        count ++; 
+                    }
+                }
+            }
+            if (count > largest) {
+                largest = count;
+                largest_id = value.product_id;
+            }
+            count = 0;
+        }
+        return([largest_id, largest/profile.length])
+    },
+
+    recommendation: function (data, profile) {
+        let results = [];
+        let hashtags = [];
+        let total = [];
+        let percent = [];
+        let count = 0;
+
+        for (var i of data) {
+            results.push(i[0])
+        };
+
+        results = results.filter(function (item, index) {
+            return results.indexOf(item) === index;
+        });
+
+        for (var i of results) {
+            for (var j of data) {
+                if(i == j[0])
+                hashtags.push(j[1])
+            }
+            total.push([i, hashtags]);
+            hashtags = []
+        };
+
+        total = total.map(arrObj => {
+            return {
+                product_id: arrObj[0],
+                hashtag_id: arrObj[1]
+            }
+        })
+
+        for (var value of total) {
+            for (var i of value.hashtag_id) {
+                for (var j of profile) {
+                    if (i === j) {
+                        count ++; 
+                    }
+                }
+            }
+
+            if (count === 0) {
+                percent.push([value.product_id, 0]);
+            } else {
+                count = Math.round((count/profile.length) * 10000) / 10000;
+                percent.push([value.product_id, count]);
+            }
+            count = 0;
+        }
+
+        for (var i = percent.length - 1; i > 0; i --) {
+            if (percent[i][1] > percent[i - 1][1]) {
+                percent.splice(i - 1, 0, percent[i]);
+                percent.splice(i + 1, 1);
+            }
+        }
+
+        return(percent)
     },
 }

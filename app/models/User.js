@@ -35,7 +35,12 @@ let User = MySequelize.define('user', {
         allowNull: true,
         default: null
     },
-    image: {
+    avatar: {
+        type: Sequelize.STRING(200),
+        allowNull: true,
+        default: null
+    },
+    img_location: {
         type: Sequelize.STRING(200),
         allowNull: true,
         default: null

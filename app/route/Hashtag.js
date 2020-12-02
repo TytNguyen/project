@@ -14,12 +14,12 @@ module.exports = function(app) {
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/hashtags
      *
-     * @apiSuccess {String} value Hashtag's value
-     * @apiSuccess {String} type Hashtag's type
+     * @apiSuccess {String} [value] Hashtag's value
+     * @apiSuccess {String} [type] Hashtag's type
      *                                          <br/> 1: location
      *                                          <br/> 2: type
      *                                          <br/> 3: description
-     * @apiSuccess {String} status Hashtag's status
+     * @apiSuccess {String} [status] Hashtag's status
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK

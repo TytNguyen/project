@@ -91,9 +91,9 @@ module.exports = function(app) {
      * 
      * @apiParam {string} id ID of subcategory, on params
      *
-     * @apiParam {string} subject subcategory's title
-     * @apiParam {string} categoryid category's id
-     * @apiParam {String} status status of category
+     * @apiParam {string} [subject] subcategory's title
+     * @apiParam {string} [categoryid] category's id
+     * @apiParam {String} [status] status of category
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/category/2

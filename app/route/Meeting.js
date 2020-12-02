@@ -161,15 +161,14 @@ module.exports = function(app) {
      * @apiDescription Update meetings information
      *
      * @apiParam {String} id ID of meetings, on params
-     * @apiParam {string} title title of meeting
-     * @apiParam {string} description meeting's description
-     * @apiParam {String} category_id category's id
-     * @apiParam {string} begin begin date
-     * @apiParam {String} end end date
-     * @apiParam {String} status  1: actived
+     * @apiParam {string} [title] title of meeting
+     * @apiParam {string} [description] meeting's description
+     * @apiParam {String} [category_id] category's id
+     * @apiParam {string} [begin] begin date
+     * @apiParam {String} [end] end date
+     * @apiParam {String} [status]  1: actived
      *                      <br/> 0: expired
-     * @apiParam {String} limited maximun number of people attend
-     * @apiParam {String} currentAttend number of people have register
+     * @apiParam {String} [limited] maximun number of people attend
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/meetings/2

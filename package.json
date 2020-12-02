@@ -50,6 +50,7 @@
     "mysql": "^2.16.0",
     "mysql2": "^1.6.4",
     "node-cron": "^2.0.3",
+    "nodejs": "0.0.0",
     "nodemailer": "^6.4.14",
     "path": "^0.12.7",
     "redis": "^2.8.0",
@@ -69,5 +70,13 @@
     "system"
   ],
   "license": "MIT",
-  "//": "prerequisite: [node-gyp for build the sharp], [apidoc --save-dev for document], [pm2 -g for process manager]"
+  "//": "prerequisite: [node-gyp for build the sharp], [apidoc --save-dev for document], [pm2 -g for process manager]",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TytNguyen/project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TytNguyen/project/issues"
+  },
+  "homepage": "https://github.com/TytNguyen/project#readme"
 }

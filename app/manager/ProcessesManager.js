@@ -37,20 +37,22 @@ module.exports = {
 
     update: function (accessUserId, accessUserType, matchingId, updateData, callback) {
         try {
-            if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
+            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
                 return callback(1, 'invalid_user_type', 403, null, null);
             }
 
             let queryObj = {};
             let where = {};
 
-            if ( !( Pieces.VariableBaseTypeChecking(matchingId,'string')
-                    && Validator.isInt(matchingId) )
-                && !Pieces.VariableBaseTypeChecking(matchingId,'number') ){
+            if (!(Pieces.VariableBaseTypeChecking(matchingId, 'string')
+                && Validator.isInt(matchingId))
+                && !Pieces.VariableBaseTypeChecking(matchingId, 'number')) {
                 return callback(4, 'invalid_matching_id', 400, 'matching id is incorrect', null);
             }
 
-            queryObj.step = updateData.step;
+            if (updateData.step !== undefined) {
+                queryObj.step = updateData.step;
+            }
 
             queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now()).add(7, "hour");
@@ -59,18 +61,18 @@ module.exports = {
 
             Processes.update(
                 queryObj,
-                {where: where}).then(result=>{
+                { where: where }).then(result => {
                     "use strict";
-                    if( (result !== null) && (result.length > 0) && (result[0] > 0) ){
+                    if ((result !== null) && (result.length > 0) && (result[0] > 0)) {
                         return callback(null, null, 200, null, matchingId);
-                    }else{
+                    } else {
                         return callback(4, 'update_processes_fail', 400, '', null);
                     }
-            }).catch(function(error){
-                "use strict";
-                return callback(4, 'update_processes_fail', 420, error, null);
-            });
-        }catch(error){
+                }).catch(function (error) {
+                    "use strict";
+                    return callback(4, 'update_processes_fail', 420, error, null);
+                });
+        } catch (error) {
             return callback(4, 'update_processes_fail', 400, error, null);
         }
     },

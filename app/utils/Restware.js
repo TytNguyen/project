@@ -18,8 +18,8 @@ const sendSuccessOne = function (res, data, iHttpCode) {
         out.data = data;
     }
 
-    out.message = '';
-    out.result = 'ok';
+    out.message = 'ok';
+    out.code = '0';
 
     if (process.env.NODE_ENV !== 'production') {
         console.log(out);
@@ -43,8 +43,8 @@ const sendSuccessMany = function (res, data, iHttpCode) {
         out = data;
     }
 
-    out.message = '';
-    out.result = 'ok';
+    out.message = 'ok';
+    out.code = '0';
 
     if (process.env.NODE_ENV !== 'production') {
         console.log(out);
@@ -121,12 +121,13 @@ const sendSuccessToken = function (res, token, user) {
     data.id = user.id;
     data.loginName = user.email;
     data.phone = user.phone;
+    data.avatar = user.avatar;
     data.type = user.type;
     data.status = user.status;
 
     out.data = data;
-    out.message = '';
-    out.result = 'ok';
+    out.message = 'ok';
+    out.code = '0';
 
     if (process.env.NODE_ENV !== 'production') {
         console.log(out);

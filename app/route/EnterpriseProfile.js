@@ -184,13 +184,13 @@ module.exports = function(app) {
      * 
      * @apiParam {string} id ID of profile, on params
      *
-     * @apiParam {string} title profile's title
-     * @apiParam {string} delete_ids Hashtag's list that deleted
-     * @apiParam {string} ids Hashtag's list that added to table
-     * @apiParam {String} cid company's id
-     * @apiParam {String} subcategory_id subcategory's id
-     * @apiParam {String} description profile's description
-     * @apiParam {String} status status of profile
+     * @apiParam {string} [title] profile's title
+     * @apiParam {string} [delete_ids] Hashtag's list that deleted
+     * @apiParam {string} [ids] Hashtag's list that added to table
+     * @apiParam {String} [cid] company's id
+     * @apiParam {String} [subcategory_id] subcategory's id
+     * @apiParam {String} [description] profile's description
+     * @apiParam {String} [status] status of profile
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/profile/2

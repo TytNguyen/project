@@ -229,21 +229,29 @@ module.exports = {
                 queryObj.status = updateData.status;
             }
 
-            if ( Pieces.VariableBaseTypeChecking(updateData.title,'string')
-                || Validator.isLength(updateData.title, {min: 4, max: 128}) ) {
+            if ( updateData.title !== undefined
+                && Validator.isLength(updateData.title, {min: 4, max: 128}) ) {
                     queryObj.title = updateData.title;
             }
 
-            queryObj.description = updateData.description;
-            queryObj.category_id = updateData.category_id;
+            if (updateData.description !== undefined) {
+                queryObj.description = updateData.description;
+            }
+
+            if (updateData.category_id !== undefined) {
+                queryObj.category_id = updateData.category_id;
+            }
+            
+            if (updateData.limited !== undefined) {
+                queryObj.limited = updateData.limited;
+            }
+
             queryObj.begin = moment(updateData.begin).add(7, "hour");
             queryObj.end = moment(updateData.end).add(7, "hour");
             queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now()).add(7, "hour");
-            queryObj.limited = updateData.limited;
+            
             // queryObj.currentAttend = updateData.currentAttend;
-
-            console.log(queryObj.updatedAt);
 
             where.id = meetingId;
 

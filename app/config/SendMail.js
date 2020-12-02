@@ -23,7 +23,10 @@ module.exports = {
         })
         .catch((error) => {
             return Rest.sendError(5, "Send_mail_fail", 400, error, "Send mail fail", null);
-          })
+        })
+        console.log(otp)
+        return Rest.sendSuccessOne(res, 'otp has been sent', 200);
+
     },
 
     verify: function(sender) {

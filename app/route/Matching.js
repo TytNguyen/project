@@ -1,7 +1,145 @@
 const MatchingCtrl = require('../controllers/MatchingCtrl');
 
 module.exports = function(app) {
-    app.get('/v1/auth/matching/test/:id', MatchingCtrl.test);
+    /**
+     * @api {GET} /v1/auth/matching/:id Get the matchest one of your requirement
+     * @apiVersion 1.0.0
+     * @apiName getOne
+     * @apiGroup Matching
+     * @apiPermission type of user < 3
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Auto find the matchest one of your requirement
+     *
+     * @apiParam {string} id ID of requirement, on paramss
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/matching/automatching/10
+     *
+     * @apiSuccess {String} id the ID of matching result
+     * @apiSuccess {String} title result's title
+     * @apiSuccess {String} description result's description
+     * @apiSuccess {String} status result's status
+     * @apiSuccess {String} subcategory subcategory of result
+     * @apiSuccess {String} hashtag hashtag of result
+     * @apiSuccess {String} percent_matching percent matching
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *          "data": {
+                    "id": 12,
+                    "title": "Title 1",
+                    "description": "Sản phẩm công nghệ cao",
+                    "status": 1,
+                    "createdAt": "2020-10-24T16:25:37.000Z",
+                    "updatedAt": "2020-10-24T16:37:52.000Z",
+                    "createdBy": 1,
+                    "updatedBy": 1,
+                    "subcategory": {
+                        "id": 1,
+                        "subject": "Hóa hữu cơ"
+                    },
+                   "match_hashtags": [
+                    {
+                        "hashtag_id": 26,
+                        "hashtag": {
+                            "value": "năng lực nghiên cứu",
+                            "type": 2
+                        }
+                    }],
+                    "percent_matching": 50},
+     *          "result": "ok",
+     *          "message" ""
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result": "fail",
+     *       "message": "invalid input"
+     *     }
+     */
+    app.get('/v1/auth/matching/automatching/:id', MatchingCtrl.autoMatching);
+
+    /**
+     * @api {GET} /v1/auth/matching/:id Get recommendation list
+     * @apiVersion 1.0.0
+     * @apiName getOne
+     * @apiGroup Matching
+     * @apiPermission type of user < 3
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Get list match with your requirement
+     *
+     * @apiParam {string} id ID of requirement, on paramss
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/matching/recommendation/10
+     *
+     * @apiSuccess {String} id the ID of matching result
+     * @apiSuccess {String} title result's title
+     * @apiSuccess {String} description result's description
+     * @apiSuccess {String} status result's status
+     * @apiSuccess {String} subcategory subcategory of result
+     * @apiSuccess {String} hashtag hashtag of result
+     * @apiSuccess {String} percent_matching_list percent matching list with id
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *          "data": {
+                    "id": 12,
+                    "title": "Title 1",
+                    "description": "Sản phẩm công nghệ cao",
+                    "status": 1,
+                    "createdAt": "2020-10-24T16:25:37.000Z",
+                    "updatedAt": "2020-10-24T16:37:52.000Z",
+                    "createdBy": 1,
+                    "updatedBy": 1,
+                    "subcategory": {
+                        "id": 1,
+                        "subject": "Hóa hữu cơ"
+                    },
+                   "match_hashtags": [
+                    {
+                        "hashtag_id": 26,
+                        "hashtag": {
+                            "value": "năng lực nghiên cứu",
+                            "type": 2
+                        }
+                    }],
+                    "percent_matching_list": [
+                        [
+                            12,
+                            0.5
+                        ],
+                        [
+                            1,
+                            0.3333
+                        ],
+                        [
+                            5,
+                            0.1667
+                        ]
+                    ]
+                },
+     *          "result": "ok",
+     *          "message" ""
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result": "fail",
+     *       "message": "invalid input"
+     *     }
+     */
+    app.get('/v1/auth/matching/recommendation/:id', MatchingCtrl.recommendation);
 
     /**
      * @api {GET} /v1/auth/matching/:id Get One
@@ -13,7 +151,7 @@ module.exports = function(app) {
      *
      * @apiDescription Get one matching
      *
-     * @apiParam {string} id ID of matching, on params
+     * @apiParam {string} id ID of matching, on paramss
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/matching/2

@@ -75,7 +75,7 @@ let LabResult = MySequelize.define('labresult', {
     tableName: 'labresult'
 });
 
-Stakeholder.hasMany(LabResult, {foreignKey: 'lid'});
-LabResult.belongsTo(Stakeholder, {foreignKey: 'lid'});
+// Stakeholder.hasMany(LabResult, {foreignKey: 'lid'});
+// LabResult.belongsTo(Stakeholder, {foreignKey: 'lid'});
 
 module.exports = LabResult;

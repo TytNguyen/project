@@ -14,7 +14,7 @@ module.exports = function (req, res, next) {
     if (req.method === 'OPTIONS') {
         next();
     }
-    let token = (req.body && req.body.access_token) || req.headers['access_token'] || (req.query && req.query.access_token) || (req.header('Authorization').replace('Bearer ', ''));
+    let token = (req.body && req.body.access_token) || req.headers['access_token'] || (req.query && req.query.access_token) || (req.header('Authorization').replace('Bearer ', '')) || "";
 
     if (token) {
         try {
@@ -36,8 +36,6 @@ module.exports = function (req, res, next) {
                         req.body.accessUserType = decoded.type;
                         req.body.accessLoginName = decoded.loginName;
                     }
-                    
-                    
                     next();
                 });
             });

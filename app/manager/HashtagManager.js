@@ -75,9 +75,17 @@ module.exports = {
             let queryObj = {};
             let where = {};
 
-            queryObj.value = updateData.value;
-            queryObj.type = updateData.type;
-            queryObj.status = updateData.status;
+            if (updateData.value !== undefined) {
+                queryObj.value = updateData.value;
+            }
+
+            if (updateData.type !== undefined) {
+                queryObj.type = updateData.type;
+            }
+            
+            if (updateData.status !== undefined) {
+                queryObj.status = updateData.status;
+            }
 
             queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now()).add(7, "hour");

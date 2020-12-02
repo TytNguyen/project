@@ -3,13 +3,27 @@ const MatchingManager = require('../manager/MatchingManager');
 
 module.exports = {
 
-    test: function (req, res) {
+    autoMatching: function (req, res) {
         let accessUserId = req.query.accessUserId || '';
         let accessUserType = req.query.accessUserType || '';
 
         let id = req.params.id || '';
 
-        MatchingManager.test(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+        MatchingManager.autoMatching(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+            if (errorCode) {
+                return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+            }
+            return Rest.sendSuccessOne(res, result, httpCode);
+        })
+    },
+
+    recommendation: function (req, res) {
+        let accessUserId = req.query.accessUserId || '';
+        let accessUserType = req.query.accessUserType || '';
+
+        let id = req.params.id || '';
+
+        MatchingManager.recommend(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
             if (errorCode) {
                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
             }
