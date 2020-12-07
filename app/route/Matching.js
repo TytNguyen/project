@@ -76,7 +76,7 @@ module.exports = function(app) {
      * @apiDescription Get list match with your requirement
      *
      * @apiParam {string} id ID of requirement
-     * @apiParam {string} sub_id ID of subcategory
+     * @apiParam {string} sub_id ID of subcategory of requirement
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/matching/recommendation/10

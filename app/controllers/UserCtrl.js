@@ -23,17 +23,6 @@ module.exports = {
         })        
     },
 
-    // uploadImageToFirebase: function (req, res) {
-    //     let file = req.file;
-
-    //     uploadImage.uploadImageToStorage(file, 'user', function (errorCode, errorMessage, httpCode, errorDescription, result) {
-    //         if (errorCode) {
-    //             return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-    //         }
-    //         return Rest.sendSuccessOne(res, result, httpCode);
-    // })
-    // },
-
     createByAdmin: function (req, res) {
         let accessUserId = req.body.accessUserId || '';
         let accessUserType = req.body.accessUserType || '';
@@ -59,17 +48,19 @@ module.exports = {
         UserManager.create(data, function (errorCode, errorMessage, httpCode, errorDescription, result) {
             if ( errorCode ) {
                 return Rest.sendError( res, errorCode, errorMessage, httpCode, errorDescription );
-            }
-            JsonWebToken.sign({ id: result.id, userName: result.email, type: result.type, displayName: result.displayName, phone: result.phone, avatar: result.avatar}, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
-                sendGrid.sendMailToVerifyAccount(result.email, token, function (errorCode, errorMessage, httpCode, errorDescription, message) {
-                    if( errorCode )
-                    {
-                        return Rest.sendError( res, 4000, 'create_token_fail', 400, error );
-                    }else{
-                        return Rest.sendSuccessOne(res, message, httpCode);
-                    }
+            } else {
+                JsonWebToken.sign({ id: result.id, userName: result.email, type: result.type, displayName: result.displayName, phone: result.phone, avatar: result.avatar}, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
+                    sendGrid.sendMailToVerifyAccount(result.email, token, function (errorCode, errorMessage, httpCode, errorDescription, message) {
+                        if( errorCode )
+                        {
+                            return Rest.sendError( res, 4000, 'create_token_fail', 400, error );
+                        }else{
+                            return Rest.sendSuccessOne(res, message, httpCode);
+                        }
+                    });
                 });
-            });
+            }
+            
         });
     },
 

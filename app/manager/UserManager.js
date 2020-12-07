@@ -451,7 +451,7 @@ module.exports = {
     },
 
     updateUserAfterRegister: function (data, callback) {
-        console.log(data[0])
+        console.log(data)
         try {
             let where = { id: data[0], email: data[1], type: data[2] };
             let queryObj = { status: Constant.STATUS.YES };

@@ -18,7 +18,7 @@ module.exports = function (app) {
      * @apiPermission Status < 3
      * @apiHeader {String} access_token json web token to access to data
      *
-     * @apiDescription When user click to the link in Email, user's account status update
+     * @apiDescription When user click to the link in Email, user's account status update to activated account
      *
      * @apiParam {string} token account's token
      *

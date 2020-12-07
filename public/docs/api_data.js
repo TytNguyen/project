@@ -6174,7 +6174,7 @@ define({ "api": [
         ]
       }
     },
-    "description": "<p>When user click to the link in Email, user's account status update</p>",
+    "description": "<p>When user click to the link in Email, user's account status update to activated account</p>",
     "parameter": {
       "fields": {
         "Parameter": [
