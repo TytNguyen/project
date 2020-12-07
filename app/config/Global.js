@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
     https: false,
     appname: 'node_mysql_template',
-    port: process.env.NODE_PORT || 3000,
+    port: process.env.PORT || 3000,
     url: APIROOT_URL,
     weburl: WEBROOT_URL,
     jwtAuthKey: 'fdhjfdfuejfkjdhfaueyruesfhjs',
