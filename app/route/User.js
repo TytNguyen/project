@@ -102,7 +102,7 @@ module.exports = function (app) {
      *
      * @apiDescription login and get access token
      *
-     * @apiParam {string} loginName a string with length <= 64, can be a phone or email
+     * @apiParam {string} userName a string with length <= 64, can be a phone or email
      * @apiParam {String} password a string with 4 < length < 64
      *
      * @apiExample Example usage:

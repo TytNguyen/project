@@ -2499,7 +2499,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "sub_id",
-            "description": "<p>ID of subcategory</p>"
+            "description": "<p>ID of subcategory of requirement</p>"
           }
         ]
       }
@@ -5746,7 +5746,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "loginName",
+            "field": "userName",
             "description": "<p>a string with length &lt;= 64, can be a phone or email</p>"
           },
           {
