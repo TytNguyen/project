@@ -2,43 +2,55 @@ const sgMail = require("@sendgrid/mail");
 require("dotenv").config()
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 const Rest = require('../utils/Restware');
+const JsonWebToken = require('jsonwebtoken');
+const Config = require('../config/Global');
 
-var otp;
 
 module.exports = {
-    sendGrid: function(req, res, httpCode) {
-        otp = Math.random();
-        otp = otp * 1000000;
-        otp = parseInt(otp);
-
+    sendMailToVerifyAccount: function(email, token, callback) {
         const msg = {
-            to: req.body.email,
+            to: email,
             from: `${process.env.SENDER}`,
             subject: 'Verification your account',
-            html: "<h3>OTP for account verification is </h3>"  + "<h1 style='font-weight:bold;'>" + otp + "</h1>" 
+            html: `<h3>To verify your account, click to the link below </h3><a href="http://localhost:3000/v1/verify/${token}">Click me</a>`
         };
-                
+
         sgMail.send(msg).then(()  => {
-            return Rest.sendSuccessOne(res, 'otp has been sent', 200);
+            return callback(null, null, 200, null, "account");
         })
         .catch((error) => {
-            return Rest.sendError(5, "Send_mail_fail", 400, error, "Send mail fail", null);
+            return callback(1, 'Send_mail_fail', 420, error, null);
         })
-        console.log(otp)
-        return Rest.sendSuccessOne(res, 'otp has been sent', 200);
+        return callback(null, null, 200, null, "Please check your Email, Thanks");
 
     },
 
-    verify: function(sender) {
-        console.log(otp)
-        console.log(sender)
-        if(sender == otp){
-            // otp = 0;
-            return true;
-        }
-        else{ 
-            // otp = 0;
-            return false;
-        }
+    forgotPassword: function(email, token, callback) {
+        const msg = {
+            to: email,
+            from: `${process.env.SENDER}`,
+            subject: 'Verification your account',
+            html: `<h3>To reset your password, click to the link below </h3>
+                   <a href="http://localhost:3000/v1/verify/${token}">Click me</a>`
+        };
+
+        sgMail.send(msg).then(()  => {
+            return callback(null, null, 200, null, "account");
+        })
+        .catch((error) => {
+            return callback(1, 'Send_mail_fail', 420, error, null);
+        })
+        return callback(null, null, 200, null, "Please check your Email, Thanks");
+
+    },
+
+    verifyToken: function(token, callback) {
+        JsonWebToken.verify(token, Config.jwtAuthKey, function(error, decoded) {
+            if(error){
+                return callback(1, 70, 'verify_token_fail', 400, error);
+            }
+
+            callback(null, null, 200, null, [decoded.id, decoded.userName, decoded.type]);
+        });
     }
 }

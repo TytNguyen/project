@@ -2323,7 +2323,7 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/v1/auth/matching/:id",
+    "url": "/v1/auth/matching/automatching",
     "title": "Get the matchest one of your requirement",
     "version": "1.0.0",
     "name": "getOne",
@@ -2355,7 +2355,14 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "id",
-            "description": "<p>ID of requirement, on paramss</p>"
+            "description": "<p>ID of requirement</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "sub_id",
+            "description": "<p>ID of subcategory</p>"
           }
         ]
       }
@@ -2363,7 +2370,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "curl -i http://localhost:3000/v1/auth/matching/automatching/10",
+        "content": "curl -i http://localhost:3000/v1/auth/matching/automatching",
         "type": "json"
       }
     ],
@@ -2453,7 +2460,7 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/v1/auth/matching/:id",
+    "url": "/v1/auth/matching/recommendation",
     "title": "Get recommendation list",
     "version": "1.0.0",
     "name": "getOne",
@@ -2485,7 +2492,14 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "id",
-            "description": "<p>ID of requirement, on paramss</p>"
+            "description": "<p>ID of requirement</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "sub_id",
+            "description": "<p>ID of subcategory</p>"
           }
         ]
       }
@@ -5115,17 +5129,10 @@ define({ "api": [
         "name": "lab or company user"
       }
     ],
-    "description": "<p>Create user</p>",
+    "description": "<p>Create user, after that, system will send you a Email to verify your account</p>",
     "parameter": {
       "fields": {
         "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "otp",
-            "description": "<p>otp that email send</p>"
-          },
           {
             "group": "Parameter",
             "type": "string",
@@ -5170,15 +5177,8 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "file",
-            "optional": true,
-            "field": "file",
-            "description": "<p>user's image</p>"
-          },
-          {
-            "group": "Parameter",
             "type": "String",
-            "optional": true,
+            "optional": false,
             "field": "type",
             "description": "<p>1: company <br/> 2: lab</p>"
           }
@@ -5207,7 +5207,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"data\":{\n      \"id\": \"abc\"\n  },\n  \"result\": \"ok\",\n  \"message\": \"\",\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"result\": \"ok\",\n  \"message\": \"Please check your Email\",\n}",
           "type": "json"
         }
       ]
@@ -5823,81 +5823,6 @@ define({ "api": [
     "groupTitle": "User"
   },
   {
-    "type": "POST",
-    "url": "/v1/users/send",
-    "title": "Send mail after register",
-    "version": "1.0.0",
-    "name": "sendMail",
-    "group": "User",
-    "permission": [
-      {
-        "name": "User"
-      }
-    ],
-    "description": "<p>Send mail after register</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "email",
-            "description": "<p>unique email</p>"
-          }
-        ]
-      }
-    },
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "curl -i http://localhost:3000/v1/users/send",
-        "type": "json"
-      }
-    ],
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "otp",
-            "description": "<p>has been sent</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n     \"data\": \"otp has been sent\",\n            \"message\": \"\",\n            \"result\": \"ok\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "invalid",
-            "description": "<p>input data</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"\",\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "app/route/User.js",
-    "groupTitle": "User"
-  },
-  {
     "type": "PUT",
     "url": "/v1/auth/users/:id",
     "title": "Update One",
@@ -5932,13 +5857,6 @@ define({ "api": [
             "optional": false,
             "field": "id",
             "description": "<p>ID of user, on params</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "password",
-            "description": "<p>password of user</p>"
           },
           {
             "group": "Parameter",
@@ -6027,6 +5945,280 @@ define({ "api": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\":\"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/User.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "PUT",
+    "url": "/v1/auth/users/updatepassword",
+    "title": "Update Password",
+    "version": "1.0.0",
+    "name": "update",
+    "group": "User",
+    "permission": [
+      {
+        "name": "Every type of user"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Update user password</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of user</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "oldPassword",
+            "description": "<p>user's old password</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "newPassword",
+            "description": "<p>user's new password</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/users/updatepassword",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>the ID of updated user</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n            \"data\": {\n                \"id\": \"103\"\n            },\n            \"message\": \"ok\",\n            \"code\": \"0\"\n        }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\":\"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/User.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "PUT",
+    "url": "/v1/auth/users/deletes",
+    "title": "Deletes list of account",
+    "version": "1.0.0",
+    "name": "update",
+    "group": "User",
+    "permission": [
+      {
+        "name": "Every type of user"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Delete list of user account</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of user</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "ids",
+            "description": "<p>account's list</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/users/deletes",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>the ID of updated user</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n            \"data\": {\n                \"id\": \"103\"\n            },\n            \"message\": \"ok\",\n            \"code\": \"0\"\n        }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\":\"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/User.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/verify/:token",
+    "title": "Update Email's status after register",
+    "version": "1.0.0",
+    "name": "verifyAccount",
+    "group": "User",
+    "permission": [
+      {
+        "name": "Status < 3"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>When user click to the link in Email, user's account status update</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>account's token</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/verify/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlck5hbWUiOiJhZG1pbkBnbWFpbC5jb20iLCJ0eXBlIjo1LCJwaG9uZSI6IjAxMjM0NTY3ODkiLCJhdmF0YXIiOiJodHRwczovL3Jlcy5jbG91ZGluYXJ5LmNvbS9kb2t4cTdkOWQvaW1hZ2UvdXBsb2FkL3YxNjA2MzYzNDU3L3VzZXIvdWVvZnNnMmRueTlwYm1lOGNsZ3kuanBnIiwiaWF0IjoxNjA3MDUyNzM2LCJleHAiOjE2MDkyMTI3MzZ9.R64P2doZXYlX_xblSPIlLpXVscPb8UXVPQK3REqdv1I",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"message\": \"ok\",\n            \"code\": \"0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
           "type": "json"
         }
       ]

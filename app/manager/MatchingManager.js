@@ -36,18 +36,20 @@ LabResult.belongsToMany(Hashtag, {through: MatchHashtag, foreignKey: 'result_id'
 Hashtag.belongsToMany(LabResult, {through: MatchHashtag, foreignKey: 'hashtag_id'});
 
 module.exports = {
-    autoMatching: function(accessUserId, accessUserType, id, callback) {
+    autoMatching: function(accessUserId, accessUserType, id, sub_id, callback) {
         try {
             let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
             let product = [];
             let profile = [];
 
-            MatchHashtag.findAll({
-                where: {result_id: {[Sequelize.Op.ne]: null}},
-                attributes: [Sequelize.fn('DISTINCT', Sequelize.col('result_id', 'hashtag_id')) ,'result_id', 'hashtag_id']
-            }).then(result=>{
-                "use strict";
-                
+            LabResult.findAll({
+                include: [
+                    {
+                        model: MatchHashtag,
+                        attributes: ["hashtag_id"]
+                    }],
+                attributes: ["id", "subcategory_id"]
+            }).then((lab) => {
                 MatchHashtag.findAll({
                     where: {profile_id: id},
                     attributes: [Sequelize.fn('DISTINCT', Sequelize.col('hashtag_id')), 'hashtag_id']
@@ -56,20 +58,19 @@ module.exports = {
                     for (var i of data.values()) {
                         profile.push(i.hashtag_id)
                     }
+                    for (var i of lab.values()) {
+                        let ids = []
+                        for (var j of i.match_hashtags) {
+                            ids.push(j.hashtag_id);
+                        }
+                        product.push([i.id, i.subcategory_id, ids])
+                        ids = []
+                    }    
 
-                    for (var i of result.values()) {
-                        product.push([i.result_id, i.hashtag_id])
-                    }
-    
-                    let test = this.matching(product, profile);
-
+                    let test = this.matching(product, profile, sub_id);
                     LabResult.findOne({
                         where: {id: test[0]},
                         include: [
-                        //     {
-                        //     model: Stakeholder,
-                        //     attributes: ['id', 'name']
-                        // },
                         {
                             model: SubCategory,
                             attributes: ['id', 'subject']
@@ -97,34 +98,33 @@ module.exports = {
                         "use strict";
                         return callback(4, 'find_one_labresult_fail', 400, error, null);
                     });
-
-                // return callback(null, null, 200, null, result);
-
                 }).catch(function(error) {
                     "use strict";
-                    return callback(4, 'find_one_matching_fail', 400, error, null);
+                    return callback(4, 'find_one_labresult_fail', 400, error, null);
                 });
             }).catch(function(error) {
-                "use strict";
-                return callback(4, 'find_one_matching_fail', 400, error, null);
+                return callback(4, 'find_and_count_all_labresult_fail', 420, error, null);
             });
         }catch(error){
             return callback(4, 'find_one_matching_fail', 400, error, null);
         }
     },
 
-    recommend: function(accessUserId, accessUserType, id, callback) {
+    recommend: function(accessUserId, accessUserType, id, sub_id, callback) {
         try {
             let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
             let product = [];
             let profile = [];
 
-            MatchHashtag.findAll({
-                where: {result_id: {[Sequelize.Op.ne]: null}},
-                attributes: [Sequelize.fn('DISTINCT', Sequelize.col('result_id', 'hashtag_id')) ,'result_id', 'hashtag_id']
-            }).then(result=>{
-                "use strict";
-                
+
+            LabResult.findAll({
+                include: [
+                    {
+                        model: MatchHashtag,
+                        attributes: ["hashtag_id"]
+                    }],
+                attributes: ["id", "subcategory_id"]
+            }).then((lab) => {
                 MatchHashtag.findAll({
                     where: {profile_id: id},
                     attributes: [Sequelize.fn('DISTINCT', Sequelize.col('hashtag_id')), 'hashtag_id']
@@ -134,18 +134,21 @@ module.exports = {
                         profile.push(i.hashtag_id)
                     }
 
-                    for (var i of result.values()) {
-                        product.push([i.result_id, i.hashtag_id])
-                    }
-    
-                    let test = this.recommendation(product, profile);
-                    let ids = []
+                    for (var i of lab.values()) {
+                        let ids = []
+                        for (var j of i.match_hashtags) {
+                            ids.push(j.hashtag_id);
+                        }
+                        product.push([i.id, i.subcategory_id, ids])
+                        ids = []
+                    }    
 
+                    let test = this.recommendation(product, profile, sub_id);
+
+                    let ids = []
                     for (var i of test) {
                         ids.push(i[0])
                     }
-
-                    console.log(ids)
 
                     LabResult.findAll({
                         where: {id: {[Sequelize.Op.in]: ids}},
@@ -173,7 +176,7 @@ module.exports = {
                         if(result){
                             let output = {
                                 data: result,
-                                percent_matching_list: test}  ;
+                                percent_matching_list: test};
                             return callback(null, null, 200, null, output);
                         }else{
                             return callback(4, 'find_one_labresult_fail', 404, null, null);
@@ -182,16 +185,12 @@ module.exports = {
                         "use strict";
                         return callback(4, 'find_one_labresult_fail', 400, error, null);
                     });
-
-                // return callback(null, null, 200, null, result);
-
                 }).catch(function(error) {
                     "use strict";
-                    return callback(4, 'find_one_matching_fail', 400, error, null);
+                    return callback(4, 'find_one_labresult_fail', 400, error, null);
                 });
             }).catch(function(error) {
-                "use strict";
-                return callback(4, 'find_one_matching_fail', 400, error, null);
+                return callback(4, 'find_and_count_all_labresult_fail', 420, error, null);
             });
         }catch(error){
             return callback(4, 'find_one_matching_fail', 400, error, null);
@@ -534,103 +533,52 @@ module.exports = {
         }
     },
 
-    matching: function (data, profile) {
-        let results = [];
-        let hashtags = [];
-        let total = [];
+    matching: function (product, profile, sub_id) {
         let count = 0;
         let largest = 0;
         let largest_id = 0;
 
-        for (var i of data) {
-            results.push(i[0])
-        };
-
-        results = results.filter(function (item, index) {
-            return results.indexOf(item) === index;
-        });
-
-        for (var i of results) {
-            for (var j of data) {
-                if(i == j[0])
-                hashtags.push(j[1])
-            }
-            total.push([i, hashtags]);
-            hashtags = []
-        };
-
-        total = total.map(arrObj => {
-            return {
-                product_id: arrObj[0],
-                hashtag_id: arrObj[1]
-            }
-        })
-
-        for (var value of total) {
-            for (var i of value.hashtag_id) {
-                for (var j of profile) {
-                    if (i === j) {
-                        count ++; 
+        for (var value of product) {
+            if (value[1] === sub_id) {
+                for (var i of value[2]) {
+                    for (var j of profile) {
+                        if (i === j) {
+                            count ++; 
+                        }
                     }
                 }
-            }
-            if (count > largest) {
-                largest = count;
-                largest_id = value.product_id;
-            }
-            count = 0;
-        }
-        return([largest_id, largest/profile.length])
+                if (count > largest) {
+                    largest = count;
+                    largest_id = value[0];
+                }
+                count = 0;
+            } 
+        } 
+
+        return([largest_id, largest/profile.length]);
     },
 
-    recommendation: function (data, profile) {
-        let results = [];
-        let hashtags = [];
-        let total = [];
+    recommendation: function (product, profile, sub_id) {
         let percent = [];
         let count = 0;
 
-        for (var i of data) {
-            results.push(i[0])
-        };
-
-        results = results.filter(function (item, index) {
-            return results.indexOf(item) === index;
-        });
-
-        for (var i of results) {
-            for (var j of data) {
-                if(i == j[0])
-                hashtags.push(j[1])
-            }
-            total.push([i, hashtags]);
-            hashtags = []
-        };
-
-        total = total.map(arrObj => {
-            return {
-                product_id: arrObj[0],
-                hashtag_id: arrObj[1]
-            }
-        })
-
-        for (var value of total) {
-            for (var i of value.hashtag_id) {
-                for (var j of profile) {
-                    if (i === j) {
-                        count ++; 
+        for (var value of product) {
+            if (value[1] === sub_id) {
+                for (var i of value[2]) {
+                    for (var j of profile) {
+                        if (i === j) {
+                            count ++; 
+                        }
                     }
                 }
-            }
 
-            if (count === 0) {
-                percent.push([value.product_id, 0]);
-            } else {
-                count = Math.round((count/profile.length) * 10000) / 10000;
-                percent.push([value.product_id, count]);
-            }
-            count = 0;
-        }
+                if (count !== 0) {
+                    count = Math.round((count/profile.length) * 10000) / 10000;
+                    percent.push([value[0], count]);
+                }
+                count = 0;
+            } 
+        } 
 
         for (var i = percent.length - 1; i > 0; i --) {
             if (percent[i][1] > percent[i - 1][1]) {
@@ -639,6 +587,6 @@ module.exports = {
             }
         }
 
-        return(percent)
+        return(percent)        
     },
 }

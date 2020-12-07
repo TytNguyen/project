@@ -7,9 +7,10 @@ module.exports = {
         let accessUserId = req.query.accessUserId || '';
         let accessUserType = req.query.accessUserType || '';
 
-        let id = req.params.id || '';
+        let id = req.body.id || '';
+        let sub_id = req.body.sub_id || '';
 
-        MatchingManager.autoMatching(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+        MatchingManager.autoMatching(accessUserId, accessUserType, id, sub_id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
             if (errorCode) {
                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
             }
@@ -21,9 +22,10 @@ module.exports = {
         let accessUserId = req.query.accessUserId || '';
         let accessUserType = req.query.accessUserType || '';
 
-        let id = req.params.id || '';
+        let id = req.body.id || '';
+        let sub_id = req.body.sub_id || '';
 
-        MatchingManager.recommend(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+        MatchingManager.recommend(accessUserId, accessUserType, id, sub_id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
             if (errorCode) {
                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
             }

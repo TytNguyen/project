@@ -2,7 +2,7 @@ const MatchingCtrl = require('../controllers/MatchingCtrl');
 
 module.exports = function(app) {
     /**
-     * @api {GET} /v1/auth/matching/:id Get the matchest one of your requirement
+     * @api {GET} /v1/auth/matching/automatching Get the matchest one of your requirement
      * @apiVersion 1.0.0
      * @apiName getOne
      * @apiGroup Matching
@@ -11,10 +11,11 @@ module.exports = function(app) {
      *
      * @apiDescription Auto find the matchest one of your requirement
      *
-     * @apiParam {string} id ID of requirement, on paramss
+     * @apiParam {string} id ID of requirement
+     * @apiParam {string} sub_id ID of subcategory
      *
      * @apiExample Example usage:
-     * curl -i http://localhost:3000/v1/auth/matching/automatching/10
+     * curl -i http://localhost:3000/v1/auth/matching/automatching
      *
      * @apiSuccess {String} id the ID of matching result
      * @apiSuccess {String} title result's title
@@ -62,10 +63,10 @@ module.exports = function(app) {
      *       "message": "invalid input"
      *     }
      */
-    app.get('/v1/auth/matching/automatching/:id', MatchingCtrl.autoMatching);
+    app.get('/v1/auth/matching/automatching', MatchingCtrl.autoMatching);
 
     /**
-     * @api {GET} /v1/auth/matching/:id Get recommendation list
+     * @api {GET} /v1/auth/matching/recommendation Get recommendation list
      * @apiVersion 1.0.0
      * @apiName getOne
      * @apiGroup Matching
@@ -74,7 +75,8 @@ module.exports = function(app) {
      *
      * @apiDescription Get list match with your requirement
      *
-     * @apiParam {string} id ID of requirement, on paramss
+     * @apiParam {string} id ID of requirement
+     * @apiParam {string} sub_id ID of subcategory
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/matching/recommendation/10
@@ -139,7 +141,7 @@ module.exports = function(app) {
      *       "message": "invalid input"
      *     }
      */
-    app.get('/v1/auth/matching/recommendation/:id', MatchingCtrl.recommendation);
+    app.get('/v1/auth/matching/recommendation', MatchingCtrl.recommendation);
 
     /**
      * @api {GET} /v1/auth/matching/:id Get One

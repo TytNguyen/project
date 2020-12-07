@@ -9,6 +9,40 @@ const sendGrid = require('../config/SendMail');
 module.exports = function (app) {
     app.post('/v1/test', UserCtrl.test);
 
+
+    /**
+     * @api {GET} /v1/verify/:token Update Email's status after register
+     * @apiVersion 1.0.0
+     * @apiName verifyAccount
+     * @apiGroup User
+     * @apiPermission Status < 3
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription When user click to the link in Email, user's account status update
+     *
+     * @apiParam {string} token account's token
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/verify/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlck5hbWUiOiJhZG1pbkBnbWFpbC5jb20iLCJ0eXBlIjo1LCJwaG9uZSI6IjAxMjM0NTY3ODkiLCJhdmF0YXIiOiJodHRwczovL3Jlcy5jbG91ZGluYXJ5LmNvbS9kb2t4cTdkOWQvaW1hZ2UvdXBsb2FkL3YxNjA2MzYzNDU3L3VzZXIvdWVvZnNnMmRueTlwYm1lOGNsZ3kuanBnIiwiaWF0IjoxNjA3MDUyNzM2LCJleHAiOjE2MDkyMTI3MzZ9.R64P2doZXYlX_xblSPIlLpXVscPb8UXVPQK3REqdv1I
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *          "message": "ok",
+                "code": "0"
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result": "fail",
+     *       "message": "invalid input"
+     *     }
+     */
+    app.get('/v1/verify/:token', UserCtrl.verifyAccount);
+
     // app.post('/v1/user/upload', UserCtrl.uploadImageToFirebase);
 
     /**
@@ -205,7 +239,6 @@ module.exports = function (app) {
      * @apiDescription Update user information
      *
      * @apiParam {String} id ID of user, on params
-     * @apiParam {String} [password] password of user
      * @apiParam {String} [type] type of user
      * @apiParam {String} [status] status of user
      * @apiParam {String} [firstName] first name of user
@@ -237,6 +270,81 @@ module.exports = function (app) {
      *     }
      */
     app.put('/v1/auth/users/:id', UserCtrl.update);
+    /**
+     * @api {PUT} /v1/auth/users/updatepassword Update Password
+     * @apiVersion 1.0.0
+     * @apiName update
+     * @apiGroup User
+     * @apiPermission Every type of user
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Update user password
+     *
+     * @apiParam {String} id ID of user
+     * @apiParam {String} oldPassword user's old password
+     * @apiParam {String} newPassword user's new password
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/users/updatepassword
+     *
+     * @apiSuccess {String} id the ID of updated user
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+                "data": {
+                    "id": "103"
+                },
+                "message": "ok",
+                "code": "0"
+            }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result":"fail",
+     *       "message": "invalid input"
+     *     }
+     */
+    app.put('/v1/auth/users/updatepassword', UserCtrl.update);
+/**
+     * @api {PUT} /v1/auth/users/deletes Deletes list of account
+     * @apiVersion 1.0.0
+     * @apiName update
+     * @apiGroup User
+     * @apiPermission Every type of user
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Delete list of user account
+     *
+     * @apiParam {String} id ID of user
+     * @apiParam {String} ids account's list
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/users/deletes
+     *
+     * @apiSuccess {String} id the ID of updated user
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+                "data": {
+                    "id": "103"
+                },
+                "message": "ok",
+                "code": "0"
+            }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result":"fail",
+     *       "message": "invalid input"
+     *     }
+     */
+    app.put('/v1/auth/users/deletes', UserCtrl.update);
     /**
      * @api {DELETE} /v1/auth/users/:id Delete One
      * @apiVersion 1.0.0
@@ -281,9 +389,8 @@ module.exports = function (app) {
      * @apiGroup User
      * @apiPermission lab or company user
      *
-     * @apiDescription Create user 
+     * @apiDescription Create user, after that, system will send you a Email to verify your account
      * 
-     * @apiParam {string} otp otp that email send
      * @apiParam {string} phone unique phone
      * @apiParam {string} email unique email
      * @apiParam {String} password a string with 6 <= length <= 64
@@ -291,9 +398,8 @@ module.exports = function (app) {
      *                          <br/> 0: deleted 
      * @apiParam {String} [firstName] first name of user
      * @apiParam {String} [lastName] last name of user
-     * @apiParam {file} [file] user's image
-     * @apiParam {String} [type]  1: company
-     *                      <br/> 2: lab
+     * @apiParam {String} type  1: company
+     *                    <br/> 2: lab
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/users/create
@@ -302,11 +408,8 @@ module.exports = function (app) {
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      *     {
-     *       "data":{
-     *           "id": "abc"
-     *       },
      *       "result": "ok",
-     *       "message": "",
+     *       "message": "Please check your Email",
      *     }
      *
      * @apiError invalid input data
@@ -319,39 +422,4 @@ module.exports = function (app) {
      *     }
      */
     app.post('/v1/users/create', UserCtrl.create);
-
-    /**
-     * @api {POST} /v1/users/send Send mail after register
-     * @apiVersion 1.0.0
-     * @apiName sendMail
-     * @apiGroup User
-     * @apiPermission User
-     *
-     * @apiDescription Send mail after register
-     * 
-     * @apiParam {string} email unique email
-     *
-     * @apiExample Example usage:
-     * curl -i http://localhost:3000/v1/users/send
-     *
-     * @apiSuccess {String} otp has been sent
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *          "data": "otp has been sent",
-                "message": "",
-                "result": "ok"
-     *     }
-     *
-     * @apiError invalid input data
-     *
-     * @apiErrorExample Error-Response:
-     *     HTTP/1.1 400 Bad Request
-     *     {
-     *       "result": "fail",
-     *       "message": "",
-     *     }
-     */
-    app.post('/v1/users/send', sendGrid.sendGrid);
-
 };

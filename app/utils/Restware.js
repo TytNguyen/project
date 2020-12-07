@@ -119,7 +119,7 @@ const sendSuccessToken = function (res, token, user) {
 
     data.token = token;
     data.id = user.id;
-    data.loginName = user.email;
+    data.userName = user.email;
     data.phone = user.phone;
     data.avatar = user.avatar;
     data.type = user.type;

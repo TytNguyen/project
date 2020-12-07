@@ -214,11 +214,6 @@ module.exports = {
             if (Pieces.ValidObjectEnum(parseInt(updateData.type), Constant.USER_TYPE)) {
                 queryObj.type = updateData.type;
             }
-            
-            if (Pieces.VariableBaseTypeChecking(updateData.password, 'string')
-                && Validator.isLength(updateData.password, { min: 4, max: 64 })) {
-                queryObj.password = BCrypt.hashSync(updateData.password, 10);
-            }
 
             if (updateData.firstName !== undefined) {
                 queryObj.firstName = updateData.firstName;
@@ -317,6 +312,67 @@ module.exports = {
         }
     },
 
+    updatePassword: function (accessUserId, accessUserType, updateData, callback) {
+        try {
+            let queryObj = {};
+            let where = {};
+            let attributes = ['id', 'phone', 'password', 'status', 'email', 'type', 'avatar'];
+
+            if (accessUserId !== parseInt(updateData.userId) && accessUserType < Constant.USER_TYPE.MODERATOR) {
+                return callback(1, 'invalid_user_right', 403, null, null);
+            }
+
+            if (!Pieces.VariableBaseTypeChecking(updateData.oldPassword, 'string')) {
+                return callback(1, 'invalid_user_password', 422, 'password is not a string', null);
+            }
+
+            if (!Pieces.VariableBaseTypeChecking(updateData.newPassword, 'string')) {
+                return callback(1, 'invalid_user_password', 422, 'password is not a string', null);
+            }
+
+            where = {id: updateData.userId}
+
+            User.findOne({
+                where: where,
+                attributes: attributes
+            }).then(account => {
+                "use strict";
+                if (account) {
+                    if (account.status === Constant.STATUS.NO) {
+                        return callback(1, 'unactivated_user', 404, null, null);
+                    } else {
+                        BCrypt.compare(updateData.oldPassword, account.password, function (error, result) {
+                            if (result === true) {
+                                queryObj.password = BCrypt.hashSync(updateData.newPassword, 10);
+                                User.update(
+                                    queryObj,
+                                    { where: where }).then(result => {
+                                        "use strict";
+                                        if ((result !== null) && (result.length > 0) && (result[0] > 0)) {
+                                            return callback(null, null, 200, null, updateData.userId);
+                                        } else {
+                                            return callback(1, 'update_user_fail', 400, '', null);
+                                        }
+                                    }).catch(function (error) {
+                                        "use strict";
+                                        return callback(1, 'update_user_fail', 420, error, null);
+                                    });
+                            } else {
+                                return callback(1, 'wrong_password', 422, null, null);
+                            }
+                        });
+                    }
+                } else {
+                    return callback(1, 'invalid_user', 404, null, null);
+                }
+            }).catch(function (error) {
+                "use strict";
+                return callback(1, 'find_one_user_fail', 400, error, null);
+            });
+        } catch (error) {
+            return callback(1, 'authenticate_user_fail', 400, error, null);
+        }
+    },
 
     delete: function (accessUserId, accessUserType, id, callback) {
         try {
@@ -393,6 +449,32 @@ module.exports = {
             return callback(1, 'deletes_user_fail', 400, error);
         }
     },
+
+    updateUserAfterRegister: function (data, callback) {
+        console.log(data[0])
+        try {
+            let where = { id: data[0], email: data[1], type: data[2] };
+            let queryObj = { status: Constant.STATUS.YES };
+
+            User.update(
+                queryObj,
+                {where: where}
+            ).then(result => {
+                "use strict";
+                if (result) {
+                    return callback(null, null, 200, null);
+                } else {
+                    return callback(1, 'invalid_user', 403, null, null);
+                }
+            }).catch(function (error) {
+                "use strict";
+                return callback(1, 'find_one_user_fail', 400, error, null);
+            });
+        } catch (error) {
+            return callback(1, 'find_one_user_fail', 400, error, null);
+        }
+    },
+
 
     verifyUser: function (accessUserId, accessUserType, accessLoginName, callback) {
         try {
@@ -563,12 +645,8 @@ module.exports = {
         }
     },
 
-    create: function (userData, file, callback) {
+    create: function (userData, callback) {
         try {
-            if (!sendGrid.verify(userData.otp)) {
-                return callback(1, 'invalid_otp', 400, 'otp is wrong', null);
-            }
-
             if (!Pieces.VariableBaseTypeChecking(userData.phone, 'string')) {
                 return callback(1, 'invalid_user_phone', 400, 'phone is not a string', null);
             }
@@ -587,12 +665,7 @@ module.exports = {
             queryObj.email = userData.email;
             queryObj.phone = userData.phone;
             queryObj.password = BCrypt.hashSync(userData.password, 10);
-
-            if (userData.status === Constant.STATUS.YES || userData.status === Constant.STATUS.NO) {
-                queryObj.status = userData.status;
-            } else {
-                queryObj.status = Constant.STATUS.YES;
-            }
+            queryObj.status = Constant.STATUS.NO;
 
             if (userData.type > 3) {
                 return callback(1, 'wrong_api', 400, 'call wrong api', null);
@@ -614,56 +687,26 @@ module.exports = {
             queryObj.updatedAt = moment(Date.now()).add(7, "hour");
             queryObj.createdAt = moment(Date.now()).add(7, "hour");
 
-            if (file === undefined) {
-                User.create(queryObj).then(account => {
-                    "use strict";
-                    // return callback(null, null, 200, null, result);
-                    let query = {};
-                    query.createdBy = account.id;
-                    query.updatedBy = account.id;
+            User.create(queryObj).then(account => {
+                "use strict";
+                let query = {};
+                query.createdBy = account.id;
+                query.updatedBy = account.id;
 
-                    User.update(
-                        query,
-                        { where: { id: account.id } }).then(result => {
-                            "use strict";
-                            return callback(null, null, 200, null, account);
-                        }).catch(function (error) {
-                            "use strict";
-                            return callback(1, 'update_user_fail', 420, error, null);
-                        });
-
-                }).catch(function (error) {
-                    "use strict";
-                    return callback(1, 'create_user_fail', 420, error, null);
-                });
-            } else {
-                cloudinary.uploadMultiple(file, 'user', result => {
-                    queryObj.avatar = result[0][0];
-                    queryObj.img_location = result[0][1];
-
-                    User.create(queryObj).then(account => {
+                User.update(
+                    query,
+                    { where: { id: account.id } }).then(result => {
                         "use strict";
-                        // return callback(null, null, 200, null, result);
-                        let query = {};
-                        query.createdBy = account.id;
-                        query.updatedBy = account.id;
-
-                        User.update(
-                            query,
-                            { where: { id: account.id } }).then(result => {
-                                "use strict";
-                                return callback(null, null, 200, null, account);
-                            }).catch(function (error) {
-                                "use strict";
-                                return callback(1, 'update_user_fail', 420, error, null);
-                            });
-
+                        return callback(null, null, 200, null, account);
                     }).catch(function (error) {
                         "use strict";
-                        return callback(1, 'create_user_fail', 420, error, null);
+                        return callback(1, 'update_user_fail', 420, error, null);
                     });
-                })
-            }
+
+            }).catch(function (error) {
+                "use strict";
+                return callback(1, 'create_user_fail', 420, error, null);
+            });
         } catch (error) {
             return callback(1, 'create_user_fail', 400, error, null);
         }

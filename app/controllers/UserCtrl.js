@@ -10,8 +10,7 @@ const UserManager = require('../manager/UserManager.js');
 const Rest = require('../utils/Restware');
 const uploadImage = require('../middlewares/UploadToFirebase')
 
-const cloudinary = require('../middlewares/Cloudinary')
-
+const sendGrid = require('../config/SendMail');
 
 module.exports = {
     test: function(req, res) {
@@ -24,16 +23,16 @@ module.exports = {
         })        
     },
 
-    uploadImageToFirebase: function (req, res) {
-        let file = req.file;
+    // uploadImageToFirebase: function (req, res) {
+    //     let file = req.file;
 
-        uploadImage.uploadImageToStorage(file, 'user', function (errorCode, errorMessage, httpCode, errorDescription, result) {
-            if (errorCode) {
-                return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-            }
-            return Rest.sendSuccessOne(res, result, httpCode);
-    })
-    },
+    //     uploadImage.uploadImageToStorage(file, 'user', function (errorCode, errorMessage, httpCode, errorDescription, result) {
+    //         if (errorCode) {
+    //             return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+    //         }
+    //         return Rest.sendSuccessOne(res, result, httpCode);
+    // })
+    // },
 
     createByAdmin: function (req, res) {
         let accessUserId = req.body.accessUserId || '';
@@ -57,17 +56,52 @@ module.exports = {
 
     create: function (req, res) {
         let data = req.body || '';
-        let file = req.files;
-        console.log(file)
-        UserManager.create(data, file, function (errorCode, errorMessage, httpCode, errorDescription, user) {
-            if (errorCode) {
-                return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-            } else {
-                let resData = {};
-                resData.id = user.id;
-                return Rest.sendSuccessOne(res, resData, httpCode);
+        UserManager.create(data, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+            if ( errorCode ) {
+                return Rest.sendError( res, errorCode, errorMessage, httpCode, errorDescription );
             }
+            JsonWebToken.sign({ id: result.id, userName: result.email, type: result.type, displayName: result.displayName, phone: result.phone, avatar: result.avatar}, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
+                sendGrid.sendMailToVerifyAccount(result.email, token, function (errorCode, errorMessage, httpCode, errorDescription, message) {
+                    if( errorCode )
+                    {
+                        return Rest.sendError( res, 4000, 'create_token_fail', 400, error );
+                    }else{
+                        return Rest.sendSuccessOne(res, message, httpCode);
+                    }
+                });
+            });
+        });
+    },
+
+    verifyAccount: function (req, res) {
+        let token = req.params.token || '';
+        sendGrid.verifyToken(token, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+            if( errorCode )
+            {
+                return Rest.sendError( res, null, token, 400, errorCode );
+            }
+            UserManager.updateUserAfterRegister(result, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                if (errorCode) {
+                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                }
+                return Rest.sendSuccessOne(res, result, httpCode);
+            })
+                
         })
+    },
+
+    forgotPassword: function (req, res) {
+        let email = req.body.email || '';
+        JsonWebToken.sign({userName: email}, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
+            sendGrid.forgotPassword(email, token, function (errorCode, errorMessage, httpCode, errorDescription, message) {
+                if( errorCode )
+                {
+                    return Rest.sendError( res, 4000, 'create_token_fail', 400, error );
+                }else{
+                    return Rest.sendSuccessOne(res, message, httpCode);
+                }
+            });
+        });
     },
 
     getOne: function (req, res) {
@@ -121,7 +155,19 @@ module.exports = {
                 }
                 return Rest.sendSuccessOne(res, null, httpCode);
             });
-        }else {
+        } else if (id === 'updatepassword') {
+            let data = req.body || '';
+            UserManager.updatePassword( accessUserId, accessUserType, data, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                if (errorCode) {
+                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                } else {
+                let resData = {};
+                resData.id = result;
+                return Rest.sendSuccessOne(res, resData, httpCode);
+            }
+            });
+        }
+        else {
             let data = req.body || '';
 
             UserManager.update( accessUserId, accessUserType, id, data, file, function (errorCode, errorMessage, httpCode, errorDescription, result) {
@@ -135,21 +181,6 @@ module.exports = {
             });
         }
     },
-
-
-
-    // deletes: function (req, res) 
-    //     let accessUserId = req.body.accessUserId || '';
-    //     let accessUserType = req.body.accessUserType || '';
-
-    //     let ids = req.body.ids || '';
-    //         UserManager.deletes(accessUserId, accessUserType, ids, function (errorCode, errorMessage, httpCode, errorDescription) {
-    //             if (errorCode) {
-    //                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-    //             }
-    //             return Rest.sendSuccessOne(res, null, httpCode);
-    //         });
-    // },
 
     delete: function (req, res) {
         let accessUserId = req.body.accessUserId || '';
@@ -168,14 +199,14 @@ module.exports = {
     },
 
     login: function (req, res) {
-        let loginName = req.body.loginName || '';
+        let userName = req.body.loginName || '';
         let password = req.body.password || '';
 
-        UserManager.authenticate(loginName, password, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+        UserManager.authenticate(userName, password, function (errorCode, errorMessage, httpCode, errorDescription, result) {
             if ( errorCode ) {
                 return Rest.sendError( res, errorCode, errorMessage, httpCode, errorDescription );
             }
-            JsonWebToken.sign({ id: result.id, loginName: result.email, type: result.type, displayName: result.displayName, phone: result.phone, avatar: result.avatar}, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
+            JsonWebToken.sign({ id: result.id, userName: result.email, type: result.type, displayName: result.displayName, phone: result.phone, avatar: result.avatar}, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
                 if( error )
                 {
                     return Rest.sendError( res, 4000, 'create_token_fail', 400, error );
