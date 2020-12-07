@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const MySequelize = require('../utils/Sequelize');
 const User = require('./User');
-const Matching = require('./matching');
+const Matching = require('./Matching');
 
 let Processes = MySequelize.define('processes', {
     id: {
