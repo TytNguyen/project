@@ -615,7 +615,6 @@ module.exports = {
 
             queryObj.createdBy = accessUserId;
             queryObj.updatedBy = accessUserId;
-            queryObj.img_location = "";
             queryObj.updatedAt = moment(Date.now()).add(7, "hour");
             queryObj.createdAt = moment(Date.now()).add(7, "hour");
 
@@ -667,7 +666,6 @@ module.exports = {
             queryObj.phone = userData.phone;
             queryObj.password = BCrypt.hashSync(userData.password, 10);
             queryObj.status = Constant.STATUS.NO;
-            queryObj.img_location = "";
 
             if (userData.type > 3) {
                 return callback(1, 'wrong_api', 400, 'call wrong api', null);
