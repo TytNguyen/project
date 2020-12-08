@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 let DBConnectorSetting = [
     {
         host: 'db4free.net',
