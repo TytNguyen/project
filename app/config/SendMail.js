@@ -12,7 +12,8 @@ module.exports = {
             to: email,
             from: `${process.env.SENDER}`,
             subject: 'Verification your account',
-            html: `<h3>To verify your account, click to the link below </h3><a href="http://localhost:3000/v1/verify/${token}">Click me</a>`
+            html: `<h3>To verify your account, click to the link below </h3>
+            <a href="https://exchange-website.herokuapp.com/v1/verify/${token}">Click me</a>`
         };
 
         sgMail.send(msg).then(()  => {
