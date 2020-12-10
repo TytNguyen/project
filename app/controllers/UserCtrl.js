@@ -49,18 +49,17 @@ module.exports = {
             if ( errorCode ) {
                 return Rest.sendError( res, errorCode, errorMessage, httpCode, errorDescription );
             } else {
-                return Rest.sendSuccessOne(res, message, httpCode);
-                // JsonWebToken.sign({ id: result.id, userName: result.email, type: result.type, displayName: result.displayName, phone: result.phone, avatar: result.avatar}, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
-                //     sendGrid.sendMailToVerifyAccount(result.email, token, function (errorCode, errorMessage, httpCode, errorDescription, message) {
-                //         if( errorCode )
-                //         {
+                JsonWebToken.sign({ id: result.id, userName: result.email, type: result.type, displayName: result.displayName, phone: result.phone, avatar: result.avatar}, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
+                    sendGrid.sendMailToVerifyAccount(result.email, token, function (errorCode, errorMessage, httpCode, errorDescription, message) {
+                        if( errorCode )
+                        {
 
-                //             return Rest.sendError( res, 400, 'create_token_fail', 400, error );
-                //         }else{
-                //             return Rest.sendSuccessOne(res, message, httpCode);
-                //         }
-                //     });
-                // });
+                            return Rest.sendError( res, 400, 'create_token_fail', 400, error );
+                        }else{
+                            return Rest.sendSuccessOne(res, message, httpCode);
+                        }
+                    });
+                });
             }
             
         });
