@@ -50,7 +50,6 @@ module.exports = {
             if(error){
                 return callback(1, 70, 'verify_token_fail', 400, error);
             }
-
             callback(null, null, 200, null, [decoded.id, decoded.userName, decoded.type]);
         });
     }
