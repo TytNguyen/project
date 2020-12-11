@@ -4,7 +4,7 @@ module.exports = function(app) {
     /**
      * @api {GET} /v1/auth/matching/automatching Get the matchest one of your requirement
      * @apiVersion 1.0.0
-     * @apiName getOne
+     * @apiName autoMatching
      * @apiGroup Matching
      * @apiPermission type of user < 3
      * @apiHeader {String} access_token json web token to access to data
@@ -68,7 +68,7 @@ module.exports = function(app) {
     /**
      * @api {GET} /v1/auth/matching/recommendation Get recommendation list
      * @apiVersion 1.0.0
-     * @apiName getOne
+     * @apiName recommendation
      * @apiGroup Matching
      * @apiPermission type of user < 3
      * @apiHeader {String} access_token json web token to access to data
@@ -79,7 +79,7 @@ module.exports = function(app) {
      * @apiParam {string} sub_id ID of subcategory of requirement
      *
      * @apiExample Example usage:
-     * curl -i http://localhost:3000/v1/auth/matching/recommendation/10
+     * curl -i http://localhost:3000/v1/auth/matching/recommendationa
      *
      * @apiSuccess {String} id the ID of matching result
      * @apiSuccess {String} title result's title
@@ -93,41 +93,41 @@ module.exports = function(app) {
      *     HTTP/1.1 200 OK
      *     {
      *          "data": {
-                    "id": 12,
-                    "title": "Title 1",
-                    "description": "Sản phẩm công nghệ cao",
-                    "status": 1,
-                    "createdAt": "2020-10-24T16:25:37.000Z",
-                    "updatedAt": "2020-10-24T16:37:52.000Z",
-                    "createdBy": 1,
-                    "updatedBy": 1,
-                    "subcategory": {
-                        "id": 1,
-                        "subject": "Hóa hữu cơ"
-                    },
-                   "match_hashtags": [
-                    {
-                        "hashtag_id": 26,
-                        "hashtag": {
-                            "value": "năng lực nghiên cứu",
-                            "type": 2
-                        }
-                    }],
-                    "percent_matching_list": [
-                        [
-                            12,
-                            0.5
-                        ],
-                        [
-                            1,
-                            0.3333
-                        ],
-                        [
-                            5,
-                            0.1667
-                        ]
-                    ]
-                },
+     *               "id": 12,
+     *               "title": "Title 1",
+     *               "description": "Sản phẩm công nghệ cao",
+     *               "status": 1,
+     *               "createdAt": "2020-10-24T16:25:37.000Z",
+     *               "updatedAt": "2020-10-24T16:37:52.000Z",
+     *               "createdBy": 1,
+     *               "updatedBy": 1,
+     *               "subcategory": {
+     *                   "id": 1,
+     *                   "subject": "Hóa hữu cơ"
+     *               },
+     *              "match_hashtags": [
+     *               {
+     *                   "hashtag_id": 26,
+     *                   "hashtag": {
+     *                       "value": "năng lực nghiên cứu",
+     *                       "type": 2
+     *                   }
+     *               }],
+     *               "percent_matching_list": [
+     *                   [
+     *                       12,
+     *                       0.5
+     *                   ],
+     *                   [
+     *                       1,
+     *                      0.3333
+     *                   ],
+     *                   [
+     *                       5,
+     *                       0.1667
+     *                   ]
+     *               ]
+     *           },
      *          "result": "ok",
      *          "message" ""
      *     }
@@ -268,7 +268,8 @@ module.exports = function(app) {
      *     }
      */
     app.get('/v1/auth/matching', MatchingCtrl.getAll);
-    /**
+  
+  /**
      * @api {POST} /v1/auth/matching Create One
      * @apiVersion 1.0.0
      * @apiName create
@@ -362,4 +363,6 @@ module.exports = function(app) {
      *     }
      */
     app.put('/v1/auth/matching/:id', MatchingCtrl.update);
+
+    
 }
