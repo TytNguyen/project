@@ -193,8 +193,16 @@ module.exports = {
             let attributes = ['id', 'title', 'description', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
-            if (Pieces.VariableBaseTypeChecking(queryContent.q, 'string')) {
-                where.title = { [Sequelize.Op.like]: queryContent.q };
+            if (Pieces.VariableBaseTypeChecking(queryContent.cid, 'string')) {
+                where.cid = queryContent.cid;
+            }
+
+            if (Pieces.VariableBaseTypeChecking(queryContent.subcategory_id, 'string')) {
+                where.subcategory_id = queryContent.subcategory_id;
+            }
+
+            if (Pieces.VariableBaseTypeChecking(queryContent.title, 'string')) {
+                where.title = { [Sequelize.Op.like]: queryContent.title };
             }
 
             if ((Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))

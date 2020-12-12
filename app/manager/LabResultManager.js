@@ -11,7 +11,7 @@ const moment = require('moment');
 const MatchHashtag = require('../models/MatchHashtag');
 const Hashtag = require('../models/Hashtag');
 
-Stakeholder.hasMany(LabResult);
+Stakeholder.hasMany(LabResult, {foreignKey: 'lid'});
 LabResult.belongsTo(Stakeholder, {foreignKey: 'lid'});
 
 LabResult.belongsTo(SubCategory, {foreignKey: 'subcategory_id'});
@@ -190,8 +190,16 @@ module.exports = {
             let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
-            if( Pieces.VariableBaseTypeChecking(queryContent.q, 'string') ){
-                where.title = {[Sequelize.Op.like]: queryContent.q};
+            if (Pieces.VariableBaseTypeChecking(queryContent.lid, 'string')) {
+                where.cid = queryContent.lid;
+            }
+
+            if (Pieces.VariableBaseTypeChecking(queryContent.subcategory_id, 'string')) {
+                where.subcategory_id = queryContent.subcategory_id;
+            }
+
+            if (Pieces.VariableBaseTypeChecking(queryContent.title, 'string')) {
+                where.title = { [Sequelize.Op.like]: queryContent.title };
             }
 
             if( (Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))
@@ -228,6 +236,14 @@ module.exports = {
                 {
                     model: SubCategory,
                     attributes: ['id', 'subject']
+                },
+                {
+                    model: MatchHashtag,
+                    include: [{
+                        model: Hashtag,
+                        attributes: ["value", "type"] 
+                    }],
+                    attributes: ["hashtag_id"]
                 }],
                 attributes: attributes
             }).then((data) => {
