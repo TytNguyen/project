@@ -37,16 +37,6 @@ module.exports = {
                 });
                 break;
             }
-            case 'type': {
-                let data = req.body;
-                StakeholderManager.getTypeOfStakeHolder(accessUserId, accessUserType, data, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-                    if(errorCode) {
-                        return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-                    }
-                    return Rest.sendSuccessOne(res, result, httpCode);
-                });
-                break;
-            }
             default: {
                 StakeholderManager.getOne(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
                     if (errorCode) {

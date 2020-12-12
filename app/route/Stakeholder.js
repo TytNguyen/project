@@ -56,7 +56,7 @@ module.exports = function(app) {
      *
      * @apiDescription Get one stakeholder
      *
-     * @apiParam {string} id ID of stakeholder (/laboratories, /companies), on params
+     * @apiParam {string} id ID of stakeholder, on params
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/stakeholder/2

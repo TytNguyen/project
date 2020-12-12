@@ -102,37 +102,6 @@ module.exports = {
         }
     },
 
-    getTypeOfStakeHolder: function(accessUserId, accessUserType, data, callback) {
-        try {
-            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                where.createdBy = accessUserId;
-                where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
-            }
-
-            let where = {};
-            // let attributes = ['id', 'name','address','phone', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
-
-            where = {type: data.type};
-            
-            Stakeholder.findAndCountAll({
-                where: where,
-                // attributes: attributes
-            }).then(result=>{
-                "use strict";
-                if(result){
-                    return callback(null, null, 200, null, result);
-                }else{
-                    return callback(3, 'find_one_company_fail', 404, null, null);
-                }
-            }).catch(function(error) {
-                "use strict";
-                return callback(3, 'find_one_company_fail', 400, error, null);
-            });
-        }catch(error){
-            return callback(3, 'find_one_company_fail', 400, error, null);
-        }
-    },
-
     getStatistic: function(accessUserId, accessUserType, callback) {
         try {
             let final = {};
@@ -187,8 +156,16 @@ module.exports = {
             let attributes = [];
 
             this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
-            if( Pieces.VariableBaseTypeChecking(queryContent.q, 'string') ){
-                where.name = {[Sequelize.Op.like]: queryContent.q};
+            if( Pieces.VariableBaseTypeChecking(queryContent.type, 'string') ){
+                where.type = queryContent.type;
+            }
+
+            if( Pieces.VariableBaseTypeChecking(queryContent.name, 'string') ){
+                where.name = {[Sequelize.Op.like]: queryContent.name};
+            }
+
+            if( Pieces.VariableBaseTypeChecking(queryContent.taxcode, 'string') ){
+                where.taxcode = queryContent.taxcode;
             }
 
             if( (Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))

@@ -2658,7 +2658,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "curl -i http://localhost:3000/v1/auth/matching/recommendation/10",
+        "content": "curl -i http://localhost:3000/v1/auth/matching/recommendationa",
         "type": "json"
       }
     ],
@@ -4496,7 +4496,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "id",
-            "description": "<p>ID of stakeholder (/laboratories, /companies), on params</p>"
+            "description": "<p>ID of stakeholder, on params</p>"
           }
         ]
       }
