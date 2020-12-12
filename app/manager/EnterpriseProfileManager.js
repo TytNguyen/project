@@ -11,14 +11,14 @@ const moment = require('moment');
 const { Hashtag } = require('../models');
 const MatchHashtag = require('../models/MatchHashtag');
 
-Stakeholder.hasMany(EnterpriseProfile);
+Stakeholder.hasMany(EnterpriseProfile, { foreignKey: 'cid' });
 EnterpriseProfile.belongsTo(Stakeholder, { foreignKey: 'cid' });
 
 EnterpriseProfile.belongsTo(SubCategory, { foreignKey: 'subcategory_id' });
 SubCategory.hasMany(EnterpriseProfile);
 
-// EnterpriseProfile.belongsToMany(Hashtag, { through: MatchHashtag, foreignKey: 'hashtag_id' });
-// Hashtag.belongsToMany(EnterpriseProfile, { through: MatchHashtag, foreignKey: 'profile_id' });
+EnterpriseProfile.belongsToMany(Hashtag, { through: MatchHashtag, foreignKey: 'hashtag_id' });
+Hashtag.belongsToMany(EnterpriseProfile, { through: MatchHashtag, foreignKey: 'profile_id' });
 MatchHashtag.belongsTo(EnterpriseProfile, { foreignKey: 'profile_id' });
 MatchHashtag.belongsTo(Hashtag, { foreignKey: 'hashtag_id' });
 EnterpriseProfile.hasMany(MatchHashtag, { foreignKey: 'profile_id' });
@@ -185,8 +185,6 @@ module.exports = {
 
     getAll: function (accessUserId, accessUserType, queryContent, callback) {
         try {
-       
-
             let where;
             let con1 = {};
             let page = 1;
@@ -233,8 +231,16 @@ module.exports = {
                 {
                     model: SubCategory,
                     attributes: ['id', 'subject']
+                },
+                {
+                    model: MatchHashtag,
+                    include: [{
+                        model: Hashtag,
+                        attributes: ["value", "type"]
+                    }],
+                    attributes: ["hashtag_id"]
                 }],
-                attributes: attributes
+                // attributes: attributes
             }).then((data) => {
                 let pages = Math.ceil(data.count / perPage);
                 let profile = data.rows;
