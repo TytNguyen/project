@@ -182,7 +182,7 @@ module.exports = {
 
     getAll: function(accessUserId, accessUserType, queryContent, callback) {
         try {
-            let where;
+            let where = {};
             let con1 = {};
             let page = 1;
             let perPage = Constant.DEFAULT_PAGING_SIZE;
