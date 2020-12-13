@@ -139,6 +139,34 @@
           },
           {
             "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>Page which we want to get (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "perPage",
+            "description": "<p>Item per page (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "sort",
+            "description": "<p>Sort the list by a field (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "filter",
+            "description": "<p>filter the query data (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "string",
             "optional": false,
             "field": "sid",
@@ -225,7 +253,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"data\": [\n                    {\n                        \"sid\": 3,\n                        \"mid\": 1,\n                        \"status\": 2,\n                        \"meeting\": {\n                            \"title\": \"Sản phẩm công nghệ tương lai\",\n                            \"description\": \"Giới thiệu\",\n                            \"begin\": \"2020-12-20T10:00:00.000Z\",\n                            \"end\": null,\n                            \"category\": {\n                                \"id\": 1,\n                                \"mainsubject\": \"Hóa học\"\n                            }\n                        }\n                    },\n                    {\n                        \"sid\": 3,\n                        \"mid\": 2,\n                        \"status\": 1,\n                        \"meeting\": {\n                            \"title\": \"Sinh hóa học\",\n                            \"description\": \"Giới thiệu\",\n                            \"begin\": \"2020-12-20T09:00:00.000Z\",\n                            \"end\": null,\n                            \"category\": {\n                                \"id\": 2,\n                                \"mainsubject\": \"Sinh học\"\n                            }\n                        }\n                    }\n                ],\n                \"pages\": {\n                    \"current\": 1,\n                    \"prev\": 0,\n                    \"hasPrev\": false,\n                    \"next\": 0,\n                    \"hasNext\": false,\n                    \"total\": 1\n                },\n                \"items\": {\n                    \"begin\": 1,\n                    \"end\": 25,\n                    \"total\": 2\n                }\n            },\n            \"message\": \"\",\n            \"result\": \"ok\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"data\": [\n                    {\n                        \"status\": 2,\n                        \"meeting\": {\n                            \"id\": 1,\n                            \"title\": \"Sản phẩm công nghệ tương lai\",\n                            \"description\": \"Giới thiệu\",\n                            \"begin\": \"2020-11-19T10:00:00.000Z\",\n                            \"end\": null,\n                            \"category\": {\n                                \"id\": 1,\n                                \"mainsubject\": \"Hóa học\"\n                            }\n                        }\n                    },\n                    {\n                        \"status\": 1,\n                        \"meeting\": {\n                            \"id\": 2,\n                            \"title\": \"Sinh hóa học\",\n                            \"description\": \"Giới thiệu\",\n                            \"begin\": \"2020-11-19T09:00:00.000Z\",\n                            \"end\": null,\n                            \"category\": {\n                                \"id\": 2,\n                                \"mainsubject\": \"Sinh học\"\n                            }\n                        }\n                    }   \n                ],\n                \"pages\": {\n                    \"current\": 1,\n                    \"prev\": 0,\n                    \"hasPrev\": false,\n                    \"next\": 0,\n                    \"hasNext\": false,\n                    \"total\": 1\n                },\n                \"items\": {\n                    \"begin\": 1,\n                    \"end\": 25,\n                    \"total\": 2\n                }\n            },\n            \"message\": \"\",\n            \"result\": \"ok\"\n}",
           "type": "json"
         }
       ]
@@ -287,6 +315,41 @@
             "optional": false,
             "field": "id",
             "description": "<p>ID of Meeting, on params</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>Page which we want to get (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "perPage",
+            "description": "<p>Item per page (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "sort",
+            "description": "<p>Sort the list by a field (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "filter",
+            "description": "<p>filter the query data (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "q",
+            "description": "<p>(status) Text filter for data (N/A)</p>"
           },
           {
             "group": "Parameter",
@@ -355,7 +418,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"data\": [\n                    {\n                        \"sid\": 3,\n                        \"mid\": 1,\n                        \"status\": 2,\n                        \"stakeholder\": {\n                            \"name\": \"Lab 1\",\n                            \"taxcode\": \"0121213\",\n                            \"address\": \"Phú Nhuận\",\n                            \"phone\": \"23123123123123\",\n                            \"type\": 2\n                        }\n                    },\n                    {\n                        \"sid\": 1,\n                        \"mid\": 1,\n                        \"status\": 1,\n                        \"stakeholder\": {\n                            \"name\": \"Cty Nam Phương\",\n                            \"taxcode\": \"123455678\",\n                            \"address\": \"Bình Thạnh\",\n                            \"phone\": \"0123456789\",\n                            \"type\": 1\n                        }\n                    },\n                    {\n                        \"sid\": 6,\n                        \"mid\": 1,\n                        \"status\": 0,\n                        \"stakeholder\": {\n                            \"name\": \"Cty TNHH Bình Minh\",\n                            \"taxcode\": \"232313123321\",\n                            \"address\": \"Quận 3\",\n                            \"phone\": \"32312312312\",\n                            \"type\": 1\n                        }\n                    }\n                ],\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"data\": [\n                    {\n                        \"status\": 2,\n                        \"stakeholder\": {\n                            \"id\": 3,\n                            \"name\": \"Lab 1\",\n                            \"taxcode\": \"0121213\",\n                            \"district\": \"Phú Nhuận\",\n                            \"detailAddress\": null,\n                            \"phone\": \"23123123123123\",\n                            \"type\": 2\n                        }\n                    },\n                    {\n                        \"status\": 1,\n                        \"stakeholder\": {\n                            \"id\": 1,\n                            \"name\": \"Cty Nam Phương\",\n                            \"taxcode\": \"123455678\",\n                            \"district\": \"Bình Thạnh\",\n                            \"detailAddress\": null,\n                            \"phone\": \"0123456789\",\n                            \"type\": 1\n                        }\n                    },\n                    {\n                        \"status\": 0,\n                        \"stakeholder\": {\n                            \"id\": 6,\n                            \"name\": \"Cty TNHH Bình Minh\",\n                            \"taxcode\": \"232313123321\",\n                            \"district\": \"Quận 3\",\n                            \"detailAddress\": null,\n                            \"phone\": \"32312312312\",\n                            \"type\": 1\n                        }\n                    }\n                ],\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
           "type": "json"
         }
       ]
@@ -781,6 +844,40 @@
       }
     },
     "description": "<p>Get all category</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>Page which we want to get (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "perPage",
+            "description": "<p>Item per page (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "sort",
+            "description": "<p>Sort the list by a field (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "filter",
+            "description": "<p>filter the query data (N/A)</p>"
+          }
+        ]
+      }
+    },
     "examples": [
       {
         "title": "Example usage:",
@@ -1278,6 +1375,47 @@
       }
     },
     "description": "<p>Get all hashtag and type</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>Page which we want to get (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "perPage",
+            "description": "<p>Item per page (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "sort",
+            "description": "<p>Sort the list by a field (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "filter",
+            "description": "<p>filter the query data (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "q",
+            "description": "<p>(type) Text filter for data (N/A)</p>"
+          }
+        ]
+      }
+    },
     "examples": [
       {
         "title": "Example usage:",
@@ -1680,6 +1818,47 @@
       }
     },
     "description": "<p>Get all labresult</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>Page which we want to get (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "perPage",
+            "description": "<p>Item per page (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "sort",
+            "description": "<p>Sort the list by a field (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "filter",
+            "description": "<p>filter the query data (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "q",
+            "description": "<p>(lid, subcategory_id, title, status) Text filter for data (N/A)</p>"
+          }
+        ]
+      }
+    },
     "examples": [
       {
         "title": "Example usage:",
@@ -2346,6 +2525,47 @@
       }
     },
     "description": "<p>Get all matching</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>Page which we want to get (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "perPage",
+            "description": "<p>Item per page (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "sort",
+            "description": "<p>Sort the list by a field (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "filter",
+            "description": "<p>filter the query data (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "q",
+            "description": "<p>(profileId, resultId) Text filter for data (N/A)</p>"
+          }
+        ]
+      }
+    },
     "examples": [
       {
         "title": "Example usage:",
@@ -3121,7 +3341,7 @@
             "type": "String",
             "optional": false,
             "field": "q",
-            "description": "<p>Text filter for data (N/A)</p>"
+            "description": "<p>(title, description, category_id, begin, status) Text filter for data (N/A)</p>"
           }
         ]
       }
@@ -3721,6 +3941,47 @@
       }
     },
     "description": "<p>Get all profile</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>Page which we want to get (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "perPage",
+            "description": "<p>Item per page (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "sort",
+            "description": "<p>Sort the list by a field (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "filter",
+            "description": "<p>filter the query data (N/A)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "q",
+            "description": "<p>(cid, subcategory_id, title, status) Text filter for data (N/A)</p>"
+          }
+        ]
+      }
+    },
     "examples": [
       {
         "title": "Example usage:",
@@ -4380,7 +4641,7 @@
             "type": "String",
             "optional": false,
             "field": "q",
-            "description": "<p>Text filter for data (N/A)</p>"
+            "description": "<p>(type, name, taxcode) Text filter for data (N/A)</p>"
           }
         ]
       }
@@ -5521,7 +5782,7 @@
             "type": "String",
             "optional": false,
             "field": "q",
-            "description": "<p>Text filter for data (N/A)</p>"
+            "description": "<p>(email, type, status) Text filter for data (N/A)</p>"
           }
         ]
       }
