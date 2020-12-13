@@ -162,7 +162,7 @@ module.exports = {
                 order: sort,
                 include: [{
                     model: SubCategory,
-                    attributes: ['subject']
+                    attributes: ['id', 'subject']
                 }],
             }).then((data) => {
                 let pages = Math.ceil(data.count / perPage);
