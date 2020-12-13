@@ -44,6 +44,16 @@ let Meeting = MySequelize.define('meeting', {
         allowNull: true,
         default: 0
     },
+    banner: {
+        type: Sequelize.STRING(200),
+        allowNull: true,
+        default: null
+    },
+    banner_location: {
+        type: Sequelize.STRING(200),
+        allowNull: true,
+        default: null
+    },
     status: {
         type: Sequelize.TINYINT(1),
         allowNull: true,

@@ -441,7 +441,7 @@ module.exports = {
 
     update: function (accessUserId, accessUserType, matchingId, updateData, callback) {
         try {
-            if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
+            if ( accessUserType < Constant.USER_TYPE.MODERATOR && (updateData.step !== 2 || updateData.step !== 10) ) {
                 return callback(1, 'invalid_user_type', 403, null, null);
             }
 

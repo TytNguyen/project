@@ -37,9 +37,9 @@ module.exports = {
 
     update: function (accessUserId, accessUserType, matchingId, updateData, callback) {
         try {
-            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                return callback(1, 'invalid_user_type', 403, null, null);
-            }
+            // if (accessUserType < Constant.USER_TYPE.MODERATOR) {
+            //     return callback(1, 'invalid_user_type', 403, null, null);
+            // }
 
             let queryObj = {};
             let where = {};

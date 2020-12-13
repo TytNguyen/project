@@ -12,6 +12,10 @@ module.exports = function(app) {
      * @apiDescription Get Meeting Stakeholder Attend
      *
      * @apiParam {string} id ID of Stakeholder, on params
+     * @apiParam {Number} page Page which we want to get (N/A)
+     * @apiParam {Number} perPage Item per page (N/A)
+     * @apiParam {String} sort Sort the list by a field (N/A)
+     * @apiParam {String} filter filter the query data (N/A)
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/attendances/meeting/2
@@ -36,13 +40,12 @@ module.exports = function(app) {
      *          "data": {
                     "data": [
                         {
-                            "sid": 3,
-                            "mid": 1,
                             "status": 2,
                             "meeting": {
+                                "id": 1,
                                 "title": "Sản phẩm công nghệ tương lai",
                                 "description": "Giới thiệu",
-                                "begin": "2020-12-20T10:00:00.000Z",
+                                "begin": "2020-11-19T10:00:00.000Z",
                                 "end": null,
                                 "category": {
                                     "id": 1,
@@ -51,20 +54,19 @@ module.exports = function(app) {
                             }
                         },
                         {
-                            "sid": 3,
-                            "mid": 2,
                             "status": 1,
                             "meeting": {
+                                "id": 2,
                                 "title": "Sinh hóa học",
                                 "description": "Giới thiệu",
-                                "begin": "2020-12-20T09:00:00.000Z",
+                                "begin": "2020-11-19T09:00:00.000Z",
                                 "end": null,
                                 "category": {
                                     "id": 2,
                                     "mainsubject": "Sinh học"
                                 }
                             }
-                        }
+                        }   
                     ],
                     "pages": {
                         "current": 1,
@@ -105,6 +107,11 @@ module.exports = function(app) {
      * @apiDescription Get Stakeholder Attend Meeting
      *
      * @apiParam {string} id ID of Meeting, on params
+     * @apiParam {Number} page Page which we want to get (N/A)
+     * @apiParam {Number} perPage Item per page (N/A)
+     * @apiParam {String} sort Sort the list by a field (N/A)
+     * @apiParam {String} filter filter the query data (N/A)
+     * @apiParam {String} q(status) Text filter for data (N/A)
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/attendances/stakeholder/2
@@ -123,37 +130,37 @@ module.exports = function(app) {
      *          "data": {
                     "data": [
                         {
-                            "sid": 3,
-                            "mid": 1,
                             "status": 2,
                             "stakeholder": {
+                                "id": 3,
                                 "name": "Lab 1",
                                 "taxcode": "0121213",
-                                "address": "Phú Nhuận",
+                                "district": "Phú Nhuận",
+                                "detailAddress": null,
                                 "phone": "23123123123123",
                                 "type": 2
                             }
                         },
                         {
-                            "sid": 1,
-                            "mid": 1,
                             "status": 1,
                             "stakeholder": {
+                                "id": 1,
                                 "name": "Cty Nam Phương",
                                 "taxcode": "123455678",
-                                "address": "Bình Thạnh",
+                                "district": "Bình Thạnh",
+                                "detailAddress": null,
                                 "phone": "0123456789",
                                 "type": 1
                             }
                         },
                         {
-                            "sid": 6,
-                            "mid": 1,
                             "status": 0,
                             "stakeholder": {
+                                "id": 6,
                                 "name": "Cty TNHH Bình Minh",
                                 "taxcode": "232313123321",
-                                "address": "Quận 3",
+                                "district": "Quận 3",
+                                "detailAddress": null,
                                 "phone": "32312312312",
                                 "type": 1
                             }

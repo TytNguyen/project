@@ -106,6 +106,11 @@ module.exports = function(app) {
      * @apiHeader {String} access_token json web token to access to data
      *
      * @apiDescription Get all category
+     * 
+     * @apiParam {Number} page Page which we want to get (N/A)
+     * @apiParam {Number} perPage Item per page (N/A)
+     * @apiParam {String} sort Sort the list by a field (N/A)
+     * @apiParam {String} filter filter the query data (N/A)
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/category/

@@ -149,7 +149,7 @@ module.exports = {
             let final = {};
             final = { activated: 0, deleted: 0, total: 0 };
             if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                return callback(null, null, 200, null, final);
+                where.createdBy = accessUserId;
             }
 
             EnterpriseProfile.count({
@@ -194,7 +194,6 @@ module.exports = {
 
             this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
             if (Pieces.VariableBaseTypeChecking(queryContent.cid, 'string')) {
-                
                 where.cid = queryContent.cid;
             }
 
@@ -204,6 +203,10 @@ module.exports = {
 
             if (Pieces.VariableBaseTypeChecking(queryContent.title, 'string')) {
                 where.title = { [Sequelize.Op.like]: queryContent.title };
+            }
+
+            if (Pieces.VariableBaseTypeChecking(queryContent.status, 'string')) {
+                where.status = queryContent.status;
             }
 
             if ((Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))

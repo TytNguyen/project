@@ -22,9 +22,9 @@ module.exports = {
         let accessUserId = req.query.accessUserId || '';
         let accessUserType = req.query.accessUserType || '';
 
-        let id = req.params.id || '';
+        let query = req.query || '';
 
-        HashtagManager.getAll(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+        HashtagManager.getAll(accessUserId, accessUserType, query, function (errorCode, errorMessage, httpCode, errorDescription, result) {
             if (errorCode) {
                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
             }

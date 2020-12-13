@@ -82,6 +82,8 @@ module.exports = {
                 where.id = queryContent.id;
             }
 
+            console.log(where)
+
             // let attributes = ['id', 'name','address','phone', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             // if (Pieces.VariableBaseTypeChecking(queryContent.id, 'string')) {
@@ -96,7 +98,7 @@ module.exports = {
                 if(result){
                     return callback(null, null, 200, null, result);
                 }else{
-                    return callback(3, 'find_one_company_fail', 404, null, null);
+                    return callback(3, 'find_one_company_fail', 404, "User haven't created stakeholder before", null);
                 }
             }).catch(function(error) {
                 "use strict";
@@ -148,16 +150,16 @@ module.exports = {
 
     getAll: function(accessUserId, accessUserType, queryContent, callback) {
         try {
-            if(accessUserType < Constant.USER_TYPE.MODERATOR) {
-                where.createdBy = accessUserId;
-            }
-
-            let where;
+            let where = {}; 
             let con1 = {};
             let page = 1;
             let perPage = Constant.DEFAULT_PAGING_SIZE;
             let sort = [];
             let attributes = [];
+
+            if(accessUserType < Constant.USER_TYPE.MODERATOR) {
+                where.createdBy = accessUserId;
+            }
 
             this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
             if( Pieces.VariableBaseTypeChecking(queryContent.type, 'string') ){

@@ -41,10 +41,10 @@ module.exports = {
 
     getOneCategory: function (accessUserId, accessUserType, id, callback) {
         try {
-            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                where.createdBy = accessUserId;
-                where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
-            }
+            // if (accessUserType < Constant.USER_TYPE.MODERATOR) {
+            //     where.createdBy = accessUserId;
+            //     where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
+            // }
 
             let where = {};
             // let attributes = ['id', 'title','description','field', 'begin', 'end', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
@@ -129,9 +129,9 @@ module.exports = {
             console.log(queryContent.filter)
 
             this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
-            if (Pieces.VariableBaseTypeChecking(queryContent.q, 'string')) {
-                where.mainsubject = { [Sequelize.Op.like]: queryContent.q };
-            }
+            // if (Pieces.VariableBaseTypeChecking(queryContent.q, 'string')) {
+            //     where.mainsubject = { [Sequelize.Op.like]: queryContent.q };
+            // }
 
             if ((Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))
                 || (Pieces.VariableBaseTypeChecking(queryContent['page'], 'number'))) {

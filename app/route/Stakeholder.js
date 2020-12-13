@@ -56,7 +56,9 @@ module.exports = function(app) {
      *
      * @apiDescription Get one stakeholder
      *
-     * @apiParam {string} id ID of stakeholder, on params
+     * @apiParam {string} id ID Use on params
+     *                          <br/> Use id = 1 when call this api in customer page
+     *                          <br/> Use stakeholder'id when call this api in admin page
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/stakeholder/2
@@ -110,7 +112,7 @@ module.exports = function(app) {
      * @apiParam {Number} perPage Item per page (N/A)
      * @apiParam {String} sort Sort the list by a field (N/A)
      * @apiParam {String} filter filter the query data (N/A)
-     * @apiParam {String} q Text filter for data (N/A)
+     * @apiParam {String} q(type, name, taxcode) Text filter for data (N/A)
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/stakeholder

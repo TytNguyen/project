@@ -119,8 +119,16 @@ module.exports = {
             cond1.type = { [Sequelize.Op.lt]: accessUserType };
 
             this.parseFilter(accessUserId, accessUserType, cond1, query.filter);
-            if (Pieces.VariableBaseTypeChecking(query.q, 'string')) {
-                cond1.email = { [Sequelize.Op.like]: query.q };
+            if (Pieces.VariableBaseTypeChecking(query.email, 'string')) {
+                where.email = { [Sequelize.Op.like]: query.email };
+            }
+
+            if (Pieces.VariableBaseTypeChecking(query.type, 'string')) {
+                where.type = query.type;
+            }
+
+            if (Pieces.VariableBaseTypeChecking(query.status, 'string')) {
+                where.status = query.status;
             }
 
             where = { [Sequelize.Op.or]: [{ id: accessUserId }, cond1] };

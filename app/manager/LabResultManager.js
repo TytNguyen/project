@@ -98,7 +98,7 @@ module.exports = {
 
             if (accessUserType < Constant.USER_TYPE.MODERATOR) {
                 where.createdBy = accessUserId;
-                where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
+                // where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
             }
 
             let where = {};
@@ -200,6 +200,10 @@ module.exports = {
 
             if (Pieces.VariableBaseTypeChecking(queryContent.title, 'string')) {
                 where.title = { [Sequelize.Op.like]: queryContent.title };
+            }
+
+            if (Pieces.VariableBaseTypeChecking(queryContent.status, 'string')) {
+                where.status = queryContent.status;
             }
 
             if( (Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))

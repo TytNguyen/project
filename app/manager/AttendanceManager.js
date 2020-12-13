@@ -33,7 +33,7 @@ module.exports = {
             let page = 1;
             let perPage = Constant.DEFAULT_PAGING_SIZE;
             let sort = [];
-            let attributes = ['sid', 'mid', 'status'];
+            let attributes = ['status'];
 
             where = { sid: stakeholderId };
 
@@ -67,7 +67,7 @@ module.exports = {
                 order: sort,
                 include: [{
                     model: Meeting,
-                    attributes: ['title', 'description', 'begin', 'end'],
+                    attributes: ['id', 'title', 'description', 'begin', 'end'],
                     include: [{
                         model: Category,
                         attributes: ['id', 'mainsubject'],
@@ -122,7 +122,11 @@ module.exports = {
             let page = 1;
             let perPage = Constant.DEFAULT_PAGING_SIZE;
             let sort = [];
-            let attributes = ['sid', 'mid', 'status'];
+            let attributes = ['status'];
+
+            if (Pieces.VariableBaseTypeChecking(query.status, 'string')) {
+                where.status = query.status;
+            }
 
             where = { mid: meetingId };
 
@@ -156,7 +160,7 @@ module.exports = {
                 order: sort,
                 include: [{
                     model: Stakeholder,
-                    attributes: ['name', 'taxcode', 'address', 'phone', 'type']
+                    attributes: ['id', 'name', 'taxcode', 'district', 'detailAddress', 'phone', 'type']
                 }],
                 attributes: attributes,
             }).then(data => {

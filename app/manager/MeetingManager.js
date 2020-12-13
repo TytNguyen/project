@@ -19,19 +19,14 @@ module.exports = {
                 return callback(4, 'invalid_meeting_id', 400, 'meeting id is incorrect', null);
             }
 
-            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                where.createdBy = accessUserId;
-                where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
-            }
-
             let where = {};
-            let attributes = ['id', 'title','description', 'begin', 'end', 'limited', 'currentAttend', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            // let attributes = ['id', 'title','description', 'begin', 'end', 'limited', 'currentAttend', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             where = {id: id};
             
             Meeting.findOne({
                 where: where,
-                attributes: attributes,
+                // attributes: attributes,
                 include: [{
                     model: Category,
                     attributes: ['id', 'mainsubject'],
@@ -57,7 +52,7 @@ module.exports = {
             let final = {};
             final = {activated: 0, deleted: 0, total: 0};
             if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
-                return callback(null, null, 200, null, final);
+                return callback(4, 'invalid_user_right', 400, error, null);
             }
 
             Meeting.count({
@@ -105,8 +100,24 @@ module.exports = {
             let attributes = ['id', 'title','description', 'begin', 'end', 'limited', 'currentAttend', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
-            if( Pieces.VariableBaseTypeChecking(queryContent.q, 'string') ){
-                where.name = {[Sequelize.Op.like]: queryContent.q};
+            if( Pieces.VariableBaseTypeChecking(queryContent.title, 'string') ){
+                where.title = {[Sequelize.Op.like]: queryContent.title};
+            }
+
+            if( Pieces.VariableBaseTypeChecking(queryContent.description, 'string') ){
+                where.description = {[Sequelize.Op.like]: queryContent.description};
+            }
+
+            if( Pieces.VariableBaseTypeChecking(queryContent.category_id, 'string') ){
+                where.category_id = queryContent.category_id;
+            }
+
+            if( Pieces.VariableBaseTypeChecking(queryContent.begin, 'string') ){
+                where.begin = queryContent.begin;
+            }
+
+            if( Pieces.VariableBaseTypeChecking(queryContent.status, 'string') ){
+                where.status = queryContent.status;
             }
 
             if( (Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))

@@ -4496,7 +4496,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "id",
-            "description": "<p>ID of stakeholder, on params</p>"
+            "description": "<p>ID Use on params <br/> Use id = 1 when call this api in customer page <br/> Use stakeholder'id when call this api in admin page</p>"
           }
         ]
       }
