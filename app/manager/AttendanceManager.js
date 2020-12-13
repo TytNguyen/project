@@ -25,9 +25,9 @@ module.exports = {
                 return callback(4, 'invalid_stakeholder_id', 400, 'stakeholder id is incorrect', null);
             }
 
-            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                return callback(1, 'invalid_user_type', 403, null, null);
-            }
+            // if (accessUserType < Constant.USER_TYPE.MODERATOR) {
+            //     return callback(1, 'invalid_user_type', 403, null, null);
+            // }
 
             let where;
             let page = 1;

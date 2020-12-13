@@ -145,7 +145,6 @@ module.exports = {
         try {
             if(accessUserType < Constant.USER_TYPE.MODERATOR) {
                 where.createdBy = accessUserId;
-                where.status = { [Sequelize.Op.lt]: Constant.STATUS.NO };
             }
 
             let where;

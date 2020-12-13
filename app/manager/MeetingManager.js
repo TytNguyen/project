@@ -93,9 +93,9 @@ module.exports = {
 
     getAll: function(accessUserId, accessUserType, queryContent, callback) {
         try {
-            if(accessUserType < Constant.USER_TYPE.MODERATOR) {
-                return callback(4, 'invalid_user_type', 400, null, null);
-            }
+            // if(accessUserType < Constant.USER_TYPE.MODERATOR) {
+            //     return callback(4, 'invalid_user_type', 400, null, null);
+            // }
 
             let where;
             let con1 = {};

@@ -286,9 +286,9 @@ module.exports = {
 
     getAll: function(accessUserId, accessUserType, queryContent, callback) {
         try {
-            if(accessUserType < Constant.USER_TYPE.MODERATOR) {
-                return callback(4, 'invalid_user_type', 400, null, null);
-            }
+            // if(accessUserType < Constant.USER_TYPE.MODERATOR) {
+            //     return callback(4, 'invalid_user_type', 400, null, null);
+            // }
 
             let where;
             let con1 = {};
@@ -297,10 +297,14 @@ module.exports = {
             let sort = [];
             let attributes = ['id', 'status','type','isCompany', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
-            // this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
-            // if( Pieces.VariableBaseTypeChecking(queryContent.q, 'string') ){
-            //     where.name = {[Sequelize.Op.like]: queryContent.q};
-            // }
+            this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
+            if( Pieces.VariableBaseTypeChecking(queryContent.profileId, 'string') ){
+                where.profileId = queryContent.profileId;
+            }
+
+            if( Pieces.VariableBaseTypeChecking(queryContent.resultId, 'string') ){
+                where.resultId = queryContent.resultId;
+            }
 
             if( (Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))
                 || (Pieces.VariableBaseTypeChecking(queryContent['page'], 'number')) ){
