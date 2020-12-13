@@ -27,9 +27,9 @@ module.exports = {
         try {
             let queryObj = {};
 
-            if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
-                return callback(4, 'invalid_user_right', 403, 'you must be admin to do this process', null);
-            }
+            // if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
+            //     return callback(4, 'invalid_user_right', 403, 'you must be admin to do this process', null);
+            // }
 
             if ( !Pieces.VariableBaseTypeChecking(data.title,'string')
                 || !Validator.isLength(data.title, {min: 4, max: 128}) ) {

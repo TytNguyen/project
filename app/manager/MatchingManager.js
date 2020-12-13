@@ -380,9 +380,9 @@ module.exports = {
 
     create: function (accessUserId, accessUserType, data, callback) {
         try {
-            if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
-                return callback(4, 'invalid_user_right', 403, 'you must be admin to do this process', null);
-            }
+            // if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
+            //     return callback(4, 'invalid_user_right', 403, 'you must be admin to do this process', null);
+            // }
 
             let queryObj = {};
             let where = {};

@@ -68,6 +68,8 @@ module.exports = {
 
     getOne: function(accessUserId, accessUserType, id, callback) {
         try {
+            let where = {};
+
             if ( !( Pieces.VariableBaseTypeChecking(id,'string') && Validator.isInt(id) )
                 && !Pieces.VariableBaseTypeChecking(id,'number') ){
                 return callback(3, 'invalid_stakeholder_id', 400, 'stakeholder id is incorrect', null);
@@ -75,13 +77,16 @@ module.exports = {
 
             if (accessUserType < Constant.USER_TYPE.MODERATOR) {
                 where.createdBy = accessUserId;
-                where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
+                // where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
+            } else {
+                where.id = queryContent.id;
             }
 
-            let where = {};
             // let attributes = ['id', 'name','address','phone', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
-            where = {id: id};
+            // if (Pieces.VariableBaseTypeChecking(queryContent.id, 'string')) {
+            //     where.id = queryContent.id;
+            // }
             
             Stakeholder.findOne({
                 where: where,

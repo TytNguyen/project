@@ -94,7 +94,6 @@ module.exports = function(app) {
      *     }
      */
     app.get('/v1/auth/stakeholder/:id', StakeholderCtrl.getOne);
-    app.get('/v1/auth/stakeholder/type', StakeholderCtrl.getOne);
     app.get('v1/auth/stakeholder/statistic', StakeholderCtrl.getOne);
 
     /**
