@@ -14,7 +14,7 @@ module.exports = function(app) {
      * @apiParam {string} name name of company or lab
      * @apiParam {string} taxcode company or lab's taxcode
      * @apiParam {String} district company or lab's district
-     * @apiParam {String} detailaddress company or lab's detail address
+     * @apiParam {String} detailAddress company or lab's detail address
      * @apiParam {String} phone company or lab's phone
      * @apiParam {String} type      1: company
      *                      <br/>   2: lab

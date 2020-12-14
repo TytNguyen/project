@@ -197,8 +197,6 @@ module.exports = {
 
     updates: function (accessUserId, accessUserType, meetingId, ids, callback) {
         try {
-
-            console
             if (!Pieces.VariableBaseTypeChecking(ids, 'string')
                 || !Validator.isJSON(ids)) {
                 return callback(3, 'invalid_attendance_ids', 400, 'attendance id list is not a json array string');

@@ -4422,7 +4422,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "detailaddress",
+            "field": "detailAddress",
             "description": "<p>company or lab's detail address</p>"
           },
           {

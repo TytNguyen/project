@@ -41,13 +41,14 @@ module.exports = {
 
     getOneCategory: function (accessUserId, accessUserType, id, callback) {
         try {
+            let where = {};
+            // let attributes = ['id', 'title','description','field', 'begin', 'end', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+
+
             // if (accessUserType < Constant.USER_TYPE.MODERATOR) {
             //     where.createdBy = accessUserId;
             //     where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
             // }
-
-            let where = {};
-            // let attributes = ['id', 'title','description','field', 'begin', 'end', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             where = { id: id };
 
@@ -125,8 +126,6 @@ module.exports = {
             let perPage = Constant.DEFAULT_PAGING_SIZE;
             let sort = [];
             let attributes = [];
-
-            console.log(queryContent.filter)
 
             this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
             // if (Pieces.VariableBaseTypeChecking(queryContent.q, 'string')) {

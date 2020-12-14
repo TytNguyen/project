@@ -91,6 +91,9 @@ module.exports = {
 
     getOne: function(accessUserId, accessUserType, id, callback) {
         try {
+            let where = {};
+            let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+
             if ( !( Pieces.VariableBaseTypeChecking(id,'string') && Validator.isInt(id) )
                 && !Pieces.VariableBaseTypeChecking(id,'number') ){
                 return callback(4, 'invalid_labresult_id', 400, 'labresult id is incorrect', null);
@@ -100,9 +103,6 @@ module.exports = {
                 where.createdBy = accessUserId;
                 // where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
             }
-
-            let where = {};
-            let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             where = {id: id};
             
