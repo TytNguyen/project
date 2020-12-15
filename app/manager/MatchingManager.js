@@ -71,7 +71,7 @@ module.exports = {
                     let test = this.matching(product, profile, sub_id);
 
                     if (test == null) {
-                        return callback(4, 'find_one_labresult_fail', 404, "No data suitable with your requirement", null);
+                        return callback(4, 'No_data_suitable_with_your_requirement', 404, "No data suitable with your requirement", null);
                     } else {
                         LabResult.findOne({
                             where: {id: test[0]},
@@ -154,7 +154,7 @@ module.exports = {
                     let test = this.recommendation(product, profile, sub_id);
 
                     if(test == null) {
-                        return callback(4, 'find_one_labresult_fail', 404, "No data suitable with your requirement", null);
+                        return callback(4, 'No_data_suitable_with_your_requirement', 404, "No data suitable with your requirement", null);
                     } else {
                         let ids = []
                         for (var i of test) {
