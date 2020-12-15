@@ -52,6 +52,7 @@ module.exports = {
                     }],
                 attributes: ["id", "subcategory_id"]
             }).then((lab) => {
+                "use strict";
                 MatchHashtag.findAll({
                     where: {profile_id: id},
                     attributes: ['hashtag_id']
@@ -105,8 +106,6 @@ module.exports = {
                             return callback(4, 'find_one_labresult_fail', 400, error, null);
                         });
                     }
-
-                    
                 }).catch(function(error) {
                     "use strict";
                     return callback(4, 'find_one_labresult_fail', 400, error, null);
@@ -133,9 +132,10 @@ module.exports = {
                     }],
                 attributes: ["id", "subcategory_id"]
             }).then((lab) => {
+                "use strict";
                 MatchHashtag.findAll({
                     where: {profile_id: id},
-                    attributes: ['hashtag_id']
+                    attributes: [Sequelize.fn('DISTINCT', Sequelize.col('hashtag_id')), 'hashtag_id']
                 }).then(data=>{
                     "use strict";
                     for (var i of data.values()) {
@@ -199,7 +199,6 @@ module.exports = {
                     }
                 }).catch(function(error) {
                     "use strict";
-                    console.log(id, sub_id);
                     console.log(error);
                     return callback(4, 'test 3', 400, error, null);
                 });
