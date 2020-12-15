@@ -135,7 +135,7 @@ module.exports = {
             }).then((lab) => {
                 MatchHashtag.findAll({
                     where: {profile_id: id},
-                    attributes: [Sequelize.fn('DISTINCT', Sequelize.col('hashtag_id')), 'hashtag_id']
+                    attributes: ['hashtag_id']
                 }).then(data=>{
                     "use strict";
                     for (var i of data.values()) {
