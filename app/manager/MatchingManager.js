@@ -53,7 +53,7 @@ module.exports = {
             }).then((lab) => {
                 MatchHashtag.findAll({
                     where: {profile_id: id},
-                    attributes: [Sequelize.fn('DISTINCT', Sequelize.col('hashtag_id')), 'hashtag_id']
+                    attributes: ['hashtag_id']
                 }).then(data=>{
                     "use strict";
                     for (var i of data.values()) {
@@ -123,7 +123,6 @@ module.exports = {
             let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
             let product = [];
             let profile = [];
-
 
             LabResult.findAll({
                 include: [
