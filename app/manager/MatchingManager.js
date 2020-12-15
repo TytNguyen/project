@@ -12,9 +12,10 @@ const EnterpriseProfile = Model.EnterpriseProfile;
 const Stakeholder = Model.Stakeholder;
 const SubCategory = Model.SubCategory;
 const Hashtag = Model.Hashtag;
+const MatchHashtag = Model.MatchHashtag;
 
 const moment = require('moment');
-const MatchHashtag = require('../models/MatchHashtag');
+
 const { resolve } = require('path');
 const { isNull } = require('util');
 
