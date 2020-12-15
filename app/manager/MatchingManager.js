@@ -198,6 +198,8 @@ module.exports = {
                     }
                 }).catch(function(error) {
                     "use strict";
+                    console.log(id, sub_id);
+                    console.log(error);
                     return callback(4, 'test 3', 400, error, null);
                 });
             }).catch(function(error) {
