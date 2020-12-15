@@ -138,65 +138,67 @@ module.exports = {
                     attributes: [Sequelize.fn('DISTINCT', Sequelize.col('hashtag_id')), 'hashtag_id']
                 }).then(data=>{
                     "use strict";
-                    for (var i of data.values()) {
-                        profile.push(i.hashtag_id)
-                    }
+                    return callback(null, null, 200, null, data);
 
-                    for (var i of lab.values()) {
-                        let ids = []
-                        for (var j of i.match_hashtags) {
-                            ids.push(j.hashtag_id);
-                        }
-                        product.push([i.id, i.subcategory_id, ids])
-                        ids = []
-                    }    
+                    // for (var i of data.values()) {
+                    //     profile.push(i.hashtag_id)
+                    // }
 
-                    let test = this.recommendation(product, profile, sub_id);
+                    // for (var i of lab.values()) {
+                    //     let ids = []
+                    //     for (var j of i.match_hashtags) {
+                    //         ids.push(j.hashtag_id);
+                    //     }
+                    //     product.push([i.id, i.subcategory_id, ids])
+                    //     ids = []
+                    // }    
 
-                    if(test == null) {
-                        return callback(4, 'No_data_suitable_with_your_requirement', 404, "No data suitable with your requirement", null);
-                    } else {
-                        let ids = []
-                        for (var i of test) {
-                            ids.push(i[0])
-                        }
+                    // let test = this.recommendation(product, profile, sub_id);
+
+                    // if(test == null) {
+                    //     return callback(4, 'No_data_suitable_with_your_requirement', 404, "No data suitable with your requirement", null);
+                    // } else {
+                    //     let ids = []
+                    //     for (var i of test) {
+                    //         ids.push(i[0])
+                    //     }
     
-                        LabResult.findAll({
-                            where: {id: {[Sequelize.Op.in]: ids}},
-                            include: [
-                            //     {
-                            //     model: Stakeholder,
-                            //     attributes: ['id', 'name']
-                            // },
-                            {
-                                model: SubCategory,
-                                attributes: ['id', 'subject']
-                            },
-                            {
-                                model: MatchHashtag,
-                                include: [{
-                                    model: Hashtag,
-                                    attributes: ["value", "type"] 
-                                }],
-                                attributes: ["hashtag_id"]
-                            }],
-                            attributes: attributes,
-                            order: [Sequelize.literal(("FIELD(LabResult.id,"+ids.join(',')+")"))] 
-                        }).then(result=>{
-                            "use strict";
-                            if(result){
-                                let output = {
-                                    data: result,
-                                    percent_matching_list: test};
-                                return callback(null, null, 200, null, output);
-                            }else{
-                                return callback(4, 'test 1', 404, null, null);
-                            }
-                        }).catch(function(error) {
-                            "use strict";
-                            return callback(4, 'test 2', 400, error, null);
-                        });
-                    }
+                    //     LabResult.findAll({
+                    //         where: {id: {[Sequelize.Op.in]: ids}},
+                    //         include: [
+                    //         //     {
+                    //         //     model: Stakeholder,
+                    //         //     attributes: ['id', 'name']
+                    //         // },
+                    //         {
+                    //             model: SubCategory,
+                    //             attributes: ['id', 'subject']
+                    //         },
+                    //         {
+                    //             model: MatchHashtag,
+                    //             include: [{
+                    //                 model: Hashtag,
+                    //                 attributes: ["value", "type"] 
+                    //             }],
+                    //             attributes: ["hashtag_id"]
+                    //         }],
+                    //         attributes: attributes,
+                    //         order: [Sequelize.literal(("FIELD(LabResult.id,"+ids.join(',')+")"))] 
+                    //     }).then(result=>{
+                    //         "use strict";
+                    //         if(result){
+                    //             let output = {
+                    //                 data: result,
+                    //                 percent_matching_list: test};
+                    //             return callback(null, null, 200, null, output);
+                    //         }else{
+                    //             return callback(4, 'test 1', 404, null, null);
+                    //         }
+                    //     }).catch(function(error) {
+                    //         "use strict";
+                    //         return callback(4, 'test 2', 400, error, null);
+                    //     });
+                    // }
                 }).catch(function(error) {
                     "use strict";
                     console.log(error);
