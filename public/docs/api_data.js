@@ -2878,7 +2878,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "curl -i http://localhost:3000/v1/auth/matching/recommendationa",
+        "content": "curl -i http://localhost:3000/v1/auth/matching/recommendation",
         "type": "json"
       }
     ],
@@ -3138,6 +3138,13 @@ define({ "api": [
             "optional": false,
             "field": "currentAttend",
             "description": "<p>number of people have register</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "address",
+            "description": "<p>address where organized the meeting</p>"
           }
         ]
       }

@@ -79,7 +79,7 @@ module.exports = function(app) {
      * @apiParam {string} sub_id ID of subcategory of requirement
      *
      * @apiExample Example usage:
-     * curl -i http://localhost:3000/v1/auth/matching/recommendationa
+     * curl -i http://localhost:3000/v1/auth/matching/recommendation
      *
      * @apiSuccess {String} id the ID of matching result
      * @apiSuccess {String} title result's title

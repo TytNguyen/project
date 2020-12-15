@@ -357,10 +357,6 @@ module.exports = {
 
     create: function (accessUserId, accessUserType, data, callback) {
         try {
-            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                return callback(4, 'invalid_user_right', 403, 'you must be admin to do this process', null);
-            }
-
             if (!(Pieces.VariableBaseTypeChecking(data.mid, 'string')
                 && Validator.isInt(data.mid))
                 && Pieces.VariableBaseTypeChecking(data.mid, 'number')) {

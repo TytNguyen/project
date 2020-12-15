@@ -16,6 +16,7 @@ const Hashtag = Model.Hashtag;
 const moment = require('moment');
 const MatchHashtag = require('../models/MatchHashtag');
 const { resolve } = require('path');
+const { isNull } = require('util');
 
 Matching.hasMany(Processes, {foreignKey: 'mid'});
 Processes.belongsTo(Matching, {foreignKey: 'mid'});
@@ -68,36 +69,43 @@ module.exports = {
                     }    
 
                     let test = this.matching(product, profile, sub_id);
-                    LabResult.findOne({
-                        where: {id: test[0]},
-                        include: [
-                        {
-                            model: SubCategory,
-                            attributes: ['id', 'subject']
-                        },
-                        {
-                            model: MatchHashtag,
-                            include: [{
-                                model: Hashtag,
-                                attributes: ["value", "type"] 
+
+                    if (test == null) {
+                        return callback(4, 'find_one_labresult_fail', 404, "No data suitable with your requirement", null);
+                    } else {
+                        LabResult.findOne({
+                            where: {id: test[0]},
+                            include: [
+                            {
+                                model: SubCategory,
+                                attributes: ['id', 'subject']
+                            },
+                            {
+                                model: MatchHashtag,
+                                include: [{
+                                    model: Hashtag,
+                                    attributes: ["value", "type"] 
+                                }],
+                                attributes: ["hashtag_id"]
                             }],
-                            attributes: ["hashtag_id"]
-                        }],
-                        attributes: attributes
-                    }).then(result=>{
-                        "use strict";
-                        if(result){
-                            let output = {
-                                data: result,
-                                percent_matching: test[1]*100}  ;
-                            return callback(null, null, 200, null, output);
-                        }else{
-                            return callback(4, 'find_one_labresult_fail', 404, null, null);
-                        }
-                    }).catch(function(error) {
-                        "use strict";
-                        return callback(4, 'find_one_labresult_fail', 400, error, null);
-                    });
+                            attributes: attributes
+                        }).then(result=>{
+                            "use strict";
+                            if(result){
+                                let output = {
+                                    data: result,
+                                    percent_matching: test[1]*100}  ;
+                                return callback(null, null, 200, null, output);
+                            }else{
+                                return callback(4, 'find_one_labresult_fail', 404, null, null);
+                            }
+                        }).catch(function(error) {
+                            "use strict";
+                            return callback(4, 'find_one_labresult_fail', 400, error, null);
+                        });
+                    }
+
+                    
                 }).catch(function(error) {
                     "use strict";
                     return callback(4, 'find_one_labresult_fail', 400, error, null);
@@ -145,46 +153,50 @@ module.exports = {
 
                     let test = this.recommendation(product, profile, sub_id);
 
-                    let ids = []
-                    for (var i of test) {
-                        ids.push(i[0])
-                    }
-
-                    LabResult.findAll({
-                        where: {id: {[Sequelize.Op.in]: ids}},
-                        include: [
-                        //     {
-                        //     model: Stakeholder,
-                        //     attributes: ['id', 'name']
-                        // },
-                        {
-                            model: SubCategory,
-                            attributes: ['id', 'subject']
-                        },
-                        {
-                            model: MatchHashtag,
-                            include: [{
-                                model: Hashtag,
-                                attributes: ["value", "type"] 
-                            }],
-                            attributes: ["hashtag_id"]
-                        }],
-                        attributes: attributes,
-                        order: [Sequelize.literal(("FIELD(LabResult.id,"+ids.join(',')+")"))] 
-                    }).then(result=>{
-                        "use strict";
-                        if(result){
-                            let output = {
-                                data: result,
-                                percent_matching_list: test};
-                            return callback(null, null, 200, null, output);
-                        }else{
-                            return callback(4, 'find_one_labresult_fail', 404, null, null);
+                    if(test == null) {
+                        return callback(4, 'find_one_labresult_fail', 404, "No data suitable with your requirement", null);
+                    } else {
+                        let ids = []
+                        for (var i of test) {
+                            ids.push(i[0])
                         }
-                    }).catch(function(error) {
-                        "use strict";
-                        return callback(4, 'find_one_labresult_fail', 400, error, null);
-                    });
+    
+                        LabResult.findAll({
+                            where: {id: {[Sequelize.Op.in]: ids}},
+                            include: [
+                            //     {
+                            //     model: Stakeholder,
+                            //     attributes: ['id', 'name']
+                            // },
+                            {
+                                model: SubCategory,
+                                attributes: ['id', 'subject']
+                            },
+                            {
+                                model: MatchHashtag,
+                                include: [{
+                                    model: Hashtag,
+                                    attributes: ["value", "type"] 
+                                }],
+                                attributes: ["hashtag_id"]
+                            }],
+                            attributes: attributes,
+                            order: [Sequelize.literal(("FIELD(LabResult.id,"+ids.join(',')+")"))] 
+                        }).then(result=>{
+                            "use strict";
+                            if(result){
+                                let output = {
+                                    data: result,
+                                    percent_matching_list: test};
+                                return callback(null, null, 200, null, output);
+                            }else{
+                                return callback(4, 'find_one_labresult_fail', 404, null, null);
+                            }
+                        }).catch(function(error) {
+                            "use strict";
+                            return callback(4, 'find_one_labresult_fail', 400, error, null);
+                        });
+                    }
                 }).catch(function(error) {
                     "use strict";
                     return callback(4, 'find_one_labresult_fail', 400, error, null);
@@ -559,7 +571,10 @@ module.exports = {
             } 
         } 
 
-        return([largest_id, largest/profile.length]);
+        if (largest === 0) {
+            return null;
+        } else
+            return([largest_id, largest/profile.length]);
     },
 
     recommendation: function (product, profile, sub_id) {
@@ -591,6 +606,9 @@ module.exports = {
             }
         }
 
-        return(percent)        
+        if (percent.length == 0) {
+            return null;
+        } else
+            return(percent)        
     },
 }

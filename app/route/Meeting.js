@@ -125,6 +125,7 @@ module.exports = function(app) {
      * @apiParam {String} end end date
      * @apiParam {String} limited maximun number of people attend
      * @apiParam {String} currentAttend number of people have register
+     * @apiParam {String} address address where organized the meeting
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/meetings

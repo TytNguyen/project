@@ -34,6 +34,11 @@ let Meeting = MySequelize.define('meeting', {
         type: Sequelize.DATE,
         allowNull: true
     },
+    address: {
+        type: Sequelize.STRING(200),
+        allowNull: true,
+        default: null
+    },
     limited: {
         type: Sequelize.INTEGER(5),
         allowNull: true,

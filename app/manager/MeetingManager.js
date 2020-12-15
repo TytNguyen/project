@@ -208,6 +208,7 @@ module.exports = {
             queryObj.end = moment(data.end).add(7, "hour");
             queryObj.limited = data.limited;
             queryObj.currentAttend = data.currentAttend;    
+            queryObj.address = data.address; 
 
             Meeting.create(queryObj).then(meeting => {
                 "use strict";
