@@ -41,12 +41,13 @@ module.exports = {
                 queryObj.title = data.title;
             }
 
-            if (!Pieces.VariableBaseTypeChecking(data.ids, 'string')
-                || !Validator.isJSON(data.ids)) {
-                return callback(4, 'invalid_hashtag_ids', 400, 'hashtag id list is not a json array string');
-            }
+            // if (!Pieces.VariableBaseTypeChecking(data.ids, 'string')
+            //     || !Validator.isJSON(data.ids)) {
+            //     return callback(4, 'invalid_hashtag_ids', 400, 'hashtag id list is not a json array string');
+            // }
 
             let idLists = Pieces.safelyParseJSON(data.ids);
+            console.log(idLists)
             let match = [];
             for (let value of idLists) {
                 match.push([value])
