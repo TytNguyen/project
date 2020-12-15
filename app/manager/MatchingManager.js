@@ -192,23 +192,23 @@ module.exports = {
                     //                 percent_matching_list: test};
                     //             return callback(null, null, 200, null, output);
                     //         }else{
-                    //             return callback(4, 'test 1', 404, null, null);
+                    //             return callback(4, 'find_and_count_all_labresult_fail', 404, null, null);
                     //         }
                     //     }).catch(function(error) {
                     //         "use strict";
-                    //         return callback(4, 'test 2', 400, error, null);
+                    //         return callback(4, 'find_and_count_all_labresult_fail', 400, error, null);
                     //     });
                     // }
                 }).catch(function(error) {
                     "use strict";
                     console.log(error);
-                    return callback(4, 'test 3', 400, error, null);
+                    return callback(4, 'find_and_count_all_labresult_fail', 400, error, null);
                 });
             }).catch(function(error) {
-                return callback(4, 'test 4', 420, error, null);
+                return callback(4, 'find_and_count_all_labresult_fail', 420, error, null);
             });
         }catch(error){
-            return callback(4, 'test 5', 400, error, null);
+            return callback(4, 'find_and_count_all_labresult_fail', 400, error, null);
         }
     },
 

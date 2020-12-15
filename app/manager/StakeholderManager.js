@@ -79,7 +79,7 @@ module.exports = {
                 where.createdBy = accessUserId;
                 // where.status = { [Sequelize.Op.ne]: Constant.STATUS.NO };
             } else {
-                where.id = queryContent.id;
+                where.id = id;
             }
 
             console.log(where)
