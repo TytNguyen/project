@@ -18,6 +18,8 @@ const moment = require('moment');
 
 const { resolve } = require('path');
 const { isNull } = require('util');
+const { count } = require('../models/MatchHashtag');
+const { entries } = require('../config/Database');
 
 Matching.hasMany(Processes, {foreignKey: 'mid'});
 Processes.belongsTo(Matching, {foreignKey: 'mid'});
@@ -128,20 +130,85 @@ module.exports = {
                 include: [
                     {
                         model: MatchHashtag,
-                        attributes: ["hashtag_id"]
+                        attributes: ["hashtag_id"] 
                     }],
                 attributes: ["id", "subcategory_id"],
+
             }).then((lab) => {
                 "use strict";
                 MatchHashtag.findAll({
                     where: {profile_id: id},
                     attributes: [Sequelize.fn('DISTINCT', Sequelize.col('hashtag_id')), 'hashtag_id'],
-                    raw:true
+                    raw:true,
                 }).then(data=>{
                     "use strict";
                     for (var i of data) {
                         profile.push(i.hashtag_id)
                     }
+
+                    // for(let index = 0; index <= lab.length; index ++) {
+                    //     console.log("index " + index);
+                    //     let ids = [];
+                    //     let count = 0;
+                    //     for(let [i, v] of lab.entries()) {
+                    //         if (lab[index].id == v.id) {
+                    //             ids.push(v.match_hashtags.hashtag_id);
+                    //             ++ count;
+                    //         } 
+                    //     }
+                    //     product.push([lab[index].id, lab[index].subcategory_id, ids]);
+
+                    //     if (count == 1) {
+                    //         count = 0;
+                    //     } else if (index > 0) {
+                    //         index = count - 1 + index;
+                    //     }
+                    //     ids = [];
+                        
+                    // }
+
+                    // lab.find(function(value, index) {
+                    //     let ids = [];
+                    //     if (value.id == lab[index + 1].id) {
+                    //         ids.push(value.match_hashtags.hashtag_id);
+                    //     } else {
+                    //         ids.push(value.match_hashtags.hashtag_id);
+                    //         break;
+                    //     }
+                    //     console.log(value.match_hashtags.hashtag_id);
+                    //     console.log(lab[index].match_hashtags.hashtag_id);
+                    // })
+
+                    // for (var i of lab.values()) {
+                    //     let ids = []
+                    //     for (var j of i.match_hashtags) {
+                    //         ids.push(j.hashtag_id);
+                    //     }
+                    //     product.push([i.id, i.subcategory_id, ids])
+                    //     ids = []
+                    // } 
+
+                    // for (var i = 0; i <= lab.length; i ++) {
+                    //     let ids = [];
+                    //     let count = 1;
+                    //     for (var j = 1; j < lab.length; j ++) {
+                    //         if (lab[i].id === lab[j].id)
+                    //         {
+                    //             ids.push(lab[j].match_hashtags.hashtag_id);
+                    //             count ++;
+                    //         } else {
+                    //             ids.push(lab[j].match_hashtags.hashtag_id);
+                    //             count = 0;
+                    //             j = parseInt(lab.length) 
+                    //         }
+                    //     }
+                    //     product.push([lab[i].id, lab[i].subcategory_id, ids])
+                    //     i += count;
+                    //     count = 1;
+                    //     ids = [];
+                    // }     
+
+                    console.log(product)
 
                     for (var i of lab.values()) {
                         let ids = []
@@ -200,7 +267,6 @@ module.exports = {
                     }
                 }).catch(function(error) {
                     "use strict";
-                    console.log(error);
                     return callback(4, 'find_and_count_all_labresult_fail', 400, error, null);
                 });
             }).catch(function(error) {
