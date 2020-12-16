@@ -266,10 +266,11 @@ module.exports = {
                         });
                     }
                 }).catch(function(error) {
-                    "use strict";
+                    console.log(error)
                     return callback(4, 'find_and_count_all_labresult_fail', 400, error, null);
                 });
             }).catch(function(error) {
+                console.log(error)
                 return callback(4, 'find_and_count_all_labresult_fail', 420, error, null);
             });
         }catch(error){
