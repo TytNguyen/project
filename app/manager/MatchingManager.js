@@ -133,7 +133,6 @@ module.exports = {
                         attributes: ["hashtag_id"] 
                     }],
                 attributes: ["id", "subcategory_id"],
-
             }).then((lab) => {
                 "use strict";
                 MatchHashtag.findAll({
@@ -208,7 +207,6 @@ module.exports = {
                     //     ids = [];
                     // }     
 
-                    console.log(product)
 
                     for (var i of lab.values()) {
                         let ids = []
