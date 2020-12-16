@@ -20,13 +20,12 @@ module.exports = {
             }
 
             let where = {};
-            // let attributes = ['id', 'title','description', 'begin', 'end', 'limited', 'currentAttend', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            let attributes = ['id', 'title','description', 'begin', 'end', 'limited', 'currentAttend', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             where = {id: id};
             
             Meeting.findOne({
                 where: where,
-                // attributes: attributes,
                 include: [{
                     model: Category,
                     attributes: ['id', 'mainsubject'],

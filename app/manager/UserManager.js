@@ -245,8 +245,6 @@ module.exports = {
 
             queryObj.updatedAt = moment(Date.now()).add(7, "hour");
 
-            console.log(Pieces.VariableBaseTypeChecking(file, 'string'));
-
             if (file === undefined) {
                 User.update(
                     queryObj,
