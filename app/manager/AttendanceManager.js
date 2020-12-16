@@ -327,8 +327,9 @@ module.exports = {
                         }).then(function (total) {
                             "use strict";
                             final.currentAttend = total;
+                            console.log(final.currentAttend)
                             Meeting.update(
-                                final.currentAttend,
+                                {currentAttend: total},
                                 { where: { id: where.mid } }).then(result => {
                                     "use strict";
                                     // return callback(null, null, 200, null, result);
