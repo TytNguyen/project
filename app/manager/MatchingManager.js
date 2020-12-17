@@ -678,4 +678,149 @@ module.exports = {
         } else
             return(percent)        
     },
+
+    // --------- others ----------
+    parseFilter: function (accessUserId, accessUserType, condition, filters) {
+        try {
+            if (!Pieces.VariableBaseTypeChecking(filters, 'string')
+                || !Validator.isJSON(filters)) {
+                return false;
+            }
+
+            let aDataFilter = Pieces.safelyParseJSON1(filters);
+            if (aDataFilter && (aDataFilter.length > 0)) {
+                for (let i = 0; i < aDataFilter.length; i++) {
+                    if (!Pieces.VariableBaseTypeChecking(aDataFilter[i].key, 'string')
+                        || !Pieces.VariableBaseTypeChecking(aDataFilter[i].operator, 'string')
+                        || aDataFilter[i].value === null
+                        || aDataFilter[i].value === undefined) {
+                        continue;
+                    }
+
+                    if (aDataFilter[i].key === 'activated'
+                        && ((aDataFilter[i].operator === '=') || (aDataFilter[i].operator === '!='))
+                        && (aDataFilter[i].value === Constant.ACTIVATED.YES || aDataFilter[i].value === Constant.ACTIVATED.NO)) {
+                        switch (aDataFilter[i].operator) {
+                            case '=':
+                                condition[aDataFilter[i].key] = aDataFilter[i].value;
+                                break;
+                            case '!=':
+                                condition[aDataFilter[i].key] = { $ne: aDataFilter[i].value };
+                                break;
+                        }
+                        continue;
+                    }
+
+                    if (aDataFilter[i].key === 'type'
+                        && ((aDataFilter[i].operator === '=') || (aDataFilter[i].operator === '!='))
+                        && Pieces.ValidObjectEnum(aDataFilter[i].value, Constant.USER_TYPE)) {
+                        switch (aDataFilter[i].operator) {
+                            case '=':
+                                condition[aDataFilter[i].key] = aDataFilter[i].value;
+                                break;
+                            case '!=':
+                                condition[aDataFilter[i].key] = { $ne: aDataFilter[i].value };
+                                break;
+                        }
+                        continue;
+                    }
+
+                    if ((aDataFilter[i].key === 'createdAt') &&
+                        (
+                            (aDataFilter[i].operator === '=')
+                            || (aDataFilter[i].operator === '!=')
+                            || (aDataFilter[i].operator === '<')
+                            || (aDataFilter[i].operator === '>')
+                            || (aDataFilter[i].operator === '<=')
+                            || (aDataFilter[i].operator === '>=')
+                            || (aDataFilter[i].operator === 'in')
+                        )
+                    ) {
+                        if (aDataFilter[i].operator !== 'in'
+                            && Pieces.VariableBaseTypeChecking(aDataFilter[i].value, 'string')
+                            && Validator.isISO8601(aDataFilter[i].value)) {
+                            switch (aDataFilter[i].operator) {
+                                case '=':
+                                    condition[aDataFilter[i].key] = { $eq: aDataFilter[i].value };
+                                    break;
+                                case '!=':
+                                    condition[aDataFilter[i].key] = { $ne: aDataFilter[i].value };
+                                    break;
+                                case '>':
+                                    condition[aDataFilter[i].key] = { $gt: aDataFilter[i].value };
+                                    break;
+                                case '>=':
+                                    condition[aDataFilter[i].key] = { $gte: aDataFilter[i].value };
+                                    break;
+                                case '<':
+                                    condition[aDataFilter[i].key] = { $lt: aDataFilter[i].value };
+                                    break;
+                                case '<=':
+                                    condition[aDataFilter[i].key] = { $lte: aDataFilter[i].value };
+                                    break;
+                            }
+                        } else if (aDataFilter[i].operator === 'in') {
+                            if (aDataFilter[i].value.length === 2
+                                && Pieces.VariableBaseTypeChecking(aDataFilter[i].value[0], 'string')
+                                && Pieces.VariableBaseTypeChecking(aDataFilter[i].value[1], 'string')
+                                && Validator.isISO8601(aDataFilter[i].value[0])
+                                && Validator.isISO8601(aDataFilter[i].value[1])) {
+                                condition[aDataFilter[i].key] = { $gte: aDataFilter[i].value[0], $lte: aDataFilter[i].value[1] };
+                            }
+                        }
+                        continue;
+                    }
+
+                    if ((aDataFilter[i].key === 'updatedAt') &&
+                        (
+                            (aDataFilter[i].operator === '=')
+                            || (aDataFilter[i].operator === '!=')
+                            || (aDataFilter[i].operator === '<')
+                            || (aDataFilter[i].operator === '>')
+                            || (aDataFilter[i].operator === '<=')
+                            || (aDataFilter[i].operator === '>=')
+                            || (aDataFilter[i].operator === 'in')
+                        )
+                    ) {
+                        if (aDataFilter[i].operator !== 'in'
+                            && Pieces.VariableBaseTypeChecking(aDataFilter[i].value, 'string')
+                            && Validator.isISO8601(aDataFilter[i].value)) {
+                            switch (aDataFilter[i].operator) {
+                                case '=':
+                                    condition[aDataFilter[i].key] = { $eq: aDataFilter[i].value };
+                                    break;
+                                case '!=':
+                                    condition[aDataFilter[i].key] = { $ne: aDataFilter[i].value };
+                                    break;
+                                case '>':
+                                    condition[aDataFilter[i].key] = { $gt: aDataFilter[i].value };
+                                    break;
+                                case '>=':
+                                    condition[aDataFilter[i].key] = { $gte: aDataFilter[i].value };
+                                    break;
+                                case '<':
+                                    condition[aDataFilter[i].key] = { $lt: aDataFilter[i].value };
+                                    break;
+                                case '<=':
+                                    condition[aDataFilter[i].key] = { $lte: aDataFilter[i].value };
+                                    break;
+                            }
+                        } else if (aDataFilter[i].operator === 'in') {
+                            if (aDataFilter[i].value.length === 2
+                                && Pieces.VariableBaseTypeChecking(aDataFilter[i].value[0], 'string')
+                                && Pieces.VariableBaseTypeChecking(aDataFilter[i].value[1], 'string')
+                                && Validator.isISO8601(aDataFilter[i].value[0])
+                                && Validator.isISO8601(aDataFilter[i].value[1])) {
+                                condition[aDataFilter[i].key] = { $gte: aDataFilter[i].value[0], $lte: aDataFilter[i].value[1] };
+                            }
+                        }
+                    }
+                }
+            } else {
+                return false;
+            }
+        } catch (error) {
+            return false;
+        }
+    }
 }
