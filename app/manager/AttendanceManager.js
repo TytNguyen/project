@@ -294,9 +294,8 @@ module.exports = {
                                     where: where1
                                 }).then(function (total) {
                                     "use strict";
-                                    final.currentAttend = total;
                                     Meeting.update(
-                                        final,
+                                        {currentAttend: total},
                                         { where: { id: where.mid } }).then(result => {
                                             "use strict";
                                             return callback(null, null, 200, null, "mid: " + updateData.mid + " sid: " + updateData.sid);
@@ -326,7 +325,6 @@ module.exports = {
                             where: where1
                         }).then(function (total) {
                             "use strict";
-                            final.currentAttend = total;
                             console.log(final.currentAttend)
                             Meeting.update(
                                 {currentAttend: total},
