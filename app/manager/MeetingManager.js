@@ -196,15 +196,15 @@ module.exports = {
             let queryObj = {};
             queryObj.createdBy = accessUserId;
             queryObj.updatedBy = accessUserId;
-            queryObj.createdAt = moment(Date.now()).add(7, "hour");
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.createdAt = moment(Date.now());
+            queryObj.updatedAt = moment(Date.now());
 
             queryObj.title = data.title;
             queryObj.description = data.description;
             queryObj.category_id = data.category_id;
             queryObj.status = Constant.STATUS.YES;
-            queryObj.begin = moment(data.begin).add(7, "hour");
-            queryObj.end = moment(data.end).add(7, "hour");
+            queryObj.begin = moment(data.begin);
+            queryObj.end = moment(data.end);
             queryObj.limited = data.limited;
             queryObj.currentAttend = data.currentAttend;    
             queryObj.address = data.address; 
@@ -257,8 +257,8 @@ module.exports = {
                 queryObj.limited = updateData.limited;
             }
 
-            queryObj.begin = moment(updateData.begin).add(7, "hour");
-            queryObj.end = moment(updateData.end).add(7, "hour");
+            queryObj.begin = moment(updateData.begin);
+            queryObj.end = moment(updateData.end);
             queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now()).add(7, "hour");
             

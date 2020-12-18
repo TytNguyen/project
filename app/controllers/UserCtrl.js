@@ -53,7 +53,6 @@ module.exports = {
                     sendGrid.sendMailToVerifyAccount(result.email, token, function (errorCode, errorMessage, httpCode, errorDescription, message) {
                         if( errorCode )
                         {
-
                             return Rest.sendError( res, 400, 'create_token_fail', 400, error );
                         }else{
                             return Rest.sendSuccessOne(res, message, httpCode);
@@ -76,7 +75,8 @@ module.exports = {
                 if (errorCode) {
                     return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
                 }
-                return Rest.sendSuccessOne(res, result, httpCode);
+                // res.redirect("https://www.google.com")
+                return Rest.sendSuccessOne(res, message, httpCode);
             })
                 
         })
