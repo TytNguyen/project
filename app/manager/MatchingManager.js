@@ -145,69 +145,6 @@ module.exports = {
                         profile.push(i.hashtag_id)
                     }
 
-                    // for(let index = 0; index <= lab.length; index ++) {
-                    //     console.log("index " + index);
-                    //     let ids = [];
-                    //     let count = 0;
-                    //     for(let [i, v] of lab.entries()) {
-                    //         if (lab[index].id == v.id) {
-                    //             ids.push(v.match_hashtags.hashtag_id);
-                    //             ++ count;
-                    //         } 
-                    //     }
-                    //     product.push([lab[index].id, lab[index].subcategory_id, ids]);
-
-                    //     if (count == 1) {
-                    //         count = 0;
-                    //     } else if (index > 0) {
-                    //         index = count - 1 + index;
-                    //     }
-                    //     ids = [];
-                        
-                    // }
-
-                    // lab.find(function(value, index) {
-                    //     let ids = [];
-                    //     if (value.id == lab[index + 1].id) {
-                    //         ids.push(value.match_hashtags.hashtag_id);
-                    //     } else {
-                    //         ids.push(value.match_hashtags.hashtag_id);
-                    //         break;
-                    //     }
-                    //     console.log(value.match_hashtags.hashtag_id);
-                    //     console.log(lab[index].match_hashtags.hashtag_id);
-                    // })
-
-                    // for (var i of lab.values()) {
-                    //     let ids = []
-                    //     for (var j of i.match_hashtags) {
-                    //         ids.push(j.hashtag_id);
-                    //     }
-                    //     product.push([i.id, i.subcategory_id, ids])
-                    //     ids = []
-                    // } 
-
-                    // for (var i = 0; i <= lab.length; i ++) {
-                    //     let ids = [];
-                    //     let count = 1;
-                    //     for (var j = 1; j < lab.length; j ++) {
-                    //         if (lab[i].id === lab[j].id)
-                    //         {
-                    //             ids.push(lab[j].match_hashtags.hashtag_id);
-                    //             count ++;
-                    //         } else {
-                    //             ids.push(lab[j].match_hashtags.hashtag_id);
-                    //             count = 0;
-                    //             j = parseInt(lab.length) 
-                    //         }
-                    //     }
-                    //     product.push([lab[i].id, lab[i].subcategory_id, ids])
-                    //     i += count;
-                    //     count = 1;
-                    //     ids = [];
-                    // }     
-
-
                     for (var i of lab.values()) {
                         let ids = []
                         for (var j of i.match_hashtags) {
@@ -226,7 +163,9 @@ module.exports = {
                         for (var i of test) {
                             ids.push(i[0])
                         }
-    
+                        
+                        console.log(ids)
+
                         LabResult.findAll({
                             where: {id: {[Sequelize.Op.in]: ids}},
                             include: [
@@ -236,7 +175,7 @@ module.exports = {
                             // },
                             {
                                 model: SubCategory,
-                                attributes: ['id', 'subject']
+                                attributes: ['id', 'subject'],
                             },
                             {
                                 model: MatchHashtag,
@@ -247,7 +186,7 @@ module.exports = {
                                 attributes: ["hashtag_id"]
                             }],
                             attributes: attributes,
-                            order: [Sequelize.literal(("FIELD(LabResult.id,"+ids.join(',')+")"))] 
+                            order: [Sequelize.literal(("FIELD(labresult.id,"+ids.join(',')+")"))]
                         }).then(result=>{
                             "use strict";
                             if(result){
@@ -659,7 +598,7 @@ module.exports = {
                 }
 
                 if (count !== 0) {
-                    count = Math.round((count/profile.length) * 10000) / 10000;
+                    count = Math.round((count/profile.length) * 10000) / 10000 * 100;
                     percent.push([value[0], count]);
                 }
                 count = 0;
