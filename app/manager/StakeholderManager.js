@@ -49,8 +49,8 @@ module.exports = {
             queryObj.detailAddress = data.detailAddress;
             queryObj.phone = data.phone;
             queryObj.type = data.type;
-            queryObj.createdAt = moment(Date.now()).add(7, "hour");
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.createdAt = moment(Date.now());
+            queryObj.updatedAt = moment(Date.now());
 
             queryObj.status = Constant.STATUS.YES;
 
@@ -280,7 +280,7 @@ module.exports = {
             }
 
             queryObj.updatedBy = accessUserId;
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now());
             where.id = stakeholderId;
 
             Stakeholder.update(

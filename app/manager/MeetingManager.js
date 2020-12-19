@@ -260,7 +260,7 @@ module.exports = {
             queryObj.begin = moment(updateData.begin);
             queryObj.end = moment(updateData.end);
             queryObj.updatedBy = accessUserId;
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now());
             
             // queryObj.currentAttend = updateData.currentAttend;
 

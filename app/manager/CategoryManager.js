@@ -21,8 +21,8 @@ module.exports = {
             let queryObj = {};
             queryObj.createdBy = accessUserId;
             queryObj.updatedBy = accessUserId;
-            queryObj.createdAt = moment(Date.now()).add(7, "hour");
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.createdAt = moment(Date.now());
+            queryObj.updatedAt = moment(Date.now());
 
             queryObj.mainsubject = data.mainsubject;
             queryObj.status = Constant.STATUS.YES;
@@ -213,7 +213,7 @@ module.exports = {
             }
 
             queryObj.updatedBy = accessUserId;
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now());
             where.id = categoryId;
 
             Category.update(

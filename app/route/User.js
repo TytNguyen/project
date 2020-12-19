@@ -9,39 +9,7 @@ const sendGrid = require('../config/SendMail');
 module.exports = function (app) {
     app.post('/v1/test', UserCtrl.test);
 
-
-    /**
-     * @api {GET} /v1/verify/:token Update Email's status after register
-     * @apiVersion 1.0.0
-     * @apiName verifyAccount
-     * @apiGroup User
-     * @apiPermission Status < 3
-     * @apiHeader {String} access_token json web token to access to data
-     *
-     * @apiDescription When user click to the link in Email, user's account status update to activated account
-     *
-     * @apiParam {string} token account's token
-     *
-     * @apiExample Example usage:
-     * curl -i http://localhost:3000/v1/verify/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlck5hbWUiOiJhZG1pbkBnbWFpbC5jb20iLCJ0eXBlIjo1LCJwaG9uZSI6IjAxMjM0NTY3ODkiLCJhdmF0YXIiOiJodHRwczovL3Jlcy5jbG91ZGluYXJ5LmNvbS9kb2t4cTdkOWQvaW1hZ2UvdXBsb2FkL3YxNjA2MzYzNDU3L3VzZXIvdWVvZnNnMmRueTlwYm1lOGNsZ3kuanBnIiwiaWF0IjoxNjA3MDUyNzM2LCJleHAiOjE2MDkyMTI3MzZ9.R64P2doZXYlX_xblSPIlLpXVscPb8UXVPQK3REqdv1I
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *          "message": "ok",
-                "code": "0"
-     *     }
-     *
-     * @apiError invalid input data
-     *
-     * @apiErrorExample Error-Response:
-     *     HTTP/1.1 400 Bad Request
-     *     {
-     *       "result": "fail",
-     *       "message": "invalid input"
-     *     }
-     */
-    app.get('/v1/verify/:token', UserCtrl.verifyAccount);
+    // app.get('/v1/verify/:token', UserCtrl.verifyAccount);
 
     // app.post('/v1/user/upload', UserCtrl.uploadImageToFirebase);
 

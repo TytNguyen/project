@@ -80,6 +80,44 @@ module.exports = function(app) {
     app.post('/v1/auth/subcategory', SubCategoryCtrl.create);
 
     /**
+     * @api {POST} /v1/auth/subcategory/creates Create Multiple subcategory
+     * @apiVersion 1.0.0
+     * @apiName creates
+     * @apiGroup SubCategory
+     * @apiPermission administrator or moderator
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Create subcategory by admin, moderator
+     *
+     * @apiParam {array} ids list of subcategory's title 
+     * @apiParam {string} categoryid category's id
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/subcategory/creates
+     *
+     * @apiSuccess {String} id the ID of created subcategory
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "data":{
+     *           "id": "abc"
+     *       },
+     *       "result": "ok",
+     *       "message": "",
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result": "fail",
+     *       "message": "",
+     *     }
+     */
+    app.post('/v1/auth/subcategory/creates', SubCategoryCtrl.creates);
+
+    /**
      * @api {PUT} /v1/auth/subcategory/:id Update One
      * @apiVersion 1.0.0
      * @apiName update

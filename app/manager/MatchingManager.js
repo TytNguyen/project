@@ -7,19 +7,15 @@ const Pieces = require('../utils/Pieces');
 const Model = require('../models/index');
 const Matching = Model.Matching
 const Processes = Model.Processes
-const LabResult = Model.LabResult;
-const EnterpriseProfile = Model.EnterpriseProfile;
-const Stakeholder = Model.Stakeholder;
-const SubCategory = Model.SubCategory;
-const Hashtag = Model.Hashtag;
-const MatchHashtag = Model.MatchHashtag;
+
+const Hashtag = require('../models/Hashtag');
+const LabResult = require('../models/LabResult');
+const EnterpriseProfile = require('../models/EnterpriseProfile');
+const Stakeholder = require('../models/Stakeholder');
+const SubCategory = require('../models/SubCategory');
+const MatchHashtag = require('../models/MatchHashtag');
 
 const moment = require('moment');
-
-const { resolve } = require('path');
-const { isNull } = require('util');
-const { count } = require('../models/MatchHashtag');
-const { entries } = require('../config/Database');
 
 Matching.hasMany(Processes, {foreignKey: 'mid'});
 Processes.belongsTo(Matching, {foreignKey: 'mid'});
@@ -28,8 +24,10 @@ Matching.belongsTo(EnterpriseProfile, {foreignKey: 'profileId'});
 LabResult.belongsToMany(EnterpriseProfile, { through: Matching, foreignKey: 'profileId' });
 EnterpriseProfile.belongsToMany(LabResult, { through: Matching, foreignKey: 'resultId' });
 
-// LabResult.belongsTo(Stakeholder, {foreignKey: 'lid'});
-// Stakeholder.hasMany(LabResult, {foreignKey: 'lid'});
+Stakeholder.hasMany(EnterpriseProfile, { foreignKey: 'cid' });
+EnterpriseProfile.belongsTo(Stakeholder, { foreignKey: 'cid' });
+Stakeholder.hasMany(LabResult, {foreignKey: 'lid'});
+LabResult.belongsTo(Stakeholder, {foreignKey: 'lid'});
 
 LabResult.belongsTo(SubCategory, {foreignKey: 'subcategory_id'});
 SubCategory.hasMany(LabResult, {foreignKey: 'subcategory_id'});
@@ -355,16 +353,29 @@ module.exports = {
                 include: [
                     {
                     model: EnterpriseProfile,
-                    attributes: ['id', 'title']
+                    attributes: ['id', 'title'],
+                    include: [
+                        {
+                            model: Stakeholder,
+                            attributes: ['id', 'name', 'detailAddress'],
+                        }
+                    ]
                 },
                 {
                     model: LabResult,
-                    attributes: ['id', 'title']
+                    attributes: ['id', 'title', 'lid'],
+                    include: [
+                        {
+                            model: Stakeholder,
+                            attributes: ['id', 'name', 'detailAddress'],
+                        }
+                    ]
                 },
                 {
                     model: Processes, 
                     attributes: ['id', 'step']
                 }],
+                distinct:true
                 // attributes: attributes
             }).then((data) => {
                 let pages = Math.ceil(data.count / perPage);
@@ -408,13 +419,13 @@ module.exports = {
 
             queryObj.createdBy = accessUserId;
             queryObj.updatedBy = accessUserId;
-            queryObj.createdAt = moment(Date.now()).add(7, "hour");
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.createdAt = moment(Date.now());
+            queryObj.updatedAt = moment(Date.now());
 
             query.createdBy = accessUserId;
             query.updatedBy = accessUserId;
-            query.createdAt = moment(Date.now()).add(7, "hour");
-            query.updatedAt = moment(Date.now()).add(7, "hour");
+            query.createdAt = moment(Date.now());
+            query.updatedAt = moment(Date.now());
             query.step = 1;
 
             queryObj.profileId = data.profileId;
@@ -477,7 +488,7 @@ module.exports = {
 
             queryObj.status = updateData.step;
             queryObj.updatedBy = accessUserId;
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now());
 
             where.id = matchingId;
             
@@ -486,8 +497,8 @@ module.exports = {
 
             query.createdBy = accessUserId;
             query.updatedBy = accessUserId;
-            query.createdAt = moment(Date.now()).add(7, "hour");
-            query.updatedAt = moment(Date.now()).add(7, "hour");
+            query.createdAt = moment(Date.now());
+            query.updatedAt = moment(Date.now());
 
             query.step = updateData.step;
             query.mid = matchingId;

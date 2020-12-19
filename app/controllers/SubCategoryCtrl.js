@@ -18,6 +18,22 @@ module.exports = {
         })
     },
 
+    creates: function(req, res) {
+        let accessUserId = req.body.accessUserId || '';
+        let accessUserType = req.body.accessUserType || '';
+
+        let data = req.body || '';
+        
+        SubCategoryManager.creates(accessUserId, accessUserType, data, function(errorCode, errorMessage, httpCode, errorDescription, subject) {
+            if(errorCode) {
+                return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+            }
+            let resData = {};
+            resData.id = subject.id;
+            return Rest.sendSuccessOne(res, resData, httpCode);
+        })
+    },
+
     getStatistic: function (req, res) {
         let accessUserId = req.query.accessUserId || '';
         let accessUserType = req.query.accessUserType || '';

@@ -5100,6 +5100,101 @@ define({ "api": [
     "groupTitle": "SubCategory"
   },
   {
+    "type": "POST",
+    "url": "/v1/auth/subcategory/creates",
+    "title": "Create Multiple subcategory",
+    "version": "1.0.0",
+    "name": "creates",
+    "group": "SubCategory",
+    "permission": [
+      {
+        "name": "administrator or moderator"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Create subcategory by admin, moderator</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "array",
+            "optional": false,
+            "field": "ids",
+            "description": "<p>list of subcategory's title</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "categoryid",
+            "description": "<p>category's id</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/subcategory/creates",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>the ID of created subcategory</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\":{\n      \"id\": \"abc\"\n  },\n  \"result\": \"ok\",\n  \"message\": \"\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/Subcategory.js",
+    "groupTitle": "SubCategory"
+  },
+  {
     "type": "DELETE",
     "url": "/v1/auth/subcategory/:id",
     "title": "Delete One",
@@ -6410,83 +6505,6 @@ define({ "api": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\":\"fail\",\n  \"message\": \"invalid input\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "app/route/User.js",
-    "groupTitle": "User"
-  },
-  {
-    "type": "GET",
-    "url": "/v1/verify/:token",
-    "title": "Update Email's status after register",
-    "version": "1.0.0",
-    "name": "verifyAccount",
-    "group": "User",
-    "permission": [
-      {
-        "name": "Status < 3"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "access_token",
-            "description": "<p>json web token to access to data</p>"
-          }
-        ]
-      }
-    },
-    "description": "<p>When user click to the link in Email, user's account status update to activated account</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "token",
-            "description": "<p>account's token</p>"
-          }
-        ]
-      }
-    },
-    "examples": [
-      {
-        "title": "Example usage:",
-        "content": "curl -i http://localhost:3000/v1/verify/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlck5hbWUiOiJhZG1pbkBnbWFpbC5jb20iLCJ0eXBlIjo1LCJwaG9uZSI6IjAxMjM0NTY3ODkiLCJhdmF0YXIiOiJodHRwczovL3Jlcy5jbG91ZGluYXJ5LmNvbS9kb2t4cTdkOWQvaW1hZ2UvdXBsb2FkL3YxNjA2MzYzNDU3L3VzZXIvdWVvZnNnMmRueTlwYm1lOGNsZ3kuanBnIiwiaWF0IjoxNjA3MDUyNzM2LCJleHAiOjE2MDkyMTI3MzZ9.R64P2doZXYlX_xblSPIlLpXVscPb8UXVPQK3REqdv1I",
-        "type": "json"
-      }
-    ],
-    "success": {
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n     \"message\": \"ok\",\n            \"code\": \"0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "invalid",
-            "description": "<p>input data</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
           "type": "json"
         }
       ]

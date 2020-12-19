@@ -17,14 +17,50 @@ module.exports = {
             let queryObj = {};
             queryObj.createdBy = accessUserId;
             queryObj.updatedBy = accessUserId;
-            queryObj.createdAt = moment(Date.now()).add(7, "hour");
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.createdAt = moment(Date.now());
+            queryObj.updatedAt = moment(Date.now());
 
             queryObj.subject = data.subject;
             queryObj.categoryid = data.categoryid;
             queryObj.status = Constant.STATUS.YES;
 
             SubCategory.create(queryObj).then(subject => {
+                "use strict";
+                return callback(null, null, 200, null, subject);
+            }).catch(function (error) {
+                "use strict";
+                return callback(3, 'create_subject_fail', 400, error, null);
+            });
+        } catch (error) {
+            return callback(3, 'create_subject_fail', 400, error, null);
+        }
+    },
+
+    creates: function (accessUserId, accessUserType, data, callback) {
+        try {
+            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
+                return callback(4, 'invalid_category_id', 400, 'category id is incorrect', null);
+            }
+
+            let idLists = Pieces.safelyParseJSON(data.ids);
+            let match = [];
+            for (let value of idLists) {
+                match.push([value])
+            }
+
+            const convertedData = match.map(arrObj => {
+                return {
+                    subject: arrObj[0],
+                    categoryid: data.categoryid,
+                    status: Constant.STATUS.YES,
+                    createdBy: accessUserId,
+                    updatedBy: accessUserId,
+                    createdAt: moment(Date.now()),
+                    updatedAt: moment(Date.now()),
+                }
+            })
+
+            SubCategory.bulkCreate(convertedData).then(subject => {
                 "use strict";
                 return callback(null, null, 200, null, subject);
             }).catch(function (error) {
@@ -103,7 +139,7 @@ module.exports = {
             }
 
             queryObj.updatedBy = accessUserId;
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now());
             where.id = categoryId;
 
             SubCategory.update(

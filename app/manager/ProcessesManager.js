@@ -17,8 +17,8 @@ module.exports = {
     //         let queryObj = {};
     //         queryObj.createdBy = accessUserId;
     //         queryObj.updatedBy = accessUserId;
-    //         queryObj.createdAt = moment(Date.now()).add(7, "hour");
-    //         queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+    //         queryObj.createdAt = moment(Date.now());
+    //         queryObj.updatedAt = moment(Date.now());
 
     //         queryObj.mid = data.mid;
     //         queryObj.step = data.step;
@@ -55,7 +55,7 @@ module.exports = {
             }
 
             queryObj.updatedBy = accessUserId;
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now());
 
             where.mid = matchingId;
 

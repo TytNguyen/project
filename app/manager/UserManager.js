@@ -243,7 +243,7 @@ module.exports = {
                 queryObj.displayName = updateData.firstName + " " + updateData.lastName;
             }
 
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now());
 
             if (file === undefined) {
                 User.update(
@@ -623,8 +623,8 @@ module.exports = {
 
             queryObj.createdBy = accessUserId;
             queryObj.updatedBy = accessUserId;
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
-            queryObj.createdAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now());
+            queryObj.createdAt = moment(Date.now());
 
             if (file === undefined) {
                 User.create(queryObj).then(result => {
@@ -692,8 +692,8 @@ module.exports = {
                 queryObj.displayName = userData.firstName + " " + userData.lastName;
             }
 
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
-            queryObj.createdAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now());
+            queryObj.createdAt = moment(Date.now());
 
             User.create(queryObj).then(account => {
                 "use strict";
@@ -710,7 +710,6 @@ module.exports = {
                         "use strict";
                         return callback(1, 'update_user_fail', 420, error, null);
                     });
-
             }).catch(function (error) {
                 "use strict";
                 return callback(1, 'create_user_fail', 420, error, null);

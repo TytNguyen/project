@@ -47,7 +47,6 @@ module.exports = {
             // }
 
             let idLists = Pieces.safelyParseJSON(data.ids);
-            console.log(idLists)
             let match = [];
             for (let value of idLists) {
                 match.push([value])
@@ -55,8 +54,8 @@ module.exports = {
 
             queryObj.createdBy = accessUserId;
             queryObj.updatedBy = accessUserId;
-            queryObj.createdAt = moment(Date.now()).add(7, "hour");
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.createdAt = moment(Date.now());
+            queryObj.updatedAt = moment(Date.now());
 
             queryObj.cid = data.cid;
             queryObj.subcategory_id = data.subcategory_id;
@@ -72,8 +71,8 @@ module.exports = {
                         status: 1,
                         createdBy: accessUserId,
                         updatedBy: accessUserId,
-                        createdAt: moment(Date.now()).add(7, "hour"),
-                        updatedAt: moment(Date.now()).add(7, "hour"),
+                        createdAt: moment(Date.now()),
+                        updatedAt: moment(Date.now()),
                     }
                 })
 
@@ -337,7 +336,7 @@ module.exports = {
             }
 
             queryObj.updatedBy = accessUserId;
-            queryObj.updatedAt = moment(Date.now()).add(7, "hour");
+            queryObj.updatedAt = moment(Date.now());
             where.id = profileId;
 
             EnterpriseProfile.update(
@@ -355,8 +354,8 @@ module.exports = {
                                     status: 1,
                                     createdBy: accessUserId,
                                     updatedBy: accessUserId,
-                                    createdAt: moment(Date.now()).add(7, "hour"),
-                                    updatedAt: moment(Date.now()).add(7, "hour"),
+                                    createdAt: moment(Date.now()),
+                                    updatedAt: moment(Date.now()),
                                 }
                             })
                             MatchHashtag.bulkCreate(convertedData).then(result => {

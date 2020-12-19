@@ -50,37 +50,42 @@ module.exports = {
                 return Rest.sendError( res, errorCode, errorMessage, httpCode, errorDescription );
             } else {
                 JsonWebToken.sign({ id: result.id, userName: result.email, type: result.type, displayName: result.displayName, phone: result.phone, avatar: result.avatar}, Config.jwtAuthKey, { expiresIn: '25 days' }, function(error, token) {
-                    sendGrid.sendMailToVerifyAccount(result.email, token, function (errorCode, errorMessage, httpCode, errorDescription, message) {
-                        if( errorCode )
-                        {
-                            return Rest.sendError( res, 400, 'create_token_fail', 400, error );
-                        }else{
-                            return Rest.sendSuccessOne(res, message, httpCode);
-                        }
-                    });
+                    if( error )
+                    {
+                        return Rest.sendError( res, 4000, 'create_token_fail', 400, error );
+                    }else{
+                        sendGrid.sendMailToVerifyAccount(result.email, token, function (errorCode, errorMessage, httpCode, errorDescription, message) {
+                            if( errorCode )
+                            {
+                                return Rest.sendError( res, 400, 'send_mail_fail', 400, error );
+                            }else{
+                                return Rest.sendSuccessOne(res, message, httpCode);
+                            }
+                        });
+                    }
+                    
                 });
             }
             
         });
     },
 
-    verifyAccount: function (req, res) {
-        let token = req.params.token || '';
-        sendGrid.verifyToken(token, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-            if( errorCode )
-            {
-                return Rest.sendError( res, null, token, 400, errorCode );
-            }
-            UserManager.updateUserAfterRegister(result, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-                if (errorCode) {
-                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-                }
-                // res.redirect("https://www.google.com")
-                return Rest.sendSuccessOne(res, message, httpCode);
-            })
+    // verifyAccount: function (req, res) {
+    //     let token = req.params.token || '';
+    //     sendGrid.verifyToken(token, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+    //         if( errorCode )
+    //         {
+    //             return Rest.sendError( res, null, token, 400, errorCode );
+    //         }
+    //         UserManager.updateUserAfterRegister(result, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+    //             if (errorCode) {
+    //                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+    //             }
+    //             return Rest.sendSuccessOne(res, message, httpCode);
+    //         })
                 
-        })
-    },
+    //     })
+    // },
 
     forgotPassword: function (req, res) {
         let email = req.body.email || '';
