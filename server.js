@@ -24,7 +24,8 @@ App.use(Morgan('combined'));
 // get all data/stuff of the body (POST) parameters
 // parse application/json
 App.use(BodyParser.json({
-    limit:'10mb'
+    limit:'50mb',
+    extended: true
 }));
 
 // parse application/vnd.api+json as json
@@ -34,7 +35,7 @@ App.use(BodyParser.json({
 
 // parse application/x-www-form-urlencoded
 App.use(BodyParser.urlencoded({
-    limit:'10mb',
+    limit:'50mb',
     extended: true
 }));
 
@@ -45,17 +46,6 @@ App.all('/*', [require('./app/middlewares/AllowCrossDomain')]);
 
 // Public Location
 App.use(Express.static(global.CLOUD_API.rootPath + Config.paths.public));
-
-//upload to firebase
-// const Multer = require('multer');
-
-// const multer = Multer({
-//     storage: Multer.memoryStorage(),
-//     limits: {
-//       fileSize: 5 * 1024 * 1024 
-//     }
-//   });
-// App.post('/v1/*', multer.single('file'), [require('./app/middlewares/AllowCrossDomain')]);
 
 const check = require ("./app/middlewares/Cronjob")
 const cron = require("node-cron");

@@ -151,7 +151,7 @@ module.exports = function(app) {
      *       "message": "",
      *     }
      */
-    app.post('/v1/auth/meetings', MeetingCtrl.create);
+    app.put('/v1/auth/meetings', MeetingCtrl.create);
     /**
      * @api {PUT} /v1/auth/meetings/:id Update One
      * @apiVersion 1.0.0

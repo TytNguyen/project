@@ -187,6 +187,8 @@ module.exports = {
                 return callback(4, 'invalid_user_right', 403, 'you must be admin to do this process', null);
             }
 
+            console.log(data.title)
+
             if ( !Pieces.VariableBaseTypeChecking(data.title,'string')
                 || !Validator.isLength(data.title, {min: 4, max: 128}) ) {
             return callback(4, 'invalid_title_name', 400, 'title is not alphanumeric and 4 - 128 characters', null);

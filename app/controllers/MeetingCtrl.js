@@ -45,6 +45,7 @@ module.exports = {
         let accessUserType = req.body.accessUserType || '';
 
         let data = req.body || '';
+        console.log(data)
         let file = req.files;
 
         MeetingManager.create(accessUserId, accessUserType, data, file, function(errorCode, errorMessage, httpCode, errorDescription, meeting) {

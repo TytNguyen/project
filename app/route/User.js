@@ -91,7 +91,7 @@ module.exports = function (app) {
      *       "message": "",
      *     }
      */
-    app.post('/v1/auth/users', UserCtrl.createByAdmin);
+    app.put('/v1/auth/users', UserCtrl.createByAdmin);
     /**
      * @api {POST} /v1/login Login
      * @apiVersion 1.0.0
