@@ -70,22 +70,22 @@ module.exports = {
         });
     },
 
-    // verifyAccount: function (req, res) {
-    //     let token = req.params.token || '';
-    //     sendGrid.verifyToken(token, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-    //         if( errorCode )
-    //         {
-    //             return Rest.sendError( res, null, token, 400, errorCode );
-    //         }
-    //         UserManager.updateUserAfterRegister(result, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-    //             if (errorCode) {
-    //                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-    //             }
-    //             return Rest.sendSuccessOne(res, message, httpCode);
-    //         })
+    verifyAccount: function (req, res) {
+        let token = req.params.token || '';
+        sendGrid.verifyToken(token, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+            if( errorCode )
+            {
+                return Rest.sendError( res, null, token, 400, errorCode );
+            }
+            UserManager.updateUserAfterRegister(result, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                if (errorCode) {
+                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                }
+                return Rest.sendSuccessOne(res, message, httpCode);
+            })
                 
-    //     })
-    // },
+        })
+    },
 
     forgotPassword: function (req, res) {
         let email = req.body.email || '';

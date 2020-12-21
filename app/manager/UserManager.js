@@ -20,7 +20,7 @@ const cloudinary = require('../middlewares/Cloudinary');
 
 module.exports = {
     test: function (files, callback) {
-        let image = ['user/jub52suqjyfjra8swrsk', 'user/wnjqru4vb9ymva1seral', 'user/en72cr7nspjp4ham9tda']
+        let image = ['user/j2hl79o6dbjfc9dvuhzx', 'meeting/gsndb8cad7pqm3gk9hhr', 'meeting/pdkrbtci0uuejt45pjs9']
         cloudinary.deleteImage(image, result => {
             console.log(result)
             callback(null, null, 200, null, result);
@@ -108,7 +108,6 @@ module.exports = {
             if (accessUserType < Constant.USER_TYPE.MODERATOR) {
                 return callback(1, 'invalid_user_type', 400, null, null);
             }
-
             let where;
             let cond1 = {};
             let page = 1;
@@ -245,7 +244,7 @@ module.exports = {
 
             queryObj.updatedAt = moment(Date.now());
 
-            if (file === undefined) {
+            if (file === undefined || file.length === 0) {
                 User.update(
                     queryObj,
                     { where: where }).then(result => {
@@ -265,9 +264,9 @@ module.exports = {
                     attributes: ['img_location'],
                 }).then(result => {
                     "use strict";
-
-                    if ((result !== null) && (result.length > 0) && (result[0] > 0)) {
-                        cloudinary.deleteImage(result.img_location, result => {
+                    if (result.img_location !== null) {
+                        let img = [result.img_location]
+                        cloudinary.deleteImage(img, result => {
                             // callback(null, null, 200, null, result);
                             cloudinary.uploadMultiple(file, 'user', result => {
                                 queryObj.avatar = result[0][0];
@@ -286,8 +285,14 @@ module.exports = {
                                         "use strict";
                                         return callback(1, 'update_user_fail', 420, error, null);
                                     });
-                            })
-                        })
+                            }).catch(function (error) {
+                                "use strict";
+                                return callback(1, 'create_avatar_fail', 420, error, null);
+                            });
+                        }).catch(function (error) {
+                            "use strict";
+                            return callback(1, 'delete_avatar_fail', 420, error, null);
+                        });
                     } else {
                         cloudinary.uploadMultiple(file, 'user', result => {
                             queryObj.avatar = result[0][0];
@@ -306,14 +311,15 @@ module.exports = {
                                     "use strict";
                                     return callback(1, 'update_user_fail', 420, error, null);
                                 });
-                        })
+                        }).catch(function (error) {
+                            "use strict";
+                            return callback(1, 'create_avatar_fail', 420, error, null);
+                        });
                     }
                 }).catch(function (error) {
                     "use strict";
                     return callback(1, 'update_user_fail', 420, error, null);
                 });
-
-
             }
         } catch (error) {
             return callback(1, 'update_user_fail', 400, error, null);
@@ -436,7 +442,6 @@ module.exports = {
             }
 
             let idLists = Pieces.safelyParseJSON(ids);
-            console.log(idLists);
 
             let where = { id: { [Sequelize.Op.in]: idLists }, type: { [Sequelize.Op.lt]: accessUserType } };
 
@@ -459,7 +464,6 @@ module.exports = {
     },
 
     updateUserAfterRegister: function (data, callback) {
-        console.log(data)
         try {
             let where = { id: data[0], email: data[1], type: data[2] };
             let queryObj = { status: Constant.STATUS.YES };
@@ -551,7 +555,6 @@ module.exports = {
                         return callback(1, 'unactivated_user', 404, null, null);
                     } else {
                         BCrypt.compare(password, account.password, function (error, result) {
-                            console.log(BCrypt.compare(password, account.password));
                             if (result === true) {
                                 return callback(null, null, 200, null, account);
                             } else {

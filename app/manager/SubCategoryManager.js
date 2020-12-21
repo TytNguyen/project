@@ -11,7 +11,7 @@ module.exports = {
     create: function (accessUserId, accessUserType, data, callback) {
         try {
             if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                return callback(4, 'invalid_category_id', 400, 'category id is incorrect', null);
+                return callback(4, 'invalid_user_id', 400, 'You have no rights to do this action', null);
             }
 
             let queryObj = {};
@@ -39,7 +39,7 @@ module.exports = {
     creates: function (accessUserId, accessUserType, data, callback) {
         try {
             if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                return callback(4, 'invalid_category_id', 400, 'category id is incorrect', null);
+                return callback(4, 'invalid_user_id', 400, 'You have no rights to do this action', null);
             }
 
             let idLists = Pieces.safelyParseJSON(data.ids);
@@ -149,14 +149,14 @@ module.exports = {
                     if ((result !== null) && (result.length > 0) && (result[0] > 0)) {
                         return callback(null, null, 200, null, categoryId);
                     } else {
-                        return callback(3, 'update_category_fail', 400, '', null);
+                        return callback(3, 'update_subject_fail', 400, '', null);
                     }
                 }).catch(function (error) {
                     "use strict";
-                    return callback(3, 'update_category_fail', 420, error, null);
+                    return callback(3, 'update_subject_fail', 420, error, null);
                 });
         } catch (error) {
-            return callback(3, 'update_category_fail', 400, error, null);
+            return callback(3, 'update_subject_fail', 400, error, null);
         }
     },
 
@@ -164,7 +164,7 @@ module.exports = {
         try {
             if (!Pieces.VariableBaseTypeChecking(ids, 'string')
                 || !Validator.isJSON(ids)) {
-                return callback(3, 'invalid_category_ids', 400, 'category id list is not a json array string');
+                return callback(3, 'invalid_subject_ids', 400, 'subject id list is not a json array string');
             }
 
             let idLists = Pieces.safelyParseJSON(ids);
@@ -178,14 +178,14 @@ module.exports = {
                 if (result && (result.length > 0) && result[0] > 0) {
                     return callback(null, null, 200, null);
                 } else {
-                    return callback(3, 'invalid_category_request', 404, null);
+                    return callback(3, 'invalid_subject_request', 404, null);
                 }
             }).catch(function (error) {
                 "use strict";
-                return callback(3, 'update_category_fail', 420, error);
+                return callback(3, 'update_subject_fail', 420, error);
             });
         } catch (error) {
-            return callback(3, 'deletes_category_fail', 400, error);
+            return callback(3, 'deletes_subject_fail', 400, error);
         }
     },
 
@@ -200,7 +200,7 @@ module.exports = {
 
             if (!(Pieces.VariableBaseTypeChecking(id, 'string') && Validator.isInt(id))
                 && !Pieces.VariableBaseTypeChecking(id, 'number')) {
-                return callback(3, 'invalid_category_id', 400, 'category id is incorrect', null);
+                return callback(3, 'invalid_subject_id', 400, 'subject id is incorrect', null);
             }
 
             where = { id: id };
@@ -212,22 +212,22 @@ module.exports = {
                     SubCategory.destroy({ where: where }).then(result => {
                         return callback(null, null, 200, null, result);
                     }).catch(function (error) {
-                        return callback(3, 'remove_category_fail', 420, error);
+                        return callback(3, 'remove_subject_fail', 420, error);
                     });
                 } else {
                     SubCategory.update(queryObj, { where: where }).then(result => {
                         "use strict";
                         return callback(null, null, 200, null, result);
                     }).catch(function (error) {
-                        return callback(3, 'update_category_fail', 420, error);
+                        return callback(3, 'update_subject_fail', 420, error);
                     })
                 }
             }).catch(function (error) {
                 "use strict";
-                return callback(3, 'find_one_category_fail', 400, error, null);
+                return callback(3, 'find_one_subject_fail', 400, error, null);
             });
         } catch (error) {
-            return callback(3, 'delete_category_fail', 400, error);
+            return callback(3, 'delete_subject_fail', 400, error);
         }
     },
 

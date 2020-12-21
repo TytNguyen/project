@@ -45,8 +45,9 @@ module.exports = {
         let accessUserType = req.body.accessUserType || '';
 
         let data = req.body || '';
+        let file = req.files;
 
-        MeetingManager.create(accessUserId, accessUserType, data, function(errorCode, errorMessage, httpCode, errorDescription, meeting) {
+        MeetingManager.create(accessUserId, accessUserType, data, file, function(errorCode, errorMessage, httpCode, errorDescription, meeting) {
             if(errorCode) {
                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
             }
@@ -61,6 +62,7 @@ module.exports = {
         let accessUserType = req.body.accessUserType || '';
 
         let id = req.params.id || '';
+        let file = req.files;
 
         if( id === 'deletes' ){
             let ids = req.body.ids || '';
@@ -73,7 +75,7 @@ module.exports = {
         } else {
             let data = req.body || '';
 
-            MeetingManager.update( accessUserId, accessUserType, id, data, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+            MeetingManager.update( accessUserId, accessUserType, id, data, file, function (errorCode, errorMessage, httpCode, errorDescription, result) {
                 if (errorCode) {
                     return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
                 } else {

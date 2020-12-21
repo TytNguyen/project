@@ -126,6 +126,7 @@ module.exports = function(app) {
      * @apiParam {String} limited maximun number of people attend
      * @apiParam {String} currentAttend number of people have register
      * @apiParam {String} address address where organized the meeting
+     * @apiParam {file} file banner's image
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/meetings
@@ -170,6 +171,7 @@ module.exports = function(app) {
      * @apiParam {String} [status]  1: actived
      *                      <br/> 0: expired
      * @apiParam {String} [limited] maximun number of people attend
+     * @apiParam {file} [file] banner's image
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/meetings/2

@@ -82,8 +82,6 @@ module.exports = {
                 where.id = id;
             }
 
-            console.log(where)
-
             // let attributes = ['id', 'name','address','phone', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             // if (Pieces.VariableBaseTypeChecking(queryContent.id, 'string')) {
@@ -98,14 +96,14 @@ module.exports = {
                 if(result){
                     return callback(null, null, 200, null, result);
                 }else{
-                    return callback(3, 'find_one_company_fail', 404, "User haven't created stakeholder before", null);
+                    return callback(3, 'find_one_stakeholder_fail', 404, "User haven't created stakeholder before", null);
                 }
             }).catch(function(error) {
                 "use strict";
-                return callback(3, 'find_one_company_fail', 400, error, null);
+                return callback(3, 'find_one_stakeholder_fail', 400, error, null);
             });
         }catch(error){
-            return callback(3, 'find_one_company_fail', 400, error, null);
+            return callback(3, 'find_one_stakeholder_fail', 400, error, null);
         }
     },
 
@@ -235,7 +233,7 @@ module.exports = {
         try {
             if(( accessUserType === 2 && data.type === 1) 
             || (accessUserType === 1 && data.type === 2)) {
-            return callback(3, 'invalid_company_rights', 400, 'you do not have user rights to do this process', null);    
+            return callback(3, 'invalid_stakeholder_rights', 400, 'you do not have user rights to do this process', null);    
             }
 
             let queryObj = {};

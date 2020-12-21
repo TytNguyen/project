@@ -7,6 +7,7 @@ const Pieces = require('../utils/Pieces');
 const Meeting = require('../models/Meeting');
 const moment = require('moment');
 const Category = require('../models/Category');
+const cloudinary = require('../middlewares/Cloudinary');
 
 Meeting.belongsTo(Category);
 Category.hasMany(Meeting);
@@ -180,7 +181,7 @@ module.exports = {
         }
     },
 
-    create: function (accessUserId, accessUserType, data, callback) {
+    create: function (accessUserId, accessUserType, data, file, callback) {
         try {
             if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
                 return callback(4, 'invalid_user_right', 403, 'you must be admin to do this process', null);
@@ -190,8 +191,6 @@ module.exports = {
                 || !Validator.isLength(data.title, {min: 4, max: 128}) ) {
             return callback(4, 'invalid_title_name', 400, 'title is not alphanumeric and 4 - 128 characters', null);
             }
-
-            console.log(data)
 
             let queryObj = {};
             queryObj.createdBy = accessUserId;
@@ -209,19 +208,37 @@ module.exports = {
             queryObj.currentAttend = data.currentAttend;    
             queryObj.address = data.address; 
 
-            Meeting.create(queryObj).then(meeting => {
-                "use strict";
-                return callback(null, null, 200, null, meeting);
-            }).catch(function(error) {
-                "use strict";
-                return callback(4, 'create_stakeholder_fail', 400, error, null);
-            });
+            if (file === undefined || file.length === 0) {
+                Meeting.create(queryObj).then(meeting => {
+                    "use strict";
+                    return callback(null, null, 200, null, meeting);
+                }).catch(function(error) {
+                    "use strict";
+                    return callback(4, 'create_meeting_fail', 400, error, null);
+                });
+            } else {
+                cloudinary.uploadMultiple(file, 'meeting', result => {
+                    queryObj.banner = result[0][0];
+                    queryObj.banner_location = result[0][1];
+    
+                    Meeting.create(queryObj).then(meeting => {
+                        "use strict";
+                        return callback(null, null, 200, null, meeting);
+                        }).catch(function(error) {
+                            "use strict";
+                            return callback(4, 'create_meeting_fail', 400, error, null);
+                        });
+                    }).catch(function (error) {
+                        "use strict";
+                        return callback(1, 'create_avatar_fail', 420, error, null);
+                    });
+            }
             }catch(error) {
-                return callback(4, 'create_stakeholder_fail', 400, error, null);
+                return callback(4, 'create_meeting_fail', 400, error, null);
         }
     },
 
-    update: function (accessUserId, accessUserType, meetingId, updateData, callback) {
+    update: function (accessUserId, accessUserType, meetingId, updateData, file, callback) {
         try {
             if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
                 return callback(1, 'invalid_user_type', 403, null, null);
@@ -266,19 +283,83 @@ module.exports = {
 
             where.id = meetingId;
 
-            Meeting.update(
-                queryObj,
-                {where: where}).then(result=>{
+            if (file === undefined || file.length === 0) {
+                Meeting.update(
+                    queryObj,
+                    {where: where}).then(result=>{
+                        "use strict";
+                        if( (result !== null) && (result.length > 0) && (result[0] > 0) ){
+                            return callback(null, null, 200, null, meetingId);
+                        }else{
+                            return callback(4, 'update_meeting_fail', 400, '', null);
+                        }
+                }).catch(function(error){
                     "use strict";
-                    if( (result !== null) && (result.length > 0) && (result[0] > 0) ){
-                        return callback(null, null, 200, null, meetingId);
-                    }else{
-                        return callback(4, 'update_meeting_fail', 400, '', null);
+                    return callback(4, 'update_meeting_fail', 420, error, null);
+                });
+            } else {
+                Meeting.findOne({
+                    where: where,
+                    attributes: ['banner_location'],
+                }).then(result => {
+                    "use strict";
+                    if (result.banner_location !== null) {
+                        let banner = [result.banner_location]
+                        cloudinary.deleteImage(banner, result => {
+                            // callback(null, null, 200, null, result);
+                            cloudinary.uploadMultiple(file, 'meeting', result => {
+                                queryObj.banner = result[0][0];
+                                queryObj.banner_location = result[0][1];
+
+                                Meeting.update(
+                                    queryObj,
+                                    { where: where }).then(result => {
+                                        "use strict";
+                                        if ((result !== null) && (result.length > 0) && (result[0] > 0)) {
+                                            return callback(null, null, 200, null, meetingId);
+                                        } else {
+                                            return callback(1, 'update_meeting_fail', 400, '', null);
+                                        }
+                                    }).catch(function (error) {
+                                        "use strict";
+                                        return callback(1, 'update_meeting_fail', 420, error, null);
+                                    });
+                                }).catch(function (error) {
+                                    "use strict";
+                                    return callback(1, 'create_avatar_fail', 420, error, null);
+                                });
+                            }).catch(function (error) {
+                                "use strict";
+                                return callback(1, 'delete_avatar_fail', 420, error, null);
+                            });
+                    } else {
+                        cloudinary.uploadMultiple(file, 'meeting', result => {
+                            queryObj.banner = result[0][0];
+                            queryObj.banner_location = result[0][1];
+
+                            Meeting.update(
+                                queryObj,
+                                { where: where }).then(result => {
+                                    "use strict";
+                                    if ((result !== null) && (result.length > 0) && (result[0] > 0)) {
+                                        return callback(null, null, 200, null, meetingId);
+                                    } else {
+                                        return callback(1, 'update_meeting_fail', 400, '', null);
+                                    }
+                                }).catch(function (error) {
+                                    "use strict";
+                                    return callback(1, 'update_meeting_fail', 420, error, null);
+                                });
+                        }).catch(function (error) {
+                            "use strict";
+                            return callback(1, 'create_avatar_fail', 420, error, null);
+                        });
                     }
-            }).catch(function(error){
-                "use strict";
-                return callback(4, 'update_meeting_fail', 420, error, null);
-            });
+                }).catch(function (error) {
+                    "use strict";
+                    return callback(1, 'update_meeting_fail', 420, error, null);
+                });
+            }
         }catch(error){
             return callback(4, 'update_meeting_fail', 400, error, null);
         }

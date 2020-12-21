@@ -242,7 +242,7 @@ module.exports = {
                 },
                 {
                     model: Processes, 
-                    attributes: ['id', 'step']
+                    attributes: ['id', 'step', 'createdAt']
                 }],
                 attributes: attributes
             }).then(result=>{
@@ -373,7 +373,7 @@ module.exports = {
                 },
                 {
                     model: Processes, 
-                    attributes: ['id', 'step']
+                    attributes: ['id', 'step', 'createdAt']
                 }],
                 distinct:true
                 // attributes: attributes

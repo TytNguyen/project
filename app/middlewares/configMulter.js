@@ -1,7 +1,6 @@
 var multer = require('multer');
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        
         cb(null, global.CLOUD_API.rootPath + '/public/avatar/'); //hỉnh ảnh sẽ chưa trong folder uploads
        
     },
