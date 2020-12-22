@@ -198,8 +198,7 @@ module.exports = {
                 where: where,
                 limit: perPage,
                 offset: offset,
-                order: sort,
-                distinct:true
+                order: sort
             }).then((data) => {
                 let pages = Math.ceil(data.count / perPage);
                 let stakeholder = data.rows;

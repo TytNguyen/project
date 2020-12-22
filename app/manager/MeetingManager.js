@@ -52,7 +52,7 @@ module.exports = {
             let final = {};
             final = {activated: 0, deleted: 0, total: 0};
             if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
-                return callback(4, 'invalid_user_right', 400, error, null);
+                return callback(4, 'invalid_user_right', 400, final, null);
             }
 
             Meeting.count({

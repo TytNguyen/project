@@ -272,7 +272,7 @@ module.exports = function (app) {
     /**
      * @api {PUT} /v1/auth/users/updatepassword Update Password
      * @apiVersion 1.0.0
-     * @apiName update
+     * @apiName updatepassword
      * @apiGroup User
      * @apiPermission Every type of user
      * @apiHeader {String} access_token json web token to access to data

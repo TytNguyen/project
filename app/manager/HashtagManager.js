@@ -79,8 +79,7 @@ module.exports = {
                 where: where,
                 limit: perPage,
                 offset: offset,
-                order: sort,
-                distinct:true
+                order: sort
             }).then(data=>{
                 "use strict";
                 let pages = Math.ceil(data.count / perPage);

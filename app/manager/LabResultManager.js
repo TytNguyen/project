@@ -9,7 +9,7 @@ const SubCategory = require('../models/SubCategory');
 const LabResult = require('../models/LabResult');
 const moment = require('moment');
 const MatchHashtag = require('../models/MatchHashtag');
-const Hashtag = require('../models/Hashtag');
+const { Hashtag } = require('../models');
 
 Stakeholder.hasMany(LabResult, {foreignKey: 'lid'});
 LabResult.belongsTo(Stakeholder, {foreignKey: 'lid'});
@@ -17,6 +17,8 @@ LabResult.belongsTo(Stakeholder, {foreignKey: 'lid'});
 LabResult.belongsTo(SubCategory, {foreignKey: 'subcategory_id'});
 SubCategory.hasMany(LabResult);
 
+LabResult.belongsToMany(Hashtag, { through: MatchHashtag, foreignKey: 'hashtag_id' });
+Hashtag.belongsToMany(LabResult, { through: MatchHashtag, foreignKey: 'result_id' });
 MatchHashtag.belongsTo(LabResult, {foreignKey: 'result_id'});
 MatchHashtag.belongsTo(Hashtag, {foreignKey: 'hashtag_id'});
 LabResult.hasMany(MatchHashtag, {foreignKey: 'result_id'});
@@ -249,7 +251,7 @@ module.exports = {
                     }],
                     attributes: ["hashtag_id"]
                 }],
-                attributes: attributes,
+                // attributes: attributes,
                 distinct:true
             }).then((data) => {
                 let pages = Math.ceil(data.count / perPage);
