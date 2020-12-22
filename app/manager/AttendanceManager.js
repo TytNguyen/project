@@ -74,6 +74,7 @@ module.exports = {
                     }]
                 }],
                 attributes: attributes,
+                distinct:true
             }).then(data => {
                 "use strict";
                 let pages = Math.ceil(data.count / perPage);
@@ -163,6 +164,7 @@ module.exports = {
                     attributes: ['id', 'name', 'taxcode', 'district', 'detailAddress', 'phone', 'type']
                 }],
                 attributes: attributes,
+                distinct:true
             }).then(data => {
                 "use strict";
                 let pages = Math.ceil(data.count / perPage);

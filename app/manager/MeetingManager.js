@@ -150,7 +150,8 @@ module.exports = {
                 include: [{
                     model: Category,
                     attributes: ['mainsubject'],
-                }]
+                }],
+                distinct:true
             }).then((data) => {
                 let pages = Math.ceil(data.count / perPage);
                 let meeting = data.rows;

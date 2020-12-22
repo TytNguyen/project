@@ -376,7 +376,7 @@ module.exports = {
                     attributes: ['id', 'step', 'note', 'createdAt']
                 }],
                 distinct:true
-                // attributes: attributes
+                // attributes: attributes,
             }).then((data) => {
                 let pages = Math.ceil(data.count / perPage);
                 let matching = data.rows;

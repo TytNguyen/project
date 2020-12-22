@@ -163,6 +163,7 @@ module.exports = {
                     model: SubCategory,
                     attributes: ['id', 'subject']
                 }],
+                distinct:true
             }).then((data) => {
                 let pages = Math.ceil(data.count / perPage);
                 let category = data.rows;

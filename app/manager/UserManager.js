@@ -158,7 +158,8 @@ module.exports = {
                 where: where,
                 limit: perPage,
                 offset: offset,
-                order: sort
+                order: sort,
+                distinct:true
             })
                 .then((data) => {
 

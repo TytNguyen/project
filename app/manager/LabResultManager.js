@@ -249,7 +249,8 @@ module.exports = {
                     }],
                     attributes: ["hashtag_id"]
                 }],
-                attributes: attributes
+                attributes: attributes,
+                distinct:true
             }).then((data) => {
                 let pages = Math.ceil(data.count / perPage);
                 let result = data.rows;

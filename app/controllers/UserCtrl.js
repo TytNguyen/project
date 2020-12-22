@@ -29,9 +29,6 @@ module.exports = {
         let Data = req.body || '';
         let file = req.files;
         
-
-        console.log(Data)
-
         UserManager.createByAdmin(accessUserId, accessUserType, Data, file, function (errorCode, errorMessage, httpCode, errorDescription, user) {
             if (errorCode) {
                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
