@@ -35,12 +35,12 @@ module.exports = {
                 return callback(1, 'invalid_user_id', 400, 'user id is incorrect', null);
             }
 
-            if ((accessUserId !== id) && (accessUserType < Constant.USER_TYPE.MODERATOR)) {
-                return callback(1, 'invalid_user_type', 403, null, null);
-            }
+            //if ((accessUserId !== id) && (accessUserType < Constant.USER_TYPE.MODERATOR)) {
+             //   return callback(1, 'invalid_user_type', 403, null, null);
+            //}
 
             let where = {};
-            let attributes = ['id', 'phone', 'email', 'displayName', 'type', 'status', 'avatar', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            let attributes = ['id', 'phone', 'email', 'firstName', 'lastName','displayName', 'type', 'status', 'avatar', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             if (accessUserId !== parseInt(id)) {
                 where = { id: id, type: { [Sequelize.Op.lt]: accessUserType } };
