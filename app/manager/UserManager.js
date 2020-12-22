@@ -50,7 +50,7 @@ module.exports = {
 
             User.findOne({
                 where: where,
-                attributes: attributes,
+                //attributes: attributes,
             }).then(result => {
                 "use strict";
                 if (result) {
