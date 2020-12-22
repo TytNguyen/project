@@ -7,8 +7,8 @@ module.exports = {
         let accessUserId = req.query.accessUserId || '';
         let accessUserType = req.query.accessUserType || '';
 
-        let id = req.body.id || '';
-        let sub_id = req.body.sub_id || '';
+        let id = parseInt(req.query.id);
+        let sub_id = parseInt(req.query.sub_id);
 
         MatchingManager.autoMatching(accessUserId, accessUserType, id, sub_id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
             if (errorCode) {
@@ -22,8 +22,8 @@ module.exports = {
         let accessUserId = req.query.accessUserId || '';
         let accessUserType = req.query.accessUserType || '';
 
-        let id = req.body.id || '';
-        let sub_id = req.body.sub_id || '';
+        let id = parseInt(req.query.id);
+        let sub_id = parseInt(req.query.sub_id);
 
         MatchingManager.recommend(accessUserId, accessUserType, id, sub_id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
             if (errorCode) {
