@@ -231,8 +231,8 @@ module.exports = {
 
     update: function (accessUserId, accessUserType, stakeholderId, updateData, callback) {
         try {
-            if(( accessUserType === 2 && data.type === 1) 
-            || (accessUserType === 1 && data.type === 2)) {
+            if(( accessUserType === 2 && updateData.type === 1) 
+            || (accessUserType === 1 && updateData.type === 2)) {
             return callback(3, 'invalid_stakeholder_rights', 400, 'you do not have user rights to do this process', null);    
             }
 
@@ -285,7 +285,7 @@ module.exports = {
                 queryObj,
                 {where: where}).then(result=>{
                     "use strict";
-                    if( (result !== null) && (result.length > 0) && (result[0] > 0) ){
+                    if( (result !== null) && (result.length > 0) ){
                         return callback(null, null, 200, null, stakeholderId);
                     }else{
                         return callback(3, 'update_stakeholder_fail', 400, '', null);
