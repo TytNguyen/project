@@ -40,7 +40,7 @@ module.exports = {
             //}
 
             let where = {};
-            let attributes = ['id', 'phone', 'email', 'displayName', 'type', 'status', 'avatar', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            let attributes = ['id', 'phone', 'email', 'firstName', 'lastName','displayName', 'type', 'status', 'avatar', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             if (accessUserId !== parseInt(id)) {
                 where = { id: id, type: { [Sequelize.Op.lt]: accessUserType } };
@@ -50,7 +50,7 @@ module.exports = {
 
             User.findOne({
                 where: where,
-                //attributes: attributes,
+                attributes: attributes,
             }).then(result => {
                 "use strict";
                 if (result) {
