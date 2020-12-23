@@ -15,7 +15,7 @@ module.exports = {
             from: `${process.env.SENDER}`,
             subject: 'Verification your account',
             html: `<h3>To verify your account, click to the link below </h3>
-            <button class="btn btn-success" onClick="verifyToken(${token})">Click here</button>`
+            <a href="http://localhost:4200/#/pages/landing?token=${token}">Click me</a>`
         };
 
         sgMail.send(msg).then(()  => {
@@ -28,23 +28,23 @@ module.exports = {
 
     },
     
-    verifyToken: function(token) {
-        console.log(token)
-        window.open('https://www.google.com.vn/')
+    // verifyToken: function(token) {
+    //     console.log(token)
+    //     window.open('https://www.google.com.vn/')
 
-        JsonWebToken.verify(token, Config.jwtAuthKey, function(error, decoded) {
-            if(error){
-                return callback(1, 70, 'verify_token_fail', 400, error);
-            }
-            let result = [decoded.id, decoded.userName, decoded.type]
-            UserManager.updateUserAfterRegister(result, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-                if (errorCode) {
-                    window.open('https://www.youtube.com/');
-                }
-                window.open('https://www.google.com.vn/')
-            })
-        });
-    },
+    //     JsonWebToken.verify(token, Config.jwtAuthKey, function(error, decoded) {
+    //         if(error){
+    //             return callback(1, 70, 'verify_token_fail', 400, error);
+    //         }
+    //         let result = [decoded.id, decoded.userName, decoded.type]
+    //         UserManager.updateUserAfterRegister(result, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+    //             if (errorCode) {
+    //                 window.open('https://www.youtube.com/');
+    //             }
+    //             window.open('https://www.google.com.vn/')
+    //         })
+    //     });
+    // },
 
     // verifyToken: function(token, callback) {
     //     JsonWebToken.verify(token, Config.jwtAuthKey, function(error, decoded) {
