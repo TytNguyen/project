@@ -315,13 +315,17 @@ module.exports = {
 
             let idLists = Pieces.safelyParseJSON(updateData.delete_ids);
             let deletewhere = {result_id: labresultId, hashtag_id: {[Sequelize.Op.in]: idLists}};
-            let deleteObj = {status: Constant.STATUS.NO};
 
             let idList = Pieces.safelyParseJSON(updateData.ids);
+
+            console.log(idList)
+
             let match = [];
             for (let value of idList) {
                 match.push([value])
             }
+
+            console.log(match)
 
             queryObj.mainsubjectId = updateData.mainsubjectId;
             queryObj.subtypeId = updateData.subtypeId;

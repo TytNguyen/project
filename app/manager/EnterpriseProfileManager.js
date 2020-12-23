@@ -316,7 +316,6 @@ module.exports = {
 
             let idLists = Pieces.safelyParseJSON(updateData.delete_ids);
             let deletewhere = { profile_id: profileId, hashtag_id: { [Sequelize.Op.in]: idLists } };
-            let deleteObj = { status: Constant.STATUS.NO };
 
             let idList = Pieces.safelyParseJSON(updateData.ids);
             let match = [];
@@ -344,8 +343,7 @@ module.exports = {
                 queryObj,
                 { where: where }).then(result => {
                     "use strict";
-                    MatchHashtag.update(
-                        deleteObj,
+                    MatchHashtag.destroy(
                         { where: deletewhere }).then(data => {
                             "use strict";
                             const convertedData = match.map(arrObj => {
