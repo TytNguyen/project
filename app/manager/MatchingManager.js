@@ -32,15 +32,15 @@ LabResult.belongsTo(Stakeholder, {foreignKey: 'lid'});
 LabResult.belongsTo(SubCategory, {foreignKey: 'subcategory_id'});
 SubCategory.hasMany(LabResult, {foreignKey: 'subcategory_id'});
 
-MatchHashtag.belongsTo(LabResult, {foreignKey: 'result_id'});
-MatchHashtag.belongsTo(Hashtag, {foreignKey: 'hashtag_id'});
-LabResult.belongsToMany(Hashtag, {through: MatchHashtag, foreignKey: 'result_id'});
-Hashtag.belongsToMany(LabResult, {through: MatchHashtag, foreignKey: 'hashtag_id'});
+// MatchHashtag.belongsTo(LabResult, {foreignKey: 'result_id'});
+// MatchHashtag.belongsTo(Hashtag, {foreignKey: 'hashtag_id'});
+// LabResult.belongsToMany(Hashtag, {through: MatchHashtag, foreignKey: 'result_id'});
+// Hashtag.belongsToMany(LabResult, {through: MatchHashtag, foreignKey: 'hashtag_id'});
 
-MatchHashtag.belongsTo(EnterpriseProfile, {foreignKey: 'profile_id'});
-MatchHashtag.belongsTo(Hashtag, {foreignKey: 'hashtag_id'});
-EnterpriseProfile.belongsToMany(Hashtag, {through: MatchHashtag, foreignKey: 'profile_id'});
-Hashtag.belongsToMany(EnterpriseProfile, {through: MatchHashtag, foreignKey: 'hashtag_id'});
+// MatchHashtag.belongsTo(EnterpriseProfile, {foreignKey: 'profile_id'});
+// MatchHashtag.belongsTo(Hashtag, {foreignKey: 'hashtag_id'});
+// EnterpriseProfile.belongsToMany(Hashtag, {through: MatchHashtag, foreignKey: 'profile_id'});
+// Hashtag.belongsToMany(EnterpriseProfile, {through: MatchHashtag, foreignKey: 'hashtag_id'});
 
 
 module.exports = {
