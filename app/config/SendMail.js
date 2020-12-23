@@ -46,14 +46,14 @@ module.exports = {
     //     });
     // },
 
-    // verifyToken: function(token, callback) {
-    //     JsonWebToken.verify(token, Config.jwtAuthKey, function(error, decoded) {
-    //         if(error){
-    //             return callback(1, 70, 'verify_token_fail', 400, error);
-    //         }
-    //         callback(null, null, 200, null, [decoded.id, decoded.userName, decoded.type]);
-    //     });
-    // },
+    verifyToken: function(token, callback) {
+        JsonWebToken.verify(token, Config.jwtAuthKey, function(error, decoded) {
+            if(error){
+                return callback(1, 70, 'verify_token_fail', 400, error);
+            }
+            callback(null, null, 200, null, [decoded.id, decoded.userName, decoded.type]);
+        });
+    },
 
     forgotPassword: function(email, token, callback) {
         const msg = {
