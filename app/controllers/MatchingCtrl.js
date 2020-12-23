@@ -38,22 +38,55 @@ module.exports = {
         let accessUserType = req.query.accessUserType || '';
 
         let id = req.params.id || '';
+        let query = req.query
 
-        if(id === 'statistic'){
-            MatchingManager.getStatistic(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-                if (errorCode) {
-                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-                }
-                return Rest.sendSuccessOne(res, result, httpCode);
-            })
-        }else{
-            MatchingManager.getOne(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-                if (errorCode) {
-                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-                }
-                return Rest.sendSuccessOne(res, result, httpCode);
-            })
+        switch(id) 
+        {
+            case 'getrequest': {
+                MatchingManager.getRequest(accessUserId, accessUserType, query, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                    if (errorCode) {
+                        return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                    }
+                    return Rest.sendSuccessOne(res, result, httpCode);
+                });
+                break;
+            }
+            case 'statistic': {
+                MatchingManager.getStatistic(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                    if (errorCode) {
+                        return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                    }
+                    return Rest.sendSuccessOne(res, result, httpCode);
+                });
+                break;
+            }
+            default: {
+                MatchingManager.getOne(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                    if (errorCode) {
+                        return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                    }
+                    return Rest.sendSuccessOne(res, result, httpCode);
+                });
+                break;
+            }
         }
+
+
+        // if(id === 'statistic'){
+        //     MatchingManager.getStatistic(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+        //         if (errorCode) {
+        //             return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+        //         }
+        //         return Rest.sendSuccessOne(res, result, httpCode);
+        //     })
+        // }else{
+        //     MatchingManager.getOne(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+        //         if (errorCode) {
+        //             return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+        //         }
+        //         return Rest.sendSuccessOne(res, result, httpCode);
+        //     })
+        // }
     },
 
     getAll: function(req, res) {

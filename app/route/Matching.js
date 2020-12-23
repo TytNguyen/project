@@ -225,6 +225,56 @@ module.exports = function(app) {
     app.get('v1/auth/matching/statistic', MatchingCtrl.getOne);
 
     /**
+     * @api {GET} /v1/auth/matching/getrequest Get Request
+     * @apiVersion 1.0.0
+     * @apiName getRequest
+     * @apiGroup Matching
+     * @apiPermission type of user < 3
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Get all Request that lab receive or company sent
+     *
+     * @apiParam {Number} lid ID of lab, on query
+     * @apiParam {Number} cid ID of company, on query
+     * @apiParam {string} Note Not use lid and cid in the same time
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/matching/getrequest?cid=4
+     * curl -i http://localhost:3000/v1/auth/matching/getrequest?lid=5
+     *
+     * @apiSuccess {String} id the ID of matching
+     * @apiSuccess {String} status status of matching
+     * @apiSuccess {String} type matching's type
+     * @apiSuccess {String} isCompany Company send this request or not
+     * @apiSuccess {String} enterpriseprofile_id enterpriseprofile's id
+     * @apiSuccess {String} enterpriseprofile_title enterpriseprofile's title
+     * @apiSuccess {String} labresult_id labresult's id
+     * @apiSuccess {String} labresult_title labresult's title
+     * @apiSuccess {String} processes_id processes's id
+     * @apiSuccess {String} step matching's step
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "data": [...],
+     *       "items": {"begin": 1, "end": 3, "total": 5},
+     *       "pages": {"current": 1, "prev": 3, "hasPrev": true, "next": 5, "hasNext": true, "total": 56},
+     *       "result": "ok",
+     *       "message": ""
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result": "fail",
+     *       "message": "invalid input"
+     *     }
+     */
+    app.get('/v1/auth/matching/getrequest', MatchingCtrl.getOne);
+
+    /**
      * @api {GET} /v1/auth/matching Get List
      * @apiVersion 1.0.0
      * @apiName getAll
@@ -274,6 +324,9 @@ module.exports = function(app) {
      *     }
      */
     app.get('/v1/auth/matching', MatchingCtrl.getAll);
+
+
+    
   
   /**
      * @api {POST} /v1/auth/matching Create One

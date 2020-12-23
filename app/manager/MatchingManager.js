@@ -37,6 +37,12 @@ MatchHashtag.belongsTo(Hashtag, {foreignKey: 'hashtag_id'});
 LabResult.belongsToMany(Hashtag, {through: MatchHashtag, foreignKey: 'result_id'});
 Hashtag.belongsToMany(LabResult, {through: MatchHashtag, foreignKey: 'hashtag_id'});
 
+MatchHashtag.belongsTo(EnterpriseProfile, {foreignKey: 'profile_id'});
+MatchHashtag.belongsTo(Hashtag, {foreignKey: 'hashtag_id'});
+EnterpriseProfile.belongsToMany(Hashtag, {through: MatchHashtag, foreignKey: 'profile_id'});
+Hashtag.belongsToMany(EnterpriseProfile, {through: MatchHashtag, foreignKey: 'hashtag_id'});
+
+
 module.exports = {
     autoMatching: function(accessUserId, accessUserType, id, sub_id, callback) {
         try {
@@ -402,6 +408,177 @@ module.exports = {
             }).catch(function(error) {
                 return callback(4, 'find_and_count_all_matching_fail', 420, error, null);
             });
+        } catch(error) {
+            return callback(4, 'get_all_matching_fail', 400, error, null);
+        }
+    },
+
+    getRequest: function(accessUserId, accessUserType, queryContent, callback) {
+        try {
+            // if(accessUserType < Constant.USER_TYPE.MODERATOR) {
+            //     return callback(4, 'invalid_user_type', 400, null, null);
+            // }
+
+            let where;
+            let con1 = {};
+            let page = 1;
+            let perPage = Constant.DEFAULT_PAGING_SIZE;
+            let sort = [];
+            let attributes = ['id', 'status','type','isCompany', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+
+            this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
+            if( Pieces.VariableBaseTypeChecking(queryContent.lid, 'string') ){
+                where = {lid: queryContent.lid};
+            }
+
+            if( Pieces.VariableBaseTypeChecking(queryContent.cid, 'string') ){
+                where = {cid: queryContent.cid};
+            }
+
+            console.log(where)
+
+            if( (Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))
+                || (Pieces.VariableBaseTypeChecking(queryContent['page'], 'number')) ){
+                page = parseInt(queryContent['page']);
+                if(page === 0){
+                    page = 1;
+                }
+            }
+
+            if( (Pieces.VariableBaseTypeChecking(queryContent['perPage'], 'string') && Validator.isInt(queryContent['perPage']))
+                || (Pieces.VariableBaseTypeChecking(queryContent['perPage'], 'number')) ){
+                perPage = parseInt(queryContent['perPage']);
+                if(perPage <= 0){
+                    perPage = Constant.DEFAULT_PAGING_SIZE;
+                }
+            }
+
+            Pieces.splitAndAssignValueForSort(sort, queryContent['sort']);
+            if(sort.length <= 0){
+                sort.push(['updatedAt', 'DESC']);
+            }
+
+            let offset = perPage * (page - 1);
+
+            if (where.lid !== undefined) {
+                Matching.findAndCountAll({
+                limit: perPage,
+                offset: offset,
+                order: sort,
+                include: [
+                    {
+                    model: EnterpriseProfile,
+                    attributes: ['id', 'title'],
+                    include: [
+                        {
+                            model: Stakeholder,
+                            attributes: ['id', 'name', 'detailAddress'],
+                        }
+                    ]
+                },
+                {
+                    model: LabResult,
+                    attributes: ['id', 'title', 'lid'],
+                    where: where,
+                    include: [
+                        {
+                            model: Stakeholder,
+                            attributes: ['id', 'name', 'detailAddress'],
+                        }
+                    ]
+                },
+                {
+                    model: Processes, 
+                    attributes: ['id', 'step', 'note', 'createdAt']
+                }],
+                distinct:true
+                // attributes: attributes,
+                }).then((data) => {
+                    let pages = Math.ceil(data.count / perPage);
+                    let matching = data.rows;
+                    let output = {
+                        data: matching,
+                        pages: {
+                            current: page,
+                            prev: page - 1,
+                            hasPrev: false,
+                            next: (page + 1) > pages ? 0 : (page + 1),
+                            hasNext: false,
+                            total: pages
+                        },
+                        items: {
+                            begin: ((page * perPage) - perPage) + 1,
+                            end: page * perPage,
+                            total: data.count
+                        }
+                    };
+                    output.pages.hasNext = (output.pages.next !== 0);
+                    output.pages.hasPrev = (output.pages.prev !== 0);
+                    return callback(null, null, 200, null, output);
+                }).catch(function(error) {
+                    return callback(4, 'find_and_count_all_matching_fail', 420, error, null);
+                });
+            } else {
+                Matching.findAndCountAll({
+                    limit: perPage,
+                    offset: offset,
+                    order: sort,
+                    include: [
+                        {
+                        model: EnterpriseProfile,
+                        where: where,
+                        attributes: ['id', 'title', 'cid'],
+                        include: [
+                            {
+                                model: Stakeholder,
+                                attributes: ['id', 'name', 'detailAddress'],
+                            }
+                        ]
+                    },
+                    {
+                        model: LabResult,
+                        attributes: ['id', 'title', 'lid'],
+                        include: [
+                            {
+                                model: Stakeholder,
+                                attributes: ['id', 'name', 'detailAddress'],
+                            }
+                        ]
+                    },
+                    {
+                        model: Processes, 
+                        attributes: ['id', 'step', 'note', 'createdAt']
+                    }],
+                    distinct:true
+                    // attributes: attributes,
+                }).then((data) => {
+                    let pages = Math.ceil(data.count / perPage);
+                    let matching = data.rows;
+                    let output = {
+                        data: matching,
+                        pages: {
+                            current: page,
+                            prev: page - 1,
+                            hasPrev: false,
+                            next: (page + 1) > pages ? 0 : (page + 1),
+                            hasNext: false,
+                            total: pages
+                        },
+                        items: {
+                            begin: ((page * perPage) - perPage) + 1,
+                            end: page * perPage,
+                            total: data.count
+                        }
+                    };
+                    output.pages.hasNext = (output.pages.next !== 0);
+                    output.pages.hasPrev = (output.pages.prev !== 0);
+                    return callback(null, null, 200, null, output);
+                }).catch(function(error) {
+                    return callback(4, 'find_and_count_all_matching_fail', 420, error, null);
+                });
+            }
+            
+            
         } catch(error) {
             return callback(4, 'get_all_matching_fail', 400, error, null);
         }
