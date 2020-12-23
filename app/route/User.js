@@ -10,7 +10,7 @@ module.exports = function (app) {
     app.put('/v1/test', UserCtrl.test);
 
     /**
-     * @api {GET} /v1/verify/:token Update Email's status after register
+     * @api {PUT} /v1/verify/:token Update Email's status after register
      * @apiVersion 1.0.0
      * @apiName verifyAccount
      * @apiGroup User
@@ -40,7 +40,7 @@ module.exports = function (app) {
      *       "message": "invalid input"
      *     }
      */
-    app.get('/v1/verify/:token', UserCtrl.verifyAccount);
+    app.put('/v1/verify/:token', UserCtrl.verifyAccount);
 
     // app.post('/v1/user/upload', UserCtrl.uploadImageToFirebase);
 

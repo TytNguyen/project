@@ -6692,7 +6692,7 @@
     "groupTitle": "User"
   },
   {
-    "type": "GET",
+    "type": "PUT",
     "url": "/v1/verify/:token",
     "title": "Update Email's status after register",
     "version": "1.0.0",
