@@ -320,12 +320,13 @@ module.exports = {
             let attributes = ['id', 'status','type','isCompany', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
+            
             if( Pieces.VariableBaseTypeChecking(queryContent.profileId, 'string') ){
-                where.profileId = queryContent.profileId;
+                where = {profileId: queryContent.profileId};
             }
 
             if( Pieces.VariableBaseTypeChecking(queryContent.resultId, 'string') ){
-                where.resultId = queryContent.resultId;
+                where = {resultId: queryContent.resultId};
             }
 
             if( (Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))
@@ -350,6 +351,8 @@ module.exports = {
             }
 
             let offset = perPage * (page - 1);
+
+            console.log(where)
             
             Matching.findAndCountAll({
                 where: where,

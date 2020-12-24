@@ -288,7 +288,9 @@ module.exports = function(app) {
      * @apiParam {Number} perPage Item per page (N/A)
      * @apiParam {String} sort Sort the list by a field (N/A)
      * @apiParam {String} filter filter the query data (N/A)
-     * @apiParam {String} q(profileId, resultId) Text filter for data (N/A)
+     * @apiParam {Number} profileId ID of profile, on query
+     * @apiParam {Number} resultId ID of result, on query
+     * @apiParam {string} Note Not use profileId and resultId in the same time
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/matching/

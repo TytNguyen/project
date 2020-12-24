@@ -2558,10 +2558,24 @@
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Number",
             "optional": false,
-            "field": "q",
-            "description": "<p>(profileId, resultId) Text filter for data (N/A)</p>"
+            "field": "profileId",
+            "description": "<p>ID of profile, on query</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "resultId",
+            "description": "<p>ID of result, on query</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "Note",
+            "description": "<p>Not use profileId and resultId in the same time</p>"
           }
         ]
       }
