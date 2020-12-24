@@ -78,7 +78,7 @@ module.exports = {
                 if (errorCode) {
                     return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
                 }
-                return Rest.sendSuccessOne(res, message, httpCode);
+                return Rest.sendSuccessOne(res, result, httpCode);
             })
                 
         })
