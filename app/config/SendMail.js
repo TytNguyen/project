@@ -15,7 +15,7 @@ module.exports = {
             from: `${process.env.SENDER}`,
             subject: 'Verification your account',
             html: `<h3>To verify your account, click to the link below </h3>
-            <a href="http://localhost:3000/v1/verify/${token}">Click me</a>`
+            <a href="http://localhost:4200/#/pages/landing?token=${token}">Click me</a>`
         };
 
         sgMail.send(msg).then(()  => {
