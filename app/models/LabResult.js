@@ -35,6 +35,16 @@ let LabResult = MySequelize.define('labresult', {
         type: Sequelize.STRING(200),
         allowNull: true,
     },
+    image: {
+        type: Sequelize.STRING(200),
+        allowNull: true,
+        default: null
+    },
+    img_location: {
+        type: Sequelize.STRING(200),
+        allowNull: true,
+        default: null
+    },
     status: {
         type: Sequelize.TINYINT(1),
         allowNull: true,
