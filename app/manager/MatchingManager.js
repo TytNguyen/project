@@ -238,13 +238,26 @@ module.exports = {
             
             Matching.findOne({
                 where: where,
-                include: [{
+                include: [
+                    {
                     model: EnterpriseProfile,
-                    attributes: ['id', 'title']
+                    attributes: ['id', 'title'],
+                    include: [
+                        {
+                            model: Stakeholder,
+                            attributes: ['id', 'name', 'detailAddress', 'district'],
+                        }
+                    ]
                 },
                 {
                     model: LabResult,
-                    attributes: ['id', 'title']
+                    attributes: ['id', 'title', 'lid'],
+                    include: [
+                        {
+                            model: Stakeholder,
+                            attributes: ['id', 'name', 'detailAddress', 'district'],
+                        }
+                    ]
                 },
                 {
                     model: Processes, 
@@ -366,7 +379,7 @@ module.exports = {
                     include: [
                         {
                             model: Stakeholder,
-                            attributes: ['id', 'name', 'detailAddress'],
+                            attributes: ['id', 'name', 'detailAddress', 'district'],
                         }
                     ]
                 },
@@ -376,7 +389,7 @@ module.exports = {
                     include: [
                         {
                             model: Stakeholder,
-                            attributes: ['id', 'name', 'detailAddress'],
+                            attributes: ['id', 'name', 'detailAddress', 'district'],
                         }
                     ]
                 },
@@ -475,7 +488,7 @@ module.exports = {
                     include: [
                         {
                             model: Stakeholder,
-                            attributes: ['id', 'name', 'detailAddress'],
+                            attributes: ['id', 'name', 'detailAddress', 'district'],
                         }
                     ]
                 },
@@ -486,7 +499,7 @@ module.exports = {
                     include: [
                         {
                             model: Stakeholder,
-                            attributes: ['id', 'name', 'detailAddress'],
+                            attributes: ['id', 'name', 'detailAddress', 'district'],
                         }
                     ]
                 },
