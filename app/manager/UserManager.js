@@ -543,7 +543,7 @@ module.exports = {
             } else {
                 where = { phone: loginName };
             }
-            let attributes = ['id', 'phone', 'password', 'status', 'email', 'type', 'avatar'];
+            let attributes = ['id', 'phone', 'password', 'displayName', 'status', 'email', 'type', 'avatar'];
 
             User.findOne({
                 where: where,

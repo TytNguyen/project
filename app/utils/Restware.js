@@ -122,6 +122,7 @@ const sendSuccessToken = function (res, token, user) {
     data.userName = user.email;
     data.phone = user.phone;
     data.avatar = user.avatar;
+    data.displayName = user.displayName;
     data.type = user.type;
     data.status = user.status;
 
