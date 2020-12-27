@@ -277,6 +277,11 @@ module.exports = {
                 queryObj.limited = updateData.limited;
             }
 
+            if (updateData.address !== undefined) {
+                queryObj.address = data.address; 
+            }
+
+            
             queryObj.begin = moment(updateData.begin);
             queryObj.end = moment(updateData.end);
             queryObj.updatedBy = accessUserId;

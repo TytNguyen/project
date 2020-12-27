@@ -287,6 +287,7 @@ module.exports = {
         try {
             let queryObj = {};
             let where = {};
+            let idLists, idList;
 
             if ( !( Pieces.VariableBaseTypeChecking(labresultId,'string')
                     && Validator.isInt(labresultId) )
@@ -303,75 +304,85 @@ module.exports = {
                     queryObj.title = updateData.title;
             }
 
-            if ( !Pieces.VariableBaseTypeChecking(updateData.delete_ids,'string')
-                    || !Validator.isJSON(updateData.delete_ids) ) {
-                return callback(4, 'invalid_delete_ids', 400, 'delete id list is not a json array string');
+            if ( Pieces.VariableBaseTypeChecking(updateData.delete_ids,'string')
+                    || Validator.isJSON(updateData.delete_ids) ) {
+                idLists = Pieces.safelyParseJSON(updateData.delete_ids);
             }
 
-            if ( !Pieces.VariableBaseTypeChecking(updateData.ids,'string')
-            || !Validator.isJSON(updateData.ids) ) {
-                return callback(4, 'invalid_update_ids', 400, 'update id list is not a json array string');
-            }
+            if ( Pieces.VariableBaseTypeChecking(updateData.ids,'string')
+            || Validator.isJSON(updateData.ids) ) {
+                idList = Pieces.safelyParseJSON(updateData.ids);
+            } 
 
-            let idLists = Pieces.safelyParseJSON(updateData.delete_ids);
             let deletewhere = {result_id: labresultId, hashtag_id: {[Sequelize.Op.in]: idLists}};
 
-            let idList = Pieces.safelyParseJSON(updateData.ids);
-
-            console.log(idList)
-
             let match = [];
-            for (let value of idList) {
-                match.push([value])
+            
+            if (idList !== undefined) {
+                for (let value of idList) {
+                    match.push([value])
+                }
             }
 
-            console.log(match)
+            if (updateData.subcategory_id !== undefined) {
+                queryObj.subcategory_id = updateData.subcategory_id;
+            }
 
-            queryObj.mainsubjectId = updateData.mainsubjectId;
-            queryObj.subtypeId = updateData.subtypeId;
-            queryObj.typeId = updateData.typeId;
-            queryObj.locationId = updateData.locationId;
-            queryObj.description = updateData.description;
+            if (updateData.description !== undefined) {
+                queryObj.description = updateData.description;
+            }
 
             queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now());
             where.id = labresultId;
 
-            LabResult.update(
-                queryObj,
-                {where: where}).then(result=>{
-                    "use strict";
-                    MatchHashtag.destroy(
-                        {where: deletewhere}).then(data => {
-                            "use strict";
-                            const convertedData = match.map(arrObj => {
-                                return {
-                                    result_id: labresultId,
-                                    hashtag_id: arrObj[0],
-                                    status: 1,
-                                    createdBy: accessUserId,
-                                    updatedBy: accessUserId,
-                                    createdAt: moment(Date.now()),
-                                    updatedAt: moment(Date.now()),
-                                }
-                            })
-                            MatchHashtag.bulkCreate(convertedData).then(result => {
+            if(idLists !== undefined) {
+                LabResult.update(
+                    queryObj,
+                    {where: where}).then(result=>{
+                        "use strict";
+                        MatchHashtag.destroy(
+                            {where: deletewhere}).then(data => {
                                 "use strict";
-                                return callback(null, null, 200, null, result);
-                            }).catch(function(error) {
-                            "use strict";
-                            return callback(4, 'create_profile_fail', 400, error, null);
-                        });
-                        }).catch(function(error){
-                            "use strict";
-                            return callback(3, 'update_profile_fail', 420, error, null);
-                        });
-            }).catch(function(error){
-                "use strict";
-                return callback(3, 'update_labresult_fail', 420, error, null);
-            });
+                                const convertedData = match.map(arrObj => {
+                                    return {
+                                        result_id: labresultId,
+                                        hashtag_id: arrObj[0],
+                                        status: 1,
+                                        createdBy: accessUserId,
+                                        updatedBy: accessUserId,
+                                        createdAt: moment(Date.now()),
+                                        updatedAt: moment(Date.now()),
+                                    }
+                                })
+                                MatchHashtag.bulkCreate(convertedData).then(result => {
+                                    "use strict";
+                                    return callback(null, null, 200, null, result);
+                                }).catch(function(error) {
+                                "use strict";
+                                return callback(4, 'create_profile_fail', 400, error, null);
+                            });
+                            }).catch(function(error){
+                                "use strict";
+                                return callback(3, 'update_profile_fail', 420, error, null);
+                            });
+                }).catch(function(error){
+                    "use strict";
+                    return callback(3, 'update_labresult_fail', 420, error, null);
+                });
+            } else {
+                LabResult.update(
+                    queryObj,
+                    {where: where}).then(result=>{
+                        "use strict";
+                        return callback(null, null, 200, null, result);
+                }).catch(function(error){
+                    "use strict";
+                    return callback(3, 'update_labresult_fail', 420, error, null);
+                });
+            }
         }catch(error){
-            return callback(3, 'update_labresult_fail', 400, error, null);
+            return callback(3, 'deletes_labresult_fail', 400, error);
         }
     },
 

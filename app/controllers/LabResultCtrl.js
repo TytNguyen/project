@@ -60,6 +60,8 @@ module.exports = {
         let accessUserId = req.body.accessUserId || '';
         let accessUserType = req.body.accessUserType || '';
 
+        let image = req.files;
+
         let id = req.params.id || '';
 
         if( id === 'deletes' ){
