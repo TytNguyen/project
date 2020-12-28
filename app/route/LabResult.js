@@ -135,7 +135,7 @@ module.exports = function(app) {
     app.get('/v1/auth/labresult', LabResultCtrl.getAll);
 
     /**
-     * @api {POST} /v1/auth/labresult Create One
+     * @api {PUT} /v1/auth/labresult Create One
      * @apiVersion 1.0.0
      * @apiName create
      * @apiGroup LabResult
@@ -149,7 +149,8 @@ module.exports = function(app) {
      * @apiParam {String} lid lab's id
      * @apiParam {String} subcategory_id subcategory's id
      * @apiParam {String} description labresult's description
-     *
+     * @apiParam {image} file labresult's image, can put multiple file
+     * 
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/labresult
      *
@@ -173,7 +174,7 @@ module.exports = function(app) {
      *       "message": "",
      *     }
      */
-    app.post('/v1/auth/labresult', LabResultCtrl.create);
+    app.put('/v1/auth/labresult', LabResultCtrl.create);
 
     /**
      * @api {PUT} /v1/auth/labresult/:id Update One
@@ -220,6 +221,45 @@ module.exports = function(app) {
      */
     app.put('/v1/auth/labresult/:id', LabResultCtrl.update);
     app.put('/v1/auth/labresult/deletes', LabResultCtrl.update);
+
+    /**
+     * @api {PUT} /v1/auth/labresult/updateimage Update Product's Image
+     * @apiVersion 1.0.0
+     * @apiName updateImage
+     * @apiGroup LabResult
+     * @apiPermission user with the right type, administrator or moderator
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Update Product's Image
+     *
+     * @apiParam {string} resultId labresult's id
+     * @apiParam {file} file labresult's images, can put multiple file
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/labresult/updateimage
+     *
+     * @apiSuccess {String} id the ID of updated labresult
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *          "data":{
+     *              "id": "2"
+     *          },
+     *          "result":"ok",
+     *          "message":""
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result":"fail",
+     *       "message": "invalid input"
+     *     }
+     */
+
+    app.put('/v1/auth/labresult/updateimage', LabResultCtrl.update);
 
     /**
      * @api {DELETE} /v1/auth/labresult/:id Delete One

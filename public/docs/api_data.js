@@ -1589,7 +1589,7 @@ define({ "api": [
     "groupTitle": "Hashtags"
   },
   {
-    "type": "POST",
+    "type": "PUT",
     "url": "/v1/auth/labresult",
     "title": "Create One",
     "version": "1.0.0",
@@ -1651,6 +1651,13 @@ define({ "api": [
             "optional": false,
             "field": "description",
             "description": "<p>labresult's description</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "image",
+            "optional": false,
+            "field": "file",
+            "description": "<p>labresult's image, can put multiple file</p>"
           }
         ]
       }
@@ -2200,6 +2207,101 @@ define({ "api": [
       {
         "title": "Example usage:",
         "content": "curl -i http://localhost:3000/v1/auth/labresult/2",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>the ID of updated labresult</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\":{\n         \"id\": \"2\"\n     },\n     \"result\":\"ok\",\n     \"message\":\"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\":\"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/LabResult.js",
+    "groupTitle": "LabResult"
+  },
+  {
+    "type": "PUT",
+    "url": "/v1/auth/labresult/updateimage",
+    "title": "Update Product's Image",
+    "version": "1.0.0",
+    "name": "updateImage",
+    "group": "LabResult",
+    "permission": [
+      {
+        "name": "user with the right type, administrator or moderator"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Update Product's Image</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "resultId",
+            "description": "<p>labresult's id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "file",
+            "description": "<p>labresult's images, can put multiple file</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/labresult/updateimage",
         "type": "json"
       }
     ],

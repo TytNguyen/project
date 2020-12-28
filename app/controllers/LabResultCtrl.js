@@ -7,8 +7,9 @@ module.exports = {
         let accessUserType = req.body.accessUserType || '';
 
         let data = req.body || '';
+        let image = req.files;
 
-        LabResultManager.create(accessUserId, accessUserType, data, function(errorCode, errorMessage, httpCode, errorDescription, labresult) {
+        LabResultManager.create(accessUserId, accessUserType, data, image, function(errorCode, errorMessage, httpCode, errorDescription, labresult) {
             if(errorCode) {
                 return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
             }
@@ -60,10 +61,8 @@ module.exports = {
         let accessUserId = req.body.accessUserId || '';
         let accessUserType = req.body.accessUserType || '';
 
-        let image = req.files;
-
         let id = req.params.id || '';
-
+        
         if( id === 'deletes' ){
             let ids = req.body.ids || '';
             LabResultManager.deletes(accessUserId, accessUserType, ids, function (errorCode, errorMessage, httpCode, errorDescription) {
@@ -72,9 +71,19 @@ module.exports = {
                 }
                 return Rest.sendSuccessOne(res, null, httpCode);
             });
-        } else {
+        } else if ( id === 'updateimage' ){
+            let image = req.files;
+            let resultId = req.body.resultId || '';
+            
+            LabResultManager.updateImage(accessUserId, accessUserType, resultId, image, function (errorCode, errorMessage, httpCode, errorDescription) {
+                if (errorCode) {
+                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                }
+                return Rest.sendSuccessOne(res, null, httpCode);
+            });
+        }
+        else {
             let data = req.body || '';
-
             LabResultManager.update( accessUserId, accessUserType, id, data, function (errorCode, errorMessage, httpCode, errorDescription, result) {
                 if (errorCode) {
                     return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);

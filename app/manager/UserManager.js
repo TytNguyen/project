@@ -19,15 +19,6 @@ const moment = require('moment');
 const cloudinary = require('../middlewares/Cloudinary');
 
 module.exports = {
-    test: function (files, callback) {
-        let image = ['user/j2hl79o6dbjfc9dvuhzx', 'meeting/gsndb8cad7pqm3gk9hhr', 'meeting/pdkrbtci0uuejt45pjs9']
-        cloudinary.deleteImage(image, result => {
-            console.log(result)
-            callback(null, null, 200, null, result);
-        })
-
-    },
-
     getOne: function (accessUserId, accessUserType, id, callback) {
         try {
             if (!(Pieces.VariableBaseTypeChecking(id, 'string') && Validator.isInt(id))
@@ -629,7 +620,7 @@ module.exports = {
             queryObj.updatedAt = moment(Date.now());
             queryObj.createdAt = moment(Date.now());
 
-            if (file === undefined) {
+            if (file === undefined || file.length == 0) {
                 User.create(queryObj).then(result => {
                     "use strict";
                     return callback(null, null, 200, null, result);

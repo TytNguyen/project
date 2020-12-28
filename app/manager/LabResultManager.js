@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 
 const Constant = require('../utils/Constant');
 const Pieces = require('../utils/Pieces');
+const cloudinary = require('../middlewares/Cloudinary');
 
 const Stakeholder = require('../models/Stakeholder');
 const SubCategory = require('../models/SubCategory');
@@ -25,7 +26,7 @@ LabResult.hasMany(MatchHashtag, {foreignKey: 'result_id'});
 Hashtag.hasMany(MatchHashtag, {foreignKey: 'hashtag_id'});
 
 module.exports = {
-    create: function (accessUserId, accessUserType, data, callback) {
+    create: function (accessUserId, accessUserType, data, file, callback) {
         try {
             let queryObj = {};
 
@@ -61,31 +62,75 @@ module.exports = {
             queryObj.description = data.description;
             queryObj.status = Constant.STATUS.YES;
 
-            LabResult.create(queryObj).then(labresult => {
-                "use strict";
-                const convertedData = match.map(arrObj => {
-                    return {
-                        result_id: labresult.id,
-                        hashtag_id: arrObj[0],
-                        status: 1,
-                        createdBy: accessUserId,
-                        updatedBy: accessUserId,
-                        createdAt: moment(Date.now()),
-                        updatedAt: moment(Date.now()),
-                    }
-                })
-
-                MatchHashtag.bulkCreate(convertedData).then(result => {
+            if (file === undefined || file.length == 0) {
+                LabResult.create(queryObj).then(labresult => {
                     "use strict";
-                    return callback(null, null, 200, null, labresult);
+                    const convertedData = match.map(arrObj => {
+                        return {
+                            result_id: labresult.id,
+                            hashtag_id: arrObj[0],
+                            status: 1,
+                            createdBy: accessUserId,
+                            updatedBy: accessUserId,
+                            createdAt: moment(Date.now()),
+                            updatedAt: moment(Date.now()),
+                        }
+                    })
+    
+                    MatchHashtag.bulkCreate(convertedData).then(result => {
+                        "use strict";
+                        return callback(null, null, 200, null, labresult);
+                    }).catch(function(error) {
+                    "use strict";
+                    return callback(4, 'create_labresult_fail', 400, error, null);
+                });
                 }).catch(function(error) {
-                "use strict";
-                return callback(4, 'create_labresult_fail', 400, error, null);
-            });
-            }).catch(function(error) {
-                "use strict";
-                return callback(4, 'create_labresult_fail', 400, error, null);
-            });
+                    "use strict";
+                    return callback(4, 'create_labresult_fail', 400, error, null);
+                });
+            } else {
+                cloudinary.uploadMultiple(file, 'product', result => {
+                    let link = '';
+                    let path = '';
+                    result.forEach((value) => {
+                        link += value[0] + ",";
+                        path += value[1] + ",";
+                    });
+
+                    queryObj.image = link;
+                    queryObj.img_location = path;
+
+                    LabResult.create(queryObj).then(labresult => {
+                        "use strict";
+                        const convertedData = match.map(arrObj => {
+                            return {
+                                result_id: labresult.id,
+                                hashtag_id: arrObj[0],
+                                status: 1,
+                                createdBy: accessUserId,
+                                updatedBy: accessUserId,
+                                createdAt: moment(Date.now()),
+                                updatedAt: moment(Date.now()),
+                            }
+                        })
+        
+                        MatchHashtag.bulkCreate(convertedData).then(result => {
+                            "use strict";
+                            return callback(null, null, 200, null, labresult);
+                        }).catch(function(error) {
+                        "use strict";
+                        return callback(4, 'create_labresult_fail', 400, error, null);
+                    });
+                    }).catch(function(error) {
+                        "use strict";
+                        return callback(4, 'create_labresult_fail', 400, error, null);
+                    });
+    
+                }).catch(function (error) {
+                    "use strict";
+                    return callback(1, 'create_image_fail', 420, error, null);
+                });
+            }
             }catch(error) {
                 return callback(4, 'create_labresult_fail', 400, error, null);
         }
@@ -383,6 +428,82 @@ module.exports = {
             }
         }catch(error){
             return callback(3, 'deletes_labresult_fail', 400, error);
+        }
+    },
+
+
+    updateImage: function (accessUserId, accessUserType, resultId, file, callback) {
+        try {
+            let queryObj = {};
+            let where = {};
+
+            where.id = resultId;
+            queryObj.updatedAt = moment(Date.now());
+
+            LabResult.findOne({
+                where: where,
+                attributes: ["img_location"]
+            }).then(result=>{
+                "use strict";
+                if (Pieces.VariableBaseTypeChecking(result.img_location, 'string')) {
+                    let paths = result.img_location.replace(/,/g, ' ').split(' ');
+                    paths.pop()
+                    cloudinary.deleteImage(paths, result => {
+                        cloudinary.uploadMultiple(file, 'product', result => {
+                            let link = '';
+                            let path = '';
+                            result.forEach((value) => {
+                                link += value[0] + ",";
+                                path += value[1] + ",";
+                            })
+                            LabResult.update(
+                                {image: link,
+                                img_location: path},
+                                {where: where}).then(result=>{
+                                    "use strict";
+                                    return callback(null, null, 200, resultId, null);
+                            }).catch(function(error){
+                                "use strict";
+                                return callback(3, 'update_labresult_fail', 420, error, null);
+                            });
+                        }).catch(function (error) {
+                            "use strict";
+                            return callback(1, 'create_image_fail', 420, error, null);
+                        });
+                    }).catch(function (error) {
+                        "use strict";
+                        return callback(1, 'delete_image_fail', 420, error, null);
+                    });
+                } else {
+                    cloudinary.uploadMultiple(file, 'product', result => {
+                        let link = '';
+                        let path = '';
+                        result.forEach((value) => {
+                            link += value[0] + ",";
+                            path += value[1] + ",";
+                        })
+                        LabResult.update(
+                            {image: link,
+                            img_location: path},
+                            {where: where}).then(result=>{
+                                "use strict";
+                                return callback(null, null, 200, resultId, null);
+                        }).catch(function(error){
+                            "use strict";
+                            return callback(3, 'update_labresult_fail', 420, error, null);
+                        });
+        
+                    }).catch(function (error) {
+                        "use strict";
+                        return callback(1, 'create_image_fail', 420, error, null);
+                    });
+                }
+            }).catch(function(error) {
+                "use strict";
+                return callback(4, 'find_one_labresult_fail', 400, error, null);
+            });
+        } catch (error) {
+            return callback(1, 'update_labresult_fail', 400, error, null);
         }
     },
 

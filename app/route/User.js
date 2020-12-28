@@ -7,8 +7,6 @@ const sendGrid = require('../config/SendMail');
 
 
 module.exports = function (app) {
-    app.put('/v1/test', UserCtrl.test);
-
     /**
      * @api {PUT} /v1/verify/:token Update Email's status after register
      * @apiVersion 1.0.0

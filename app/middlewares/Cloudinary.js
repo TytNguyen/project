@@ -28,7 +28,6 @@ module.exports = {
         for (var file of image) {
             await cloudinary.uploader.upload(file, { folder: folder }).then(result => {
                 fs.unlinkSync(file);
-                console.log(result.public_id)
                 list.push([result.secure_url, result.public_id]);
             })
         }

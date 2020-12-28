@@ -13,16 +13,6 @@ const uploadImage = require('../middlewares/UploadToFirebase')
 const sendGrid = require('../config/SendMail');
 
 module.exports = {
-    test: function(req, res) {
-        let files = req.files;
-        UserManager.test( files, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-            if (errorCode) {
-                return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-            }
-            return Rest.sendSuccessOne(res, result, httpCode);
-        })        
-    },
-
     createByAdmin: function (req, res) {
         let accessUserId = req.body.accessUserId || '';
         let accessUserType = req.body.accessUserType || '';
