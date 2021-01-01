@@ -18,6 +18,55 @@ Meeting.belongsTo(Category);
 Category.hasMany(Meeting);
 
 module.exports = {
+    getStatistic: function(accessUserId, accessUserType, callback) {
+        try {
+            let final = {};
+            final = {waiting: 0, accepted: 0, rejected: 0, total: 0};
+
+            Attendance.count({
+                where:{createdBy: accessUserId},
+            }).then(function(total){
+                "use strict";
+                final.total = total;
+                Attendance.count({
+                    where:{status: 1,
+                        createdBy: accessUserId},
+                }).then(function(status){
+                    final.waiting = status;
+                    Attendance.count({
+                        where:{status: 2,
+                            createdBy: accessUserId},
+                    }).then(function(status1) {
+                        console.log(status1)
+
+                        final.accepted = status1;
+                        Attendance.count({
+                        where:{status: 3,
+                            createdBy: accessUserId},
+                        }).then(function(status2) {
+                            final.rejected = status2;
+                            return callback(null, null, 200, null, final);
+                        }).catch(function(error) {
+                            "use strict";
+                            return callback(4, 'count_meeting_fail', 400, error, null);
+                        });
+                    }).catch(function(error) {
+                        "use strict";
+                        return callback(4, 'count_meeting_fail', 400, error, null);
+                    });
+                }).catch(function(error){
+                    "use strict";
+                    return callback(4, 'count_meeting_fail', 400, error, null);
+                });
+            }).catch(function(error){
+                "use strict";
+                return callback(4, 'count_meeting_fail', 400, error, null);
+            });
+        }catch(error){
+            return callback(4, 'statistic_meeting_fail', 400, error, null);
+        }
+    },
+
     getMeetingStakeholderAttend: function (accessUserId, accessUserType, stakeholderId, query, callback) {
         try {
             if (!(Pieces.VariableBaseTypeChecking(stakeholderId, 'string') && Validator.isInt(stakeholderId))

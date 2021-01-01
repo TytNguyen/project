@@ -2,6 +2,48 @@ const AttendanceCtrl = require('../controllers/AttendanceCtrl');
 
 module.exports = function(app) {
     /**
+     * @api {GET} v1/auth/attendances/statistic Get Statistic
+     * @apiVersion 1.0.0
+     * @apiName getStatistic
+     * @apiGroup Attendances
+     * @apiPermission All type of user
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Get Statistic
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/attendances/statistic
+     *
+     * @apiSuccess {String} waiting total attendances that status is equal 1
+     * @apiSuccess {String} accepted total attendances that status is equal 2
+     * @apiSuccess {String} rejected total attendances that status is equal 3
+     * @apiSuccess {String} total total attendances
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *          "data": {
+                    "waiting": 1,
+                    "accepted": 1,
+                    "rejected": 0,
+                    "total": 2
+                },
+     *          "result": "ok",
+     *          "message" ""
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result": "fail",
+     *       "message": "invalid input"
+     *     }
+     */
+
+    app.get('/v1/auth/attendances/statistic', AttendanceCtrl.getStatistic);
+    /**
      * @api {GET} /v1/auth/attendances/meeting/:id Get Meeting Stakeholder Attend
      * @apiVersion 1.0.0
      * @apiName getMeetingStakeholderAttend

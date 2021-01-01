@@ -2,6 +2,20 @@ const Rest = require('../utils/Restware');
 const AttendanceManager = require('../manager/AttendanceManager');
 
 module.exports = {
+    getStatistic: function (req, res) {
+        let accessUserId = req.query.accessUserId || '';
+        let accessUserType = req.query.accessUserType || '';
+
+        // let id = req.params.id || '';
+
+        AttendanceManager.getStatistic(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+            if (errorCode) {
+                return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+            }
+            return Rest.sendSuccessOne(res, result, httpCode);
+        })
+    },
+
     getMeetingStakeholderAttend: function (req, res) {
         let accessUserId = req.query.accessUserId || '';
         let accessUserType = req.query.accessUserType || '';

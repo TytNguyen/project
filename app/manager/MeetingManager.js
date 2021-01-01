@@ -50,10 +50,7 @@ module.exports = {
     getStatistic: function(accessUserId, accessUserType, callback) {
         try {
             let final = {};
-            final = {activated: 0, deleted: 0, total: 0};
-            if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
-                return callback(4, 'invalid_user_right', 400, final, null);
-            }
+            final = {activated: 0, expired: 0, total: 0};
 
             Meeting.count({
                 where:{},
@@ -67,7 +64,7 @@ module.exports = {
                     Meeting.count({
                         where:{status: 0},
                     }).then(function(status1) {
-                        final.deleted = status1;
+                        final.expired = status1;
                         return callback(null, null, 200, null, final);
                     }).catch(function(error) {
                         "use strict";

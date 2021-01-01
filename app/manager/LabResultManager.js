@@ -191,26 +191,29 @@ module.exports = {
     getStatistic: function(accessUserId, accessUserType, callback) {
         try {
             let final = {};
-            final = {activated: 0, deleted: 0, total: 0};
+            final = {activated: 0, expired: 0, total: 0};
             if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
-                return callback(null, null, 200, null, final);
-            }
-
-            LabResult.count({
-                where:{},
-            }).then(function(total){
-                "use strict";
-                final.total = total;
                 LabResult.count({
-                    where:{status: 1},
-                }).then(function(status){
-                    final.activated = status;
+                    where: {createdBy: accessUserId},
+                }).then(function(total){
+                    "use strict";
+                    final.total = total;
                     LabResult.count({
-                        where:{status: 0},
-                    }).then(function(status1) {
-                        final.deleted = status1;
-                        return callback(null, null, 200, null, final);
-                    }).catch(function(error) {
+                        where:{status: 1,
+                            createdBy: accessUserId},
+                    }).then(function(status){
+                        final.activated = status;
+                        LabResult.count({
+                            where:{status: 0,
+                                createdBy: accessUserId},
+                        }).then(function(status1) {
+                            final.expired = status1;
+                            return callback(null, null, 200, null, final);
+                        }).catch(function(error) {
+                            "use strict";
+                            return callback(4, 'count_labresult_fail', 400, error, null);
+                        });
+                    }).catch(function(error){
                         "use strict";
                         return callback(4, 'count_labresult_fail', 400, error, null);
                     });
@@ -218,10 +221,34 @@ module.exports = {
                     "use strict";
                     return callback(4, 'count_labresult_fail', 400, error, null);
                 });
-            }).catch(function(error){
-                "use strict";
-                return callback(4, 'count_labresult_fail', 400, error, null);
-            });
+            } else {
+                LabResult.count({
+                    where:{},
+                }).then(function(total){
+                    "use strict";
+                    final.total = total;
+                    LabResult.count({
+                        where:{status: 1},
+                    }).then(function(status){
+                        final.activated = status;
+                        LabResult.count({
+                            where:{status: 0},
+                        }).then(function(status1) {
+                            final.expired = status1;
+                            return callback(null, null, 200, null, final);
+                        }).catch(function(error) {
+                            "use strict";
+                            return callback(4, 'count_labresult_fail', 400, error, null);
+                        });
+                    }).catch(function(error){
+                        "use strict";
+                        return callback(4, 'count_labresult_fail', 400, error, null);
+                    });
+                }).catch(function(error){
+                    "use strict";
+                    return callback(4, 'count_labresult_fail', 400, error, null);
+                });
+            }
         }catch(error){
             return callback(4, 'statistic_labresult_fail', 400, error, null);
         }

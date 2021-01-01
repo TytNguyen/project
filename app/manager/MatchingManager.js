@@ -283,26 +283,29 @@ module.exports = {
     getStatistic: function(accessUserId, accessUserType, callback) {
         try {
             let final = {};
-            final = {activated: 0, deleted: 0, total: 0};
-            if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
-                return callback(null, null, 200, null, final);
-            }
-
-            Matching.count({
-                where:{},
-            }).then(function(total){
-                "use strict";
-                final.total = total;
+            final = {activated: 0, canceled: 0, total: 0};
+            if ( accessUserType == 1 ) {
                 Matching.count({
-                    where:{status: 1},
-                }).then(function(status){
-                    final.activated = status;
+                    where: {profileId: accessUserId},
+                }).then(function(total){
+                    "use strict";
+                    final.total = total;
                     Matching.count({
-                        where:{status: 0},
-                    }).then(function(status1) {
-                        final.deleted = status1;
-                        return callback(null, null, 200, null, final);
-                    }).catch(function(error) {
+                        where:{status: {[Sequelize.Op.notIn]: [9, 10]}, 
+                                profileId: accessUserId},
+                    }).then(function(status){
+                        final.activated = status;
+                        Matching.count({
+                            where:{status: {[Sequelize.Op.in]: [9, 10]}, 
+                                    profileId: accessUserId},
+                        }).then(function(status1) {
+                            final.canceled = status1;
+                            return callback(null, null, 200, null, final);
+                        }).catch(function(error) {
+                            "use strict";
+                            return callback(4, 'count_matching_fail', 400, error, null);
+                        });
+                    }).catch(function(error){
                         "use strict";
                         return callback(4, 'count_matching_fail', 400, error, null);
                     });
@@ -310,10 +313,63 @@ module.exports = {
                     "use strict";
                     return callback(4, 'count_matching_fail', 400, error, null);
                 });
-            }).catch(function(error){
-                "use strict";
-                return callback(4, 'count_matching_fail', 400, error, null);
-            });
+            } else if ( accessUserType == 2 ) {
+                Matching.count({
+                    where: {resultId: accessUserId},
+                }).then(function(total){
+                    "use strict";
+                    final.total = total;
+                    Matching.count({
+                        where:{status: {[Sequelize.Op.notIn]: [9, 10]}, 
+                                profileId: accessUserId},
+                    }).then(function(status){
+                        final.activated = status;
+                        Matching.count({
+                            where:{status: {[Sequelize.Op.in]: [9, 10]}, 
+                                    profileId: accessUserId},
+                        }).then(function(status1) {
+                            final.canceled = status1;
+                            return callback(null, null, 200, null, final);
+                        }).catch(function(error) {
+                            "use strict";
+                            return callback(4, 'count_matching_fail', 400, error, null);
+                        });
+                    }).catch(function(error){
+                        "use strict";
+                        return callback(4, 'count_matching_fail', 400, error, null);
+                    });
+                }).catch(function(error){
+                    "use strict";
+                    return callback(4, 'count_matching_fail', 400, error, null);
+                });
+            } else {
+                Matching.count({
+                    where:{},
+                }).then(function(total){
+                    "use strict";
+                    final.total = total;
+                    Matching.count({
+                        where:{status: 1},
+                    }).then(function(status){
+                        final.activated = status;
+                        Matching.count({
+                            where:{status: 0},
+                        }).then(function(status1) {
+                            final.canceled = status1;
+                            return callback(null, null, 200, null, final);
+                        }).catch(function(error) {
+                            "use strict";
+                            return callback(4, 'count_matching_fail', 400, error, null);
+                        });
+                    }).catch(function(error){
+                        "use strict";
+                        return callback(4, 'count_matching_fail', 400, error, null);
+                    });
+                }).catch(function(error){
+                    "use strict";
+                    return callback(4, 'count_matching_fail', 400, error, null);
+                });
+            }
         }catch(error){
             return callback(4, 'statistic_matching_fail', 400, error, null);
         }

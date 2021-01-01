@@ -10,6 +10,7 @@ const SubCategory = require('../models/SubCategory');
 const moment = require('moment');
 const { Hashtag } = require('../models');
 const MatchHashtag = require('../models/MatchHashtag');
+const { where } = require('sequelize');
 
 Stakeholder.hasMany(EnterpriseProfile, { foreignKey: 'cid' });
 EnterpriseProfile.belongsTo(Stakeholder, { foreignKey: 'cid' });
@@ -147,25 +148,31 @@ module.exports = {
     getStatistic: function (accessUserId, accessUserType, callback) {
         try {
             let final = {};
-            final = { activated: 0, deleted: 0, total: 0 };
-            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                where.createdBy = accessUserId;
-            }
 
-            EnterpriseProfile.count({
-                where: {},
-            }).then(function (total) {
-                "use strict";
-                final.total = total;
+            console.log
+
+            final = { activated: 0, expired: 0, total: 0 };
+            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
                 EnterpriseProfile.count({
-                    where: { status: 1 },
-                }).then(function (status) {
-                    final.activated = status;
+                    where: {createdBy: accessUserId},
+                }).then(function (total) {
+                    "use strict";
+                    final.total = total;
                     EnterpriseProfile.count({
-                        where: { status: 0 },
-                    }).then(function (status1) {
-                        final.deleted = status1;
-                        return callback(null, null, 200, null, final);
+                        where: { status: 1,
+                                createdBy: accessUserId},
+                    }).then(function (status) {
+                        final.activated = status;
+                        EnterpriseProfile.count({
+                            where: { status: 0,
+                                createdBy: accessUserId },
+                        }).then(function (status1) {
+                            final.expired = status1;
+                            return callback(null, null, 200, null, final);
+                        }).catch(function (error) {
+                            "use strict";
+                            return callback(4, 'count_profile_fail', 400, error, null);
+                        });
                     }).catch(function (error) {
                         "use strict";
                         return callback(4, 'count_profile_fail', 400, error, null);
@@ -174,10 +181,35 @@ module.exports = {
                     "use strict";
                     return callback(4, 'count_profile_fail', 400, error, null);
                 });
-            }).catch(function (error) {
-                "use strict";
-                return callback(4, 'count_profile_fail', 400, error, null);
-            });
+            } else {
+                EnterpriseProfile.count({
+                    where: {},
+                }).then(function (total) {
+                    "use strict";
+                    final.total = total;
+                    EnterpriseProfile.count({
+                        where: { status: 1},
+                    }).then(function (status) {
+                        final.activated = status;
+                        EnterpriseProfile.count({
+                            where: { status: 0 },
+                        }).then(function (status1) {
+                            final.expired = status1;
+                            return callback(null, null, 200, null, final);
+                        }).catch(function (error) {
+                            "use strict";
+                            return callback(4, 'count_profile_fail', 400, error, null);
+                        });
+                    }).catch(function (error) {
+                        "use strict";
+                        return callback(4, 'count_profile_fail', 400, error, null);
+                    });
+                }).catch(function (error) {
+                    "use strict";
+                    return callback(4, 'count_profile_fail', 400, error, null);
+                });
+            }
+            
         } catch (error) {
             return callback(4, 'statistic_labresult_fail', 400, error, null);
         }

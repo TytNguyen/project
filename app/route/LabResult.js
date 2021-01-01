@@ -82,6 +82,46 @@ module.exports = function(app) {
      *     }
      */
     app.get('/v1/auth/labresult/:id', LabResultCtrl.getOne);
+
+    /**
+     * @api {GET} v1/auth/labresult/statistic Get Statistic
+     * @apiVersion 1.0.0
+     * @apiName getStatistic
+     * @apiGroup LabResult
+     * @apiPermission All type of user
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Get Statistic
+     *
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/labresult/statistic
+     *
+     * @apiSuccess {String} activated total result that status is equal 1
+     * @apiSuccess {String} expired total result that status is equal 0
+     * @apiSuccess {String} total total result
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *          "data": {
+                    "activated": 2,
+                    "expired": 1,
+                    "total": 3
+                },
+     *          "result": "ok",
+     *          "message" ""
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result": "fail",
+     *       "message": "invalid input"
+     *     }
+     */
     app.get('v1/auth/labresult/statistic', LabResultCtrl.getOne);
 
     /**

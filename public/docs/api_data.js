@@ -446,6 +446,102 @@ define({ "api": [
     "groupTitle": "Attendances"
   },
   {
+    "type": "GET",
+    "url": "v1/auth/attendances/statistic",
+    "title": "Get Statistic",
+    "version": "1.0.0",
+    "name": "getStatistic",
+    "group": "Attendances",
+    "permission": [
+      {
+        "name": "All type of user"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get Statistic</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/attendances/statistic",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "waiting",
+            "description": "<p>total attendances that status is equal 1</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "accepted",
+            "description": "<p>total attendances that status is equal 2</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "rejected",
+            "description": "<p>total attendances that status is equal 3</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "total",
+            "description": "<p>total attendances</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"waiting\": 1,\n                \"accepted\": 1,\n                \"rejected\": 0,\n                \"total\": 2\n            },\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/Attendance.js",
+    "groupTitle": "Attendances"
+  },
+  {
     "type": "PUT",
     "url": "/v1/auth/attendances",
     "title": "Update One",
@@ -2116,6 +2212,95 @@ define({ "api": [
     "groupTitle": "LabResult"
   },
   {
+    "type": "GET",
+    "url": "v1/auth/labresult/statistic",
+    "title": "Get Statistic",
+    "version": "1.0.0",
+    "name": "getStatistic",
+    "group": "LabResult",
+    "permission": [
+      {
+        "name": "All type of user"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get Statistic</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/labresult/statistic",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "activated",
+            "description": "<p>total result that status is equal 1</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "expired",
+            "description": "<p>total result that status is equal 0</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "total",
+            "description": "<p>total result</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"activated\": 2,\n                \"expired\": 1,\n                \"total\": 3\n            },\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/LabResult.js",
+    "groupTitle": "LabResult"
+  },
+  {
     "type": "PUT",
     "url": "/v1/auth/labresult/:id",
     "title": "Update One",
@@ -3112,6 +3297,95 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "v1/auth/matching/statistic",
+    "title": "Get Statistic",
+    "version": "1.0.0",
+    "name": "getStatistic",
+    "group": "Matching",
+    "permission": [
+      {
+        "name": "All type of user"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get Statistic</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/matching/statistic",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "activated",
+            "description": "<p>total matching that status is not in [9, 10]</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "expired",
+            "description": "<p>total matching that status is in [9, 10]</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "total",
+            "description": "<p>total matching</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"activated\": 2,\n                \"expired\": 1,\n                \"total\": 3\n            },\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/Matching.js",
+    "groupTitle": "Matching"
+  },
+  {
+    "type": "GET",
     "url": "/v1/auth/matching/recommendation",
     "title": "Get recommendation list",
     "version": "1.0.0",
@@ -3870,6 +4144,95 @@ define({ "api": [
     "groupTitle": "Meetings"
   },
   {
+    "type": "GET",
+    "url": "v1/auth/meetings/statistic",
+    "title": "Get Statistic",
+    "version": "1.0.0",
+    "name": "getStatistic",
+    "group": "Meetings",
+    "permission": [
+      {
+        "name": "All type of user"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get Statistic</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/meetings/statistic",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "activated",
+            "description": "<p>total meetings that status is equal 1</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "expired",
+            "description": "<p>total meetings that status is equal 0</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "total",
+            "description": "<p>total meetings</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"activated\": 2,\n                \"expired\": 1,\n                \"total\": 3\n            },\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/Meeting.js",
+    "groupTitle": "Meetings"
+  },
+  {
     "type": "PUT",
     "url": "/v1/auth/meetings/:id",
     "title": "Update One",
@@ -4507,6 +4870,95 @@ define({ "api": [
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"id\": 1,\n                \"title\": \"Công nghệ trồng lúa\",\n                \"description\": \"Sản phẩm hỗ trợ trồng cây ít bị hư\",\n                \"status\": 1,\n                \"createdAt\": \"2020-10-01T13:03:23.000Z\",\n                \"updatedAt\": \"2020-10-01T13:03:23.000Z\",\n                \"createdBy\": 1,\n                \"updatedBy\": 1,\n                \"stakeholder\": {\n                    \"id\": 1,\n                    \"name\": \"Cty Nam Phương\"\n                },\n                \"subcategory\": {\n                    \"id\": 33,\n                    \"subject\": \"Vi sinh\"\n                },\n                \"match_hashtags\": [\n                    {\n                        \"hashtag_id\": 51,\n                        \"hashtag\": {\n                            \"value\": \"phòng bệnh\",\n                            \"type\": 3\n                        }\n                    },\n                    {\n                        \"hashtag_id\": 23,\n                        \"hashtag\": {\n                            \"value\": \"Hải Phòng\",\n                            \"type\": 1\n                        }\n                    },\n                    {\n                        \"hashtag_id\": 26,\n                        \"hashtag\": {\n                            \"value\": \"năng lực nghiên cứu\",\n                            \"type\": 2\n                        }\n                    }\n                ]\n            },\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/EnterpriseProfile.js",
+    "groupTitle": "Profile"
+  },
+  {
+    "type": "GET",
+    "url": "v1/auth/profile/statistic",
+    "title": "Get Statistic",
+    "version": "1.0.0",
+    "name": "getStatistic",
+    "group": "Profile",
+    "permission": [
+      {
+        "name": "All type of user"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get Statistic</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/profile/statistic",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "activated",
+            "description": "<p>total profile that status is equal 1</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "expired",
+            "description": "<p>total profile that status is equal 0</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "total",
+            "description": "<p>total profile</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"activated\": 2,\n                \"expired\": 1,\n                \"total\": 3\n            },\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
           "type": "json"
         }
       ]
