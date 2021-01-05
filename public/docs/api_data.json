@@ -2213,6 +2213,137 @@
   },
   {
     "type": "GET",
+    "url": "/v1/auth/labresult/getrelate",
+    "title": "Get product related to requirement",
+    "version": "1.0.0",
+    "name": "getRelate",
+    "group": "LabResult",
+    "permission": [
+      {
+        "name": "type of user = 1"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get 3 product related to requirement</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/labresult/getrelate",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>the ID of profile</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>profile's title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>profile's description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>status of profile</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "stakeholder_name",
+            "description": "<p>Company's name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "subcategory",
+            "description": "<p>subcategory's name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "hashtag_id",
+            "description": "<p>hashtag id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "value",
+            "description": "<p>hashtag's value</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>hashtag's type</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": [...],\n  \"result\": \"ok\",\n  \"message\": \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/LabResult.js",
+    "groupTitle": "LabResult"
+  },
+  {
+    "type": "GET",
     "url": "v1/auth/labresult/statistic",
     "title": "Get Statistic",
     "version": "1.0.0",
@@ -4870,6 +5001,137 @@
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 200 OK\n{\n     \"data\": {\n                \"id\": 1,\n                \"title\": \"Công nghệ trồng lúa\",\n                \"description\": \"Sản phẩm hỗ trợ trồng cây ít bị hư\",\n                \"status\": 1,\n                \"createdAt\": \"2020-10-01T13:03:23.000Z\",\n                \"updatedAt\": \"2020-10-01T13:03:23.000Z\",\n                \"createdBy\": 1,\n                \"updatedBy\": 1,\n                \"stakeholder\": {\n                    \"id\": 1,\n                    \"name\": \"Cty Nam Phương\"\n                },\n                \"subcategory\": {\n                    \"id\": 33,\n                    \"subject\": \"Vi sinh\"\n                },\n                \"match_hashtags\": [\n                    {\n                        \"hashtag_id\": 51,\n                        \"hashtag\": {\n                            \"value\": \"phòng bệnh\",\n                            \"type\": 3\n                        }\n                    },\n                    {\n                        \"hashtag_id\": 23,\n                        \"hashtag\": {\n                            \"value\": \"Hải Phòng\",\n                            \"type\": 1\n                        }\n                    },\n                    {\n                        \"hashtag_id\": 26,\n                        \"hashtag\": {\n                            \"value\": \"năng lực nghiên cứu\",\n                            \"type\": 2\n                        }\n                    }\n                ]\n            },\n     \"result\": \"ok\",\n     \"message\" \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\": \"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/EnterpriseProfile.js",
+    "groupTitle": "Profile"
+  },
+  {
+    "type": "GET",
+    "url": "/v1/auth/profile/getrelate",
+    "title": "Get requirement related to product",
+    "version": "1.0.0",
+    "name": "getRelate",
+    "group": "Profile",
+    "permission": [
+      {
+        "name": "type of user = 2"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get 3 requirement related to product</p>",
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/profile/getrelate",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>the ID of profile</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>profile's title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>profile's description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>status of profile</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "stakeholder_name",
+            "description": "<p>Company's name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "subcategory",
+            "description": "<p>subcategory's name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "hashtag_id",
+            "description": "<p>hashtag id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "value",
+            "description": "<p>hashtag's value</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>hashtag's type</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": [...],\n  \"result\": \"ok\",\n  \"message\": \"\"\n}",
           "type": "json"
         }
       ]

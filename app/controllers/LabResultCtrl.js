@@ -25,21 +25,52 @@ module.exports = {
 
         let id = req.params.id || '';
 
-        if(id === 'statistic'){
-            LabResultManager.getStatistic(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-                if (errorCode) {
-                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-                }
-                return Rest.sendSuccessOne(res, result, httpCode);
-            })
-        }else{
-            LabResultManager.getOne(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-                if (errorCode) {
-                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-                }
-                return Rest.sendSuccessOne(res, result, httpCode);
-            })
+        switch(id) 
+        {
+            case 'getrelate': {
+                LabResultManager.getRelate(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                    if (errorCode) {
+                        return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                    }
+                    return Rest.sendSuccessOne(res, result, httpCode);
+                });
+                break;
+            }
+            case 'statistic': {
+                LabResultManager.getStatistic(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                    if (errorCode) {
+                        return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                    }
+                    return Rest.sendSuccessOne(res, result, httpCode);
+                })
+                break;
+            }
+            default: {
+                LabResultManager.getOne(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                    if (errorCode) {
+                        return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                    }
+                    return Rest.sendSuccessOne(res, result, httpCode);
+                })
+                break;
+            }
         }
+
+        // if(id === 'statistic'){
+        //     LabResultManager.getStatistic(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+        //         if (errorCode) {
+        //             return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+        //         }
+        //         return Rest.sendSuccessOne(res, result, httpCode);
+        //     })
+        // }else{
+        //     LabResultManager.getOne(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+        //         if (errorCode) {
+        //             return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+        //         }
+        //         return Rest.sendSuccessOne(res, result, httpCode);
+        //     })
+        // }
     },
 
     getAll: function(req, res) {

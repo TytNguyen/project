@@ -24,20 +24,35 @@ module.exports = {
 
         let id = req.params.id || '';
 
-        if(id === 'statistic'){
-            EnterpriseProfileManager.getStatistic(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-                if (errorCode) {
-                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-                }
-                return Rest.sendSuccessOne(res, result, httpCode);
-            })
-        }else{
-            EnterpriseProfileManager.getOne(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-                if (errorCode) {
-                    return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-                }
-                return Rest.sendSuccessOne(res, result, httpCode);
-            })
+        switch(id) 
+        {
+            case 'getrelate': {
+                EnterpriseProfileManager.getRelate(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                    if (errorCode) {
+                        return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                    }
+                    return Rest.sendSuccessOne(res, result, httpCode);
+                });
+                break;
+            }
+            case 'statistic': {
+                EnterpriseProfileManager.getStatistic(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                    if (errorCode) {
+                        return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                    }
+                    return Rest.sendSuccessOne(res, result, httpCode);
+                })
+                break;
+            }
+            default: {
+                EnterpriseProfileManager.getOne(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+                    if (errorCode) {
+                        return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+                    }
+                    return Rest.sendSuccessOne(res, result, httpCode);
+                })
+                break;
+            }
         }
     },
 

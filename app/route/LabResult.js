@@ -125,6 +125,48 @@ module.exports = function(app) {
     app.get('v1/auth/labresult/statistic', LabResultCtrl.getOne);
 
     /**
+     * @api {GET} /v1/auth/labresult/getrelate Get product related to requirement
+     * @apiVersion 1.0.0
+     * @apiName getRelate
+     * @apiGroup LabResult
+     * @apiPermission type of user = 1
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Get 3 product related to requirement
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/labresult/getrelate
+     *
+     * @apiSuccess {String} id the ID of profile
+     * @apiSuccess {String} title profile's title
+     * @apiSuccess {String} description profile's description
+     * @apiSuccess {String} status status of profile
+     * @apiSuccess {String} stakeholder_name Company's name
+     * @apiSuccess {String} subcategory subcategory's name
+     * @apiSuccess {String} hashtag_id hashtag id
+     * @apiSuccess {String} value hashtag's value
+     * @apiSuccess {String} type hashtag's type
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "data": [...],
+     *       "result": "ok",
+     *       "message": ""
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result": "fail",
+     *       "message": "invalid input"
+     *     }
+     */
+    app.get('/v1/auth/labresult/getrelate', LabResultCtrl.getOne);
+
+    /**
      * @api {GET} /v1/auth/labresult Get List
      * @apiVersion 1.0.0
      * @apiName getAll

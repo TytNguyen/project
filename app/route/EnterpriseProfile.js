@@ -177,6 +177,49 @@ module.exports = function(app) {
      *     }
      */
     app.get('/v1/auth/profile', EnterpriceProfileCtrl.getAll);
+
+    /**
+     * @api {GET} /v1/auth/profile/getrelate Get requirement related to product
+     * @apiVersion 1.0.0
+     * @apiName getRelate
+     * @apiGroup Profile
+     * @apiPermission type of user = 2
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Get 3 requirement related to product
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/profile/getrelate
+     *
+     * @apiSuccess {String} id the ID of profile
+     * @apiSuccess {String} title profile's title
+     * @apiSuccess {String} description profile's description
+     * @apiSuccess {String} status status of profile
+     * @apiSuccess {String} stakeholder_name Company's name
+     * @apiSuccess {String} subcategory subcategory's name
+     * @apiSuccess {String} hashtag_id hashtag id
+     * @apiSuccess {String} value hashtag's value
+     * @apiSuccess {String} type hashtag's type
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "data": [...],
+     *       "result": "ok",
+     *       "message": ""
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result": "fail",
+     *       "message": "invalid input"
+     *     }
+     */
+    app.get('/v1/auth/profile/getrelate', EnterpriceProfileCtrl.getOne);
+
     /**
      * @api {POST} /v1/auth/profile Create One
      * @apiVersion 1.0.0

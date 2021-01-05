@@ -8,6 +8,7 @@ const cloudinary = require('../middlewares/Cloudinary');
 const Stakeholder = require('../models/Stakeholder');
 const SubCategory = require('../models/SubCategory');
 const LabResult = require('../models/LabResult');
+const EnterpriseProfile = require('../models/EnterpriseProfile');
 const moment = require('moment');
 const MatchHashtag = require('../models/MatchHashtag');
 const { Hashtag } = require('../models');
@@ -251,6 +252,114 @@ module.exports = {
             }
         }catch(error){
             return callback(4, 'statistic_labresult_fail', 400, error, null);
+        }
+    },
+
+    getRelate: function (accessUserId, accessUserType, callback) {
+        if (accessUserType !== Constant.USER_TYPE.ANONYMOUS) {
+            return callback(1, 'invalid_user_type', 403, "Only company can use this api", null);
+        }
+
+        try {
+            let sub_ids = [];
+            EnterpriseProfile.findAll({
+                where: {createdBy: {[Sequelize.Op.eq]: accessUserId}},
+                attributes: ['subcategory_id'],
+                raw:true,
+            }).then((data) => {
+                if (data.length > 0) {
+                    for (var i of data) {
+                        sub_ids.push(i.subcategory_id)
+                    }
+                    LabResult.findAll({
+                        where: {subcategory_id: {[Sequelize.Op.in]: sub_ids}},
+                        include: [{
+                            model: Stakeholder,
+                            attributes: ['id', 'name']
+                        },
+                        {
+                            model: SubCategory,
+                            attributes: ['id', 'subject']
+                        },
+                        {
+                            model: MatchHashtag,
+                            include: [{
+                                model: Hashtag,
+                                attributes: ["value", "type"]
+                            }],
+                            attributes: ["hashtag_id"]
+                        }],
+                        distinct:true,
+                        order: [ [ 'updatedAt', 'DESC' ]],
+                        limit: 3
+                    }).then((data) => {
+                        if (data.length > 0) {
+                            return callback(null, null, 200, null, data);
+                        } else {
+                            LabResult.findAll({
+                                where: where,
+                                include: [{
+                                    model: Stakeholder,
+                                    attributes: ['id', 'name']
+                                },
+                                {
+                                    model: SubCategory,
+                                    attributes: ['id', 'subject']
+                                },
+                                {
+                                    model: MatchHashtag,
+                                    include: [{
+                                        model: Hashtag,
+                                        attributes: ["value", "type"]
+                                    }],
+                                    attributes: ["hashtag_id"]
+                                }],
+                                distinct:true,
+                                order: [ [ 'updatedAt', 'DESC' ]],
+                                limit: 3
+                            }).then((data) => {
+                                return callback(null, null, 200, null, data);
+                            }).catch(function (error) {
+                                return callback(4, 'find_and_count_all_profile_fail', 420, error, null);
+                            });
+                        }
+                        
+                    }).catch(function (error) {
+                        return callback(4, 'find_and_count_all_profile_fail', 420, error, null);
+                    });
+                } else {
+                    LabResult.findAll({
+                        where: where,
+                        include: [{
+                            model: Stakeholder,
+                            attributes: ['id', 'name']
+                        },
+                        {
+                            model: SubCategory,
+                            attributes: ['id', 'subject']
+                        },
+                        {
+                            model: MatchHashtag,
+                            include: [{
+                                model: Hashtag,
+                                attributes: ["value", "type"]
+                            }],
+                            attributes: ["hashtag_id"]
+                        }],
+                        distinct:true,
+                        order: [ [ 'updatedAt', 'DESC' ]],
+                        limit: 3
+                    }).then((data) => {
+                        return callback(null, null, 200, null, data);
+                    }).catch(function (error) {
+                        return callback(4, 'find_and_count_all_profile_fail', 420, error, null);
+                    });
+                }
+            }).catch(function (error) {
+                return callback(4, 'find_all_result_fail', 420, error, null);
+            });
+        } catch (error) {
+            return callback(4, 'get_all_profile_fail', 400, error, null);
         }
     },
 
