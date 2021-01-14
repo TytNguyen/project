@@ -186,6 +186,7 @@ module.exports = {
         try {
             let queryObj = {};
             let where = {};
+            console.log(accessUserType)
 
             if (!(Pieces.VariableBaseTypeChecking(userId, 'string')
                 && Validator.isInt(userId))
@@ -255,8 +256,9 @@ module.exports = {
                     attributes: ['img_location'],
                 }).then(result => {
                     "use strict";
-                    if (result.img_location !== null) {
+                    if (result.img_location !== null && result.img_location.length !== 0) {
                         let img = [result.img_location]
+                        
                         cloudinary.deleteImage(img, result => {
                             // callback(null, null, 200, null, result);
                             cloudinary.uploadMultiple(file, 'user', result => {
