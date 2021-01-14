@@ -577,8 +577,12 @@ module.exports = {
             EnterpriseProfile.findOne({ where: where }).then(profile => {
                 "use strict";
                 if (profile && profile.status === Constant.STATUS.NO) {
-                    EnterpriseProfile.destroy({ where: where }).then(result => {
-                        return callback(null, null, 200, null, result);
+                    MatchHashtag.destroy({ where: {profile_id: id} }).then(result => {
+                        EnterpriseProfile.destroy({ where: where }).then(result => {
+                            return callback(null, null, 200, null, result);
+                        }).catch(function (error) {
+                            return callback(3, 'remove_profile_fail', 420, error);
+                        });
                     }).catch(function (error) {
                         return callback(3, 'remove_profile_fail', 420, error);
                     });

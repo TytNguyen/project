@@ -694,8 +694,12 @@ module.exports = {
             LabResult.findOne({where:where}).then(labresult =>{
                 "use strict";
                 if ( labresult && labresult.status === Constant.STATUS.NO ){
-                    LabResult.destroy({where: where}).then(result => {
-                        return callback(null, null, 200, null, result);
+                    MatchHashtag.destroy({where: {result_id: id}}).then(result => {
+                        LabResult.destroy({where: where}).then(result => {
+                            return callback(null, null, 200, null, result);
+                        }).catch(function(error){
+                            return callback(3, 'remove_labresult_fail', 420, error);
+                        });
                     }).catch(function(error){
                         return callback(3, 'remove_labresult_fail', 420, error);
                     });
