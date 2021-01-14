@@ -679,9 +679,9 @@ module.exports = {
             let queryObj = {};
             let where = {};
 
-            if ( (accessUserId !== id) && (accessUserType < Constant.USER_TYPE.MODERATOR) ) {
-                return callback(1, 'invalid_user_type', 403, null, null);
-            }
+            //if ( (accessUserId !== id) && (accessUserType < Constant.USER_TYPE.MODERATOR) ) {
+            //    return callback(1, 'invalid_user_type', 403, null, null);
+            //}
 
             if ( !( Pieces.VariableBaseTypeChecking(id,'string') && Validator.isInt(id) )
                 && !Pieces.VariableBaseTypeChecking(id,'number') ){
