@@ -46,7 +46,7 @@ SubCategory.hasMany(LabResult, {foreignKey: 'subcategory_id'});
 module.exports = {
     autoMatching: function(accessUserId, accessUserType, id, sub_id, callback) {
         try {
-            let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            let attributes = ['id', 'title','description','status', 'image', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
             let product = [];
             let profile = [];
 
@@ -126,7 +126,7 @@ module.exports = {
 
     recommend: function(accessUserId, accessUserType, id, sub_id, callback) {
         try {
-            let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            let attributes = ['id', 'title','description','status', 'image', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
             let product = [];
             let profile = [];
 

@@ -28,6 +28,14 @@ let Processes = MySequelize.define('processes', {
         allowNull: true,
         default: null
     },
+    meetingTime: {
+        type: Sequelize.DATE,
+        allowNull: true
+    },
+    meetingAddress: {
+        type: Sequelize.STRING(100),
+        allowNull: true
+    },
     createdBy: {
         type: Sequelize.BIGINT(20),
         allowNull: false,
