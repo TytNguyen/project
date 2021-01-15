@@ -2,6 +2,21 @@ const Rest = require('../utils/Restware');
 const LabResultManager = require('../manager/LabResultManager');
 
 module.exports = {
+    uploadFile: function(req, res) {
+        let accessUserId = req.body.accessUserId || '';
+        let accessUserType = req.body.accessUserType || '';
+        let id = req.params.id || '';
+        let form = req.files;
+        LabResultManager.uploadFile(accessUserId, accessUserType, id, form, function(errorCode, errorMessage, httpCode, errorDescription, labresult) {
+            if(errorCode) {
+                return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+            }
+            let resData = {};
+            resData.id = id;
+            return Rest.sendSuccessOne(res, resData, httpCode);
+        })
+    },
+
     create: function(req, res) {
         let accessUserId = req.body.accessUserId || '';
         let accessUserType = req.body.accessUserType || '';

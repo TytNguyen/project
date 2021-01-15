@@ -1,6 +1,47 @@
 const LabResultCtrl = require('../controllers/LabResultCtrl');
 
 module.exports = function(app) {
+
+    /**
+     * @api {PUT} /v1/auth/labresult/uploadFile/:id Update file
+     * @apiVersion 1.0.0
+     * @apiName uploadFile
+     * @apiGroup LabResult
+     * @apiPermission user with the right type, administrator or moderator
+     * @apiHeader {String} access_token json web token to access to data
+     *
+     * @apiDescription Update form for result
+     * 
+    * @apiParam {string} id ID of labresult, on params
+     *
+     * @apiParam {string} file labresult's form
+     *
+     * @apiExample Example usage:
+     * curl -i http://localhost:3000/v1/auth/labresult/uploadFile/14
+     *
+     * @apiSuccess {String} id the ID of updated labresult
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *          "data":{
+     *              "id": "14"
+     *          },
+     *          "result":"ok",
+     *          "message":""
+     *     }
+     *
+     * @apiError invalid input data
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "result":"fail",
+     *       "message": "invalid input"
+     *     }
+     */
+    
+    app.put('/v1/auth/labresult/uploadFile/:id', LabResultCtrl.uploadFile);
+
     /**
      * @api {GET} /v1/auth/labresult/:id Get One
      * @apiVersion 1.0.0

@@ -275,7 +275,7 @@ module.exports = {
             }
 
             if (updateData.address !== undefined) {
-                queryObj.address = data.address; 
+                queryObj.address = updateData.address; 
             }
 
             

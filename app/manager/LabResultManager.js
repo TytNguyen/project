@@ -27,13 +27,47 @@ LabResult.hasMany(MatchHashtag, {foreignKey: 'result_id'});
 Hashtag.hasMany(MatchHashtag, {foreignKey: 'hashtag_id'});
 
 module.exports = {
+    uploadFile: function (accessUserId, accessUserType, file, callback) {
+        console.log(file);
+        // console.log(global.CLOUD_API.rootPath);
+        // console.log(file.path);
+    },
+
+
+    uploadFile: function (accessUserId, accessUserType, labresultId, file, callback) {
+        try {
+            let queryObj = {};
+            let where = {};
+
+            if ( !( Pieces.VariableBaseTypeChecking(labresultId,'string')
+                    && Validator.isInt(labresultId) )
+                && !Pieces.VariableBaseTypeChecking(labresultId,'number') ){
+                return callback(3, 'invalid_labresult_id', 400, 'labresult id is incorrect', null);
+            }
+
+            queryObj.file = file[0].path;
+            queryObj.updatedBy = accessUserId;
+            queryObj.updatedAt = moment(Date.now());
+            where.id = labresultId;
+
+            LabResult.update(
+                queryObj,
+                {where: where}).then(result=>{
+                    "use strict";
+                    return callback(null, null, 200, null, result);
+                }).catch(function(error){
+                    "use strict";
+                    return callback(3, 'update_labresult_fail', 420, error, null);
+                });
+        }catch(error){
+            return callback(3, 'deletes_labresult_fail', 400, error);
+        }
+    },
+
+
     create: function (accessUserId, accessUserType, data, file, callback) {
         try {
             let queryObj = {};
-
-            // if ( accessUserType < Constant.USER_TYPE.MODERATOR ) {
-            //     return callback(4, 'invalid_user_right', 403, 'you must be admin to do this process', null);
-            // }
 
             if ( !Pieces.VariableBaseTypeChecking(data.title,'string')
                 || !Validator.isLength(data.title, {min: 4, max: 128}) ) {

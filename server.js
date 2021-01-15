@@ -57,6 +57,7 @@ cron.schedule("00 30 23 * * 0-7", function () {
 });
 
 const uploadMulter = require('./app/middlewares/configMulter')
+
 App.post('/v1/*', uploadMulter.array('file', 5), [require('./app/middlewares/AllowCrossDomain')]);
 App.post('/v1/auth/*', uploadMulter.array('file', 5), [require('./app/middlewares/ValidateRequest')]);
 App.put('/v1/auth/*', uploadMulter.array('file', 5), [require('./app/middlewares/ValidateRequest')]);

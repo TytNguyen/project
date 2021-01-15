@@ -2664,6 +2664,101 @@ define({ "api": [
     "groupTitle": "LabResult"
   },
   {
+    "type": "PUT",
+    "url": "/v1/auth/labresult/uploadFile/:id",
+    "title": "Update file",
+    "version": "1.0.0",
+    "name": "uploadFile",
+    "group": "LabResult",
+    "permission": [
+      {
+        "name": "user with the right type, administrator or moderator"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>json web token to access to data</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Update form for result</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of labresult, on params</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "file",
+            "description": "<p>labresult's form</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -i http://localhost:3000/v1/auth/labresult/uploadFile/14",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>the ID of updated labresult</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"data\":{\n         \"id\": \"14\"\n     },\n     \"result\":\"ok\",\n     \"message\":\"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "invalid",
+            "description": "<p>input data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"result\":\"fail\",\n  \"message\": \"invalid input\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/route/LabResult.js",
+    "groupTitle": "LabResult"
+  },
+  {
     "type": "GET",
     "url": "/v1/auth/matching/automatching",
     "title": "Get the matchest one of your requirement",

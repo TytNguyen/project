@@ -45,6 +45,11 @@ let LabResult = MySequelize.define('labresult', {
         allowNull: true,
         default: null
     },
+    file: {
+        type: Sequelize.STRING(100),
+        allowNull: true,
+        default: null
+    },
     status: {
         type: Sequelize.TINYINT(1),
         allowNull: true,
