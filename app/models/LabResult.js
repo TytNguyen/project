@@ -32,7 +32,7 @@ let LabResult = MySequelize.define('labresult', {
         }
     },
     description: {
-        type: Sequelize.STRING(200),
+        type: Sequelize.TEXT,
         allowNull: true,
     },
     image: {

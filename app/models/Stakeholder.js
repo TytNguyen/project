@@ -10,7 +10,7 @@ let Stakeholder = MySequelize.define('stakeholder', {
         primaryKey: true
     },
     name: {
-        type: Sequelize.STRING(64),
+        type: Sequelize.STRING(100),
         allowNull: false
     },
     taxcode: {
@@ -30,7 +30,7 @@ let Stakeholder = MySequelize.define('stakeholder', {
         allowNull: true
     },
     phone: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.STRING(100),
         allowNull: false
     },
     type: {

@@ -32,7 +32,7 @@ let EnterpriseProfile = MySequelize.define('requirement', {
         }
     },
     description: {
-        type: Sequelize.STRING(200),
+        type: Sequelize.TEXT,
         allowNull: true,
     },
     status: {

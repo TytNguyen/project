@@ -443,17 +443,14 @@ module.exports = {
                 queryObj.status = updateData.status;
             }
 
-            if (Pieces.VariableBaseTypeChecking(updateData.title, 'string')
-                || Validator.isLength(updateData.title, { min: 4, max: 128 })) {
+            if (Pieces.VariableBaseTypeChecking(updateData.title, 'string')) {
                 queryObj.title = updateData.title;
             }
 
-            if (Pieces.VariableBaseTypeChecking(updateData.delete_ids, 'string')
-                || Validator.isJSON(updateData.delete_ids)) {
+            if (Pieces.VariableBaseTypeChecking(updateData.delete_ids, 'string')) {
                 idLists = Pieces.safelyParseJSON(updateData.delete_ids);            }
 
-            if (Pieces.VariableBaseTypeChecking(updateData.ids, 'string')
-                || Validator.isJSON(updateData.ids)) {
+            if (Pieces.VariableBaseTypeChecking(updateData.ids, 'string')) {
                 idList = Pieces.safelyParseJSON(updateData.ids);            }
 
             let deletewhere = { profile_id: profileId, hashtag_id: { [Sequelize.Op.in]: idLists } };
@@ -510,7 +507,36 @@ module.exports = {
                         "use strict";
                         return callback(3, 'update_profile_fail', 420, error, null);
                     });
-            } else {
+            } else if (idList !== undefined) {
+                const convertedData = match.map(arrObj => {
+                    return {
+                        profile_id: profileId,
+                        hashtag_id: arrObj[0],
+                        status: 1,
+                        createdBy: accessUserId,
+                        updatedBy: accessUserId,
+                        createdAt: moment(Date.now()),
+                        updatedAt: moment(Date.now()),
+                    }
+                })
+                EnterpriseProfile.update(
+                    queryObj,
+                    { where: where }).then(result => {
+                        "use strict";
+                        MatchHashtag.bulkCreate(convertedData).then(result => {
+                            "use strict";
+                            return callback(null, null, 200, null, result);
+                        }).catch(function (error) {
+                            "use strict";
+                            return callback(4, 'create_profile_fail', 400, error, null);
+                        });
+                        // return callback(null, null, 200, null, result);
+                    }).catch(function (error) {
+                        "use strict";
+                        return callback(3, 'update_profile_fail', 420, error, null);
+                    });
+            } 
+            else {
                 EnterpriseProfile.update(
                     queryObj,
                     { where: where }).then(result => {

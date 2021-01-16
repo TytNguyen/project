@@ -27,13 +27,6 @@ LabResult.hasMany(MatchHashtag, {foreignKey: 'result_id'});
 Hashtag.hasMany(MatchHashtag, {foreignKey: 'hashtag_id'});
 
 module.exports = {
-    uploadFile: function (accessUserId, accessUserType, file, callback) {
-        console.log(file);
-        // console.log(global.CLOUD_API.rootPath);
-        // console.log(file.path);
-    },
-
-
     uploadFile: function (accessUserId, accessUserType, labresultId, file, callback) {
         try {
             let queryObj = {};
@@ -514,18 +507,15 @@ module.exports = {
                 queryObj.status = updateData.status;
             }
 
-            if ( Pieces.VariableBaseTypeChecking(updateData.title,'string')
-                || Validator.isLength(updateData.title, {min: 4, max: 128}) ) {
+            if ( Pieces.VariableBaseTypeChecking(updateData.title,'string')) {
                     queryObj.title = updateData.title;
             }
 
-            if ( Pieces.VariableBaseTypeChecking(updateData.delete_ids,'string')
-                    || Validator.isJSON(updateData.delete_ids) ) {
+            if ( Pieces.VariableBaseTypeChecking(updateData.delete_ids,'string')) {
                 idLists = Pieces.safelyParseJSON(updateData.delete_ids);
             }
 
-            if ( Pieces.VariableBaseTypeChecking(updateData.ids,'string')
-            || Validator.isJSON(updateData.ids) ) {
+            if ( Pieces.VariableBaseTypeChecking(updateData.ids,'string')) {
                 idList = Pieces.safelyParseJSON(updateData.ids);
             } 
 
@@ -585,7 +575,38 @@ module.exports = {
                     "use strict";
                     return callback(3, 'update_labresult_fail', 420, error, null);
                 });
-            } else {
+            } else if (idList !== undefined) {
+                const convertedData = match.map(arrObj => {
+                    return {
+                        result_id: labresultId,
+                        hashtag_id: arrObj[0],
+                        status: 1,
+                        createdBy: accessUserId,
+                        updatedBy: accessUserId,
+                        createdAt: moment(Date.now()),
+                        updatedAt: moment(Date.now()),
+                    }
+                })
+
+                console.log(convertedData)
+
+                LabResult.update(
+                    queryObj,
+                    {where: where}).then(result=>{
+                        "use strict";
+                        MatchHashtag.bulkCreate(convertedData).then(result => {
+                            "use strict";
+                            return callback(null, null, 200, null, result);
+                        }).catch(function(error) {
+                        return callback(4, 'create_profile_fail', 400, error, null);
+                    });
+                        // return callback(null, null, 200, null, result);
+                }).catch(function(error){
+                    "use strict";
+                    return callback(3, 'update_labresult_fail', 420, error, null);
+                });
+            }
+            else {
                 LabResult.update(
                     queryObj,
                     {where: where}).then(result=>{
@@ -597,7 +618,7 @@ module.exports = {
                 });
             }
         }catch(error){
-            return callback(3, 'deletes_labresult_fail', 400, error);
+            return callback(3, 'updates_labresult_fail', 400, error);
         }
     },
 
@@ -608,6 +629,7 @@ module.exports = {
             let where = {};
 
             where.id = resultId;
+            // queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now());
 
             LabResult.findOne({
