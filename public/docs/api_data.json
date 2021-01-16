@@ -3781,7 +3781,7 @@
             "type": "string",
             "optional": true,
             "field": "step",
-            "description": "<p>1: waiting for accept <br/> 2: Accept (call the client, choose date to meeting) <br/> 3: organize the meeting <br/> 4: waiting for accept agreement <br/> 5: contract <br/> 6: support <br/> 7: Done <br/> 8: Pending <br/> 9: Canceled <br/> 10: Rejected</p>"
+            "description": "<p>1: waiting for accept <br/> 2: Accept (call the client, choose date to meeting) <br/> 3: organize the meeting <br/> 4: waiting for accept agreement <br/> 5: contract <br/> 6: support <br/> 7: Done <br/> 8: Pending <br/> 9: Canceled <br/> 10: Rejected <br/> 11: Accept the meeting <br/> 11: Scheduled the meeting <br/> 13: Contracting editing</p>"
           },
           {
             "group": "Parameter",
@@ -3789,6 +3789,27 @@
             "optional": true,
             "field": "note",
             "description": "<p>note for step</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "meetingAddress",
+            "description": "<p>Scheduled the meeting Address</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "meetingTime",
+            "description": "<p>Scheduled the meeting Time</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": true,
+            "field": "file",
+            "description": "<p>contract file</p>"
           }
         ]
       }

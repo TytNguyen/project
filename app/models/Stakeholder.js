@@ -25,6 +25,10 @@ let Stakeholder = MySequelize.define('stakeholder', {
         type: Sequelize.STRING(200),
         allowNull: false
     },
+    link: {
+        type: Sequelize.STRING(100),
+        allowNull: true
+    },
     phone: {
         type: Sequelize.STRING(20),
         allowNull: false

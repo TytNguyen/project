@@ -70,23 +70,6 @@ module.exports = {
                 break;
             }
         }
-
-
-        // if(id === 'statistic'){
-        //     MatchingManager.getStatistic(accessUserId, accessUserType, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-        //         if (errorCode) {
-        //             return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-        //         }
-        //         return Rest.sendSuccessOne(res, result, httpCode);
-        //     })
-        // }else{
-        //     MatchingManager.getOne(accessUserId, accessUserType, id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
-        //         if (errorCode) {
-        //             return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
-        //         }
-        //         return Rest.sendSuccessOne(res, result, httpCode);
-        //     })
-        // }
     },
 
     getAll: function(req, res) {
@@ -123,7 +106,7 @@ module.exports = {
     update: function (req, res) {
         let accessUserId = req.body.accessUserId || '';
         let accessUserType = req.body.accessUserType || '';
-
+        let contract = req.files;
         let id = req.params.id || '';
 
         if( id === 'deletes' ){
@@ -136,8 +119,7 @@ module.exports = {
             });
         } else {
             let data = req.body || '';
-
-            MatchingManager.update( accessUserId, accessUserType, id, data, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+            MatchingManager.update( accessUserId, accessUserType, id, data, contract, function (errorCode, errorMessage, httpCode, errorDescription, result) {
                 if (errorCode) {
                     return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
                 } else {

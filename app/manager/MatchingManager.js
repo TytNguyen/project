@@ -717,7 +717,7 @@ module.exports = {
         }
     },
 
-    update: function (accessUserId, accessUserType, matchingId, updateData, callback) {
+    update: function (accessUserId, accessUserType, matchingId, updateData, files, callback) {
         try {
             //if ( accessUserType < Constant.USER_TYPE.MODERATOR && (updateData.step !== 2 || updateData.step !== 10) ) {
             //    return callback(1, 'invalid_user_type', 403, null, null);
@@ -744,6 +744,14 @@ module.exports = {
             whereProcess.step = updateData.step;
             whereProcess.mid = matchingId;
 
+            if (Pieces.VariableBaseTypeChecking(updateData.meetingTime, 'string')) {
+                query.meetingTime = updateData.meetingTime;
+            }
+
+            if (Pieces.VariableBaseTypeChecking(updateData.meetingAddress, 'string')) {
+                query.meetingAddress = updateData.meetingAddress;
+            }
+
             query.createdBy = accessUserId;
             query.updatedBy = accessUserId;
             query.createdAt = moment(Date.now());
@@ -753,13 +761,17 @@ module.exports = {
             query.mid = matchingId;
             query.note = updateData.note;
 
+            if (files.length > 0) {
+                query.contract = files[0].path;
+            }
+
             Matching.update(
                 queryObj,
                 {where: where}).then(matching=>{
                     "use strict";
                     Processes.findOne({where: whereProcess}).then(result=>{
                         "use strict";
-                        if ( result ) {
+                        if ( result && query.step !== 12 ) {
                             return callback(4, 'processes_exist', 400, null);
                         } else {
                             Processes.create(query).then(result1 =>{

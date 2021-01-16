@@ -437,7 +437,13 @@ module.exports = function(app) {
                                     <br/> 8: Pending
                                     <br/> 9: Canceled
                                     <br/> 10: Rejected
+                                    <br/> 11: Accept the meeting
+                                    <br/> 11: Scheduled the meeting
+                                    <br/> 13: Contracting editing
      * @apiParam {string} [note] note for step
+     * @apiParam {string} [meetingAddress] Scheduled the meeting Address
+     * @apiParam {string} [meetingTime] Scheduled the meeting Time
+     * @apiParam {file} [file] contract file
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/matching/2

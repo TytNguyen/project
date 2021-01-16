@@ -36,6 +36,10 @@ let Processes = MySequelize.define('processes', {
         type: Sequelize.STRING(100),
         allowNull: true
     },
+    contract: {
+        type: Sequelize.STRING(100),
+        allowNull: true
+    },
     createdBy: {
         type: Sequelize.BIGINT(20),
         allowNull: false,
