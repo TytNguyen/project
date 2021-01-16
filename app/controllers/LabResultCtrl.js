@@ -109,7 +109,9 @@ module.exports = {
                 if (errorCode) {
                     return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
                 }
-                return Rest.sendSuccessOne(res, null, httpCode);
+                let resData = {};
+                resData.id = resultId;
+                return Rest.sendSuccessOne(res, resData, httpCode);
             });
         }
         else {
@@ -119,7 +121,7 @@ module.exports = {
                     return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
                 } else {
                 let resData = {};
-                resData.id = result;
+                resData.id = id;
                 return Rest.sendSuccessOne(res, resData, httpCode);
             }
             });

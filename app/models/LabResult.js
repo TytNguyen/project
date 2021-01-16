@@ -20,7 +20,7 @@ let LabResult = MySequelize.define('labresult', {
         }
     },
     title: {
-        type: Sequelize.STRING(64),
+        type: Sequelize.STRING(200),
         allowNull: false
     },
     subcategory_id: {

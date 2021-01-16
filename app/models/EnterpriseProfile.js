@@ -20,7 +20,7 @@ let EnterpriseProfile = MySequelize.define('requirement', {
         }
     },
     title: {
-        type: Sequelize.STRING(64),
+        type: Sequelize.STRING(200),
         allowNull: true
     },
     subcategory_id: {
