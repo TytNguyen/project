@@ -15,7 +15,7 @@ let Meeting = MySequelize.define('meeting', {
         allowNull: false
     },
     description: {
-        type: Sequelize.STRING(200),
+        type: Sequelize.TEXT,
         allowNull: true
     },
     category_id: {
