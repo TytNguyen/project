@@ -106,7 +106,7 @@ module.exports = {
     update: function (req, res) {
         let accessUserId = req.body.accessUserId || '';
         let accessUserType = req.body.accessUserType || '';
-        let contract = req.files;
+        let contract = req.files || '';
         let id = req.params.id || '';
 
         if( id === 'deletes' ){
