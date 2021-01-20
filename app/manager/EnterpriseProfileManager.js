@@ -63,6 +63,7 @@ module.exports = {
             queryObj.subcategory_id = data.subcategory_id;
             queryObj.description = data.description;
             queryObj.status = Constant.STATUS.YES;
+            queryObj.price = data.price;
 
             EnterpriseProfile.create(queryObj).then(profile => {
                 "use strict";
@@ -97,7 +98,7 @@ module.exports = {
     getOne: function (accessUserId, accessUserType, id, callback) {
         try {
             let where = {};
-            let attributes = ['id', 'title', 'description', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            //let attributes = ['id', 'title', 'description', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             if (!(Pieces.VariableBaseTypeChecking(id, 'string') && Validator.isInt(id))
                 && !Pieces.VariableBaseTypeChecking(id, 'number')) {
@@ -129,7 +130,7 @@ module.exports = {
                     }],
                     attributes: ["hashtag_id"]
                 }],
-                attributes: attributes
+                //attributes: attributes
             }).then(result => {
                 "use strict";
                 if (result) {
@@ -445,6 +446,10 @@ module.exports = {
 
             if (Pieces.VariableBaseTypeChecking(updateData.title, 'string')) {
                 queryObj.title = updateData.title;
+            }
+
+            if (Pieces.VariableBaseTypeChecking(updateData.price, 'string')) {
+                queryObj.price = updateData.price;
             }
 
             if (Pieces.VariableBaseTypeChecking(updateData.delete_ids, 'string')) {

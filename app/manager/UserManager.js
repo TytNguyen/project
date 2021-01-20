@@ -214,11 +214,11 @@ module.exports = {
                 queryObj.type = updateData.type;
             }
 
-            if (updateData.firstName !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.firstName, 'string')) {
                 queryObj.firstName = updateData.firstName;
             }
 
-            if (updateData.lastName !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.lastName, 'string')) {
                 queryObj.lastName = updateData.lastName;
             }
             

@@ -50,6 +50,10 @@ let LabResult = MySequelize.define('labresult', {
         allowNull: true,
         default: null
     },
+    price: {
+        type: Sequelize.STRING(45),
+        allowNull: true
+    },
     status: {
         type: Sequelize.TINYINT(1),
         allowNull: true,

@@ -85,6 +85,7 @@ module.exports = {
             queryObj.createdAt = moment(Date.now());
             queryObj.updatedAt = moment(Date.now());
 
+            queryObj.price = data.price;
             queryObj.lid = data.lid;
             queryObj.subcategory_id = data.subcategory_id;
             queryObj.description = data.description;
@@ -167,7 +168,7 @@ module.exports = {
     getOne: function(accessUserId, accessUserType, id, callback) {
         try {
             let where = {};
-            let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
+            //let attributes = ['id', 'title','description','status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
 
             if ( !( Pieces.VariableBaseTypeChecking(id,'string') && Validator.isInt(id) )
                 && !Pieces.VariableBaseTypeChecking(id,'number') ){
@@ -199,7 +200,7 @@ module.exports = {
                     }],
                     attributes: ["hashtag_id"]
                 }],
-                attributes: attributes
+                //attributes: attributes
             }).then(result=>{
                 "use strict";
                 if(result){
@@ -529,12 +530,16 @@ module.exports = {
                 }
             }
 
-            if (updateData.subcategory_id !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.subcategory_id,'string')) {
                 queryObj.subcategory_id = updateData.subcategory_id;
             }
 
-            if (updateData.description !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.description,'string')) {
                 queryObj.description = updateData.description;
+            }
+
+            if (Pieces.VariableBaseTypeChecking(updateData.price,'string')) {
+                queryObj.price = updateData.price;
             }
 
             queryObj.updatedBy = accessUserId;

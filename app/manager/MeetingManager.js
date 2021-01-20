@@ -257,24 +257,24 @@ module.exports = {
                 queryObj.status = updateData.status;
             }
 
-            if ( updateData.title !== undefined
+            if (Pieces.VariableBaseTypeChecking(updateData.title,'string')
                 && Validator.isLength(updateData.title, {min: 4, max: 128}) ) {
                     queryObj.title = updateData.title;
             }
 
-            if (updateData.description !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.description,'string')) {
                 queryObj.description = updateData.description;
             }
 
-            if (updateData.category_id !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.category_id,'string')) {
                 queryObj.category_id = updateData.category_id;
             }
             
-            if (updateData.limited !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.limited,'string')) {
                 queryObj.limited = updateData.limited;
             }
 
-            if (updateData.address !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.address,'string')) {
                 queryObj.address = updateData.address; 
             }
 

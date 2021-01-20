@@ -735,7 +735,10 @@ module.exports = {
                 return callback(4, 'invalid_matching_id', 400, 'matching id is incorrect', null);
             }
 
-            queryObj.status = updateData.step;
+            if (Pieces.VariableBaseTypeChecking(updateData.step,'string')) {
+                queryObj.status = updateData.step;
+            }
+
             queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now());
 

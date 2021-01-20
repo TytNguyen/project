@@ -121,15 +121,15 @@ module.exports = {
             let queryObj = {};
             let where = {};
 
-            if (updateData.value !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.value,'string')) {
                 queryObj.value = updateData.value;
             }
 
-            if (updateData.type !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.type,'string')) {
                 queryObj.type = updateData.type;
             }
             
-            if (updateData.status !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.status,'string')) {
                 queryObj.status = updateData.status;
             }
 

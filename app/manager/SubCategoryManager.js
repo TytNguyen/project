@@ -126,15 +126,15 @@ module.exports = {
                 queryObj.status = updateData.status;
             }
 
-            if (updateData.subject !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.subject, 'string')) {
                 queryObj.subject = updateData.subject;
             }
 
-            if (updateData.categoryid !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.categoryid, 'string')) {
                 queryObj.categoryid = updateData.categoryid;
             }
 
-            if (updateData.status !== undefined) {
+            if (Pieces.VariableBaseTypeChecking(updateData.status, 'string')) {
                 queryObj.status = updateData.status;
             }
 
