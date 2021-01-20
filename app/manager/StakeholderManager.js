@@ -278,6 +278,10 @@ module.exports = {
                     queryObj.phone = updateData.phone;
             }
 
+if ( Pieces.VariableBaseTypeChecking(updateData.link, 'string') ) {
+                queryObj.link = updateData.link;
+            }
+
             queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now());
             where.id = stakeholderId;
