@@ -761,9 +761,9 @@ module.exports = {
             query.mid = matchingId;
             query.note = updateData.note;
 
-            if (files.length > 0) {
-                query.contract = files[0].path;
-            }
+            //if (files.length > 0) {
+            //    query.contract = files[0].path;
+           // }
 
             Matching.update(
                 queryObj,
