@@ -752,6 +752,10 @@ module.exports = {
                 query.meetingAddress = updateData.meetingAddress;
             }
 
+            if (Pieces.VariableBaseTypeChecking(updateData.note, 'string')) {
+                query.note = updateData.note;
+            }
+
             query.createdBy = accessUserId;
             query.updatedBy = accessUserId;
             query.createdAt = moment(Date.now());
@@ -759,12 +763,13 @@ module.exports = {
 
             query.step = updateData.step;
             query.mid = matchingId;
-            query.note = updateData.note;
 
-            //if (files.length > 0) {
-            //    query.contract = files[0].path;
-           // }
-
+            if (files !== "") {
+                if (files.length > 0) {
+                    query.contract = files[0].path;
+                 }
+            }
+                        
             Matching.update(
                 queryObj,
                 {where: where}).then(matching=>{

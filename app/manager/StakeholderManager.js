@@ -278,7 +278,7 @@ module.exports = {
                     queryObj.phone = updateData.phone;
             }
 
-if ( Pieces.VariableBaseTypeChecking(updateData.link, 'string') ) {
+            if ( Pieces.VariableBaseTypeChecking(updateData.link, 'string') ) {
                 queryObj.link = updateData.link;
             }
 
