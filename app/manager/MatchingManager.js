@@ -261,7 +261,7 @@ module.exports = {
                 },
                 {
                     model: Processes, 
-                    attributes: ['id', 'step', 'note', 'createdAt']
+                    attributes: ['id', 'step', 'note', 'meetingTime', 'meetingAddress', 'contract', 'createdAt']
                 }],
                 attributes: attributes
             }).then(result=>{
@@ -451,7 +451,7 @@ module.exports = {
                 },
                 {
                     model: Processes, 
-                    attributes: ['id', 'step', 'note', 'createdAt']
+                    attributes: ['id', 'step', 'note', 'meetingTime', 'meetingAddress', 'contract', 'createdAt']
                 }],
                 distinct:true
                 // attributes: attributes,
