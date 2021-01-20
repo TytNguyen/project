@@ -49,6 +49,7 @@ module.exports = {
             queryObj.detailAddress = data.detailAddress;
             queryObj.phone = data.phone;
             queryObj.type = data.type;
+            queryObj.link = data.link;
             queryObj.createdAt = moment(Date.now());
             queryObj.updatedAt = moment(Date.now());
 
