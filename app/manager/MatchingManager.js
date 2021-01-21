@@ -779,7 +779,7 @@ module.exports = {
                     "use strict";
                     Processes.findOne({where: whereProcess}).then(result=>{
                         "use strict";
-                        if ( result && query.step !== 12 ) {
+                        if ( result && query.step !== 12 && query.step !== 3 && query.step !== 13 ) {
                             return callback(4, 'processes_exist', 400, null);
                         } else {
                             Processes.create(query).then(result1 =>{
