@@ -116,7 +116,7 @@ module.exports = {
                 where: where,
                 include: [{
                     model: Stakeholder,
-                    attributes: ['id', 'name']
+                    // attributes: ['id', 'name']
                 },
                 {
                     model: SubCategory,

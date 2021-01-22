@@ -244,7 +244,7 @@ module.exports = {
                     include: [
                         {
                             model: Stakeholder,
-                            attributes: ['id', 'name', 'detailAddress', 'district'],
+                            // attributes: ['id', 'name', 'detailAddress', 'district'],
                         }
                     ]
                 },
@@ -254,7 +254,7 @@ module.exports = {
                     include: [
                         {
                             model: Stakeholder,
-                            attributes: ['id', 'name', 'detailAddress', 'district'],
+                            // attributes: ['id', 'name', 'detailAddress', 'district'],
                         }
                     ]
                 },
