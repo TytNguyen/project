@@ -75,42 +75,55 @@ module.exports = {
             }
 
             let offset = perPage * (page - 1);
-            Hashtag.findAndCountAll({
-                where: where,
-                limit: perPage,
-                offset: offset,
-                order: sort
-            }).then(data=>{
-                "use strict";
-                if (accessUserType < Constant.USER_TYPE.MODERATOR) {
+
+            if (accessUserType < Constant.USER_TYPE.MODERATOR) {
+                console.log("here")
+                Hashtag.findAndCountAll({
+                    where: where,
+                    order: sort
+                }).then(data=>{
+                    "use strict";
                     return callback(null, null, 200, null, data);
-                } else {
+                }).catch(function(error) {
+                    "use strict";
+                    return callback(3, 'find_hashtag_fail', 400, error, null);
+                });
+            } else {
+                Hashtag.findAndCountAll({
+                    where: where,
+                    limit: perPage,
+                    offset: offset,
+                    order: sort
+                }).then(data=>{
+                    "use strict";
                     let pages = Math.ceil(data.count / perPage);
-                    let meeting = data.rows;
-                    let output = {
-                        data: meeting,
-                        pages: {
-                            current: page,
-                            prev: page - 1,
-                            hasPrev: false,
-                            next: (page + 1) > pages ? 0 : (page + 1),
-                            hasNext: false,
-                            total: pages
-                        },
-                        items: {
-                            begin: ((page * perPage) - perPage) + 1,
-                            end: page * perPage,
-                            total: data.count
-                        }
-                    };
-                    output.pages.hasNext = (output.pages.next !== 0);
-                    output.pages.hasPrev = (output.pages.prev !== 0);
-                    return callback(null, null, 200, null, output);
-                }
-            }).catch(function(error) {
-                "use strict";
-                return callback(3, 'find_hashtag_fail', 400, error, null);
-            });
+                        let meeting = data.rows;
+                        let output = {
+                            data: meeting,
+                            pages: {
+                                current: page,
+                                prev: page - 1,
+                                hasPrev: false,
+                                next: (page + 1) > pages ? 0 : (page + 1),
+                                hasNext: false,
+                                total: pages
+                            },
+                            items: {
+                                begin: ((page * perPage) - perPage) + 1,
+                                end: page * perPage,
+                                total: data.count
+                            }
+                        };
+                        output.pages.hasNext = (output.pages.next !== 0);
+                        output.pages.hasPrev = (output.pages.prev !== 0);
+                        return callback(null, null, 200, null, output);
+                }).catch(function(error) {
+                    "use strict";
+                    return callback(3, 'find_hashtag_fail', 400, error, null);
+                });
+            }
+
+            
         }catch(error){
             return callback(3, 'find_hashtag_fail', 400, error, null);
         }

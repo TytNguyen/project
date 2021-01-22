@@ -3,7 +3,11 @@ var crypto = require("crypto");
 
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, global.CLOUD_API.rootPath + '/public/avatar/'); //hỉnh ảnh sẽ chưa trong folder uploads
+        const match = ["image/png", "image/jpeg"]
+
+        if (match.indexOf(file.mimetype === -1)) {
+            cb(null, global.CLOUD_API.rootPath + '/public/avatar/');
+        } else cb(null, global.CLOUD_API.rootPath + '/public/avatar/'); //hỉnh ảnh sẽ chưa trong folder uploads
        
     },
     filename: (req, file, cb) => {
