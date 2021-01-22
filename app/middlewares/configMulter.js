@@ -10,10 +10,11 @@ var storage = multer.diskStorage({
         const match = ["image/png", "image/jpeg"]
         const type = ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"]
 
-        console.log(file)
 
-        if (match.indexOf(file.mimetype === -1)) { 
-            if (!type.indexOf(file.mimetype === -1)) {
+        console.log(type.indexOf(file.mimetype) === -1)
+
+        if (match.indexOf(file.mimetype) === -1) { 
+            if (type.indexOf(file.mimetype) === -1) {
                 cb(null , `${fileName}.pdf`);
             } else {
                 cb(null , `${fileName}.doc`);
