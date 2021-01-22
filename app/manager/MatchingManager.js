@@ -240,7 +240,7 @@ module.exports = {
                 include: [
                     {
                     model: EnterpriseProfile,
-                    attributes: ['id', 'title'],
+                    // attributes: ['id', 'title'],
                     include: [
                         {
                             model: Stakeholder,
@@ -250,7 +250,7 @@ module.exports = {
                 },
                 {
                     model: LabResult,
-                    attributes: ['id', 'title', 'lid'],
+                    // attributes: ['id', 'title', 'lid', 'image'],
                     include: [
                         {
                             model: Stakeholder,
@@ -262,7 +262,7 @@ module.exports = {
                     model: Processes, 
                     attributes: ['id', 'step', 'note', 'meetingTime', 'meetingAddress', 'contract', 'createdAt']
                 }],
-                attributes: attributes
+                // attributes: attributes
             }).then(result=>{
                 "use strict";
                 if(result){
