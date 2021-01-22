@@ -3,20 +3,21 @@ var crypto = require("crypto");
 
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const match = ["image/png", "image/jpeg"]
-
-        if (match.indexOf(file.mimetype === -1)) {
-            cb(null, global.CLOUD_API.rootPath + '/public/avatar/');
-        } else cb(null, global.CLOUD_API.rootPath + '/public/avatar/'); //hỉnh ảnh sẽ chưa trong folder uploads
-       
+        cb(null, global.CLOUD_API.rootPath + '/public/avatar/'); //hỉnh ảnh sẽ chưa trong folder uploads
     },
     filename: (req, file, cb) => {
         var fileName = crypto.randomBytes(10).toString('hex');
-
         const match = ["image/png", "image/jpeg"]
+        const type = ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"]
 
-        if (match.indexOf(file.mimetype === -1)) {
-            cb(null , `${fileName}.pdf`);
+        console.log(file)
+
+        if (match.indexOf(file.mimetype === -1)) { 
+            if (!type.indexOf(file.mimetype === -1)) {
+                cb(null , `${fileName}.pdf`);
+            } else {
+                cb(null , `${fileName}.doc`);
+            }
         } else cb(null , file.originalname); 
 
         // mặc định sẽ save name của hình ảnh

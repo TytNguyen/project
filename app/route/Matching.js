@@ -1,6 +1,8 @@
 const MatchingCtrl = require('../controllers/MatchingCtrl');
 
 module.exports = function(app) {
+    app.get('/v1/file/:name', MatchingCtrl.downloadFile);
+
     /**
      * @api {GET} /v1/auth/matching/automatching Get the matchest one of your requirement
      * @apiVersion 1.0.0

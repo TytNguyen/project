@@ -77,7 +77,7 @@ module.exports = {
             let offset = perPage * (page - 1);
 
             if (accessUserType < Constant.USER_TYPE.MODERATOR) {
-                console.log("here")
+                where.status = 1;
                 Hashtag.findAndCountAll({
                     where: where,
                     order: sort

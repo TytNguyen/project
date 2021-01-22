@@ -2,6 +2,18 @@ const Rest = require('../utils/Restware');
 const MatchingManager = require('../manager/MatchingManager');
 
 module.exports = {
+    downloadFile: function (req, res) {
+        const fileName = req.params.name;
+        const directoryPath = global.CLOUD_API.rootPath + '/public/avatar/';
+      
+        res.download(directoryPath + fileName, fileName, (err) => {
+          if (err) {
+            res.status(500).send({
+              message: "Could not download the file. " + err,
+            });
+          }
+        });
+      },
 
     autoMatching: function (req, res) {
         let accessUserId = req.query.accessUserId || '';

@@ -129,8 +129,11 @@ module.exports = {
             let attributes = ['id', 'title','description','status', 'image', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'];
             let product = [];
             let profile = [];
+            let where;
+            where.status = 1;
 
             LabResult.findAll({
+                where: where,
                 include: [
                     {
                         model: MatchHashtag,
@@ -168,8 +171,6 @@ module.exports = {
                             ids.push(i[0])
                         }
                         
-                        console.log(ids)
-
                         LabResult.findAll({
                             where: {id: {[Sequelize.Op.in]: ids}},
                             include: [
@@ -207,11 +208,9 @@ module.exports = {
                         });
                     }
                 }).catch(function(error) {
-                    console.log(error)
                     return callback(4, 'find_and_count_all_labresult_fail', 400, error, null);
                 });
             }).catch(function(error) {
-                console.log(error)
                 return callback(4, 'find_and_count_all_labresult_fail', 420, error, null);
             });
         }catch(error){
@@ -420,8 +419,6 @@ module.exports = {
             }
 
             let offset = perPage * (page - 1);
-
-            console.log(where)
             
             Matching.findAndCountAll({
                 where: where,
@@ -506,8 +503,6 @@ module.exports = {
             if( Pieces.VariableBaseTypeChecking(queryContent.cid, 'string') ){
                 where = {cid: queryContent.cid};
             }
-
-            console.log(where)
 
             if( (Pieces.VariableBaseTypeChecking(queryContent['page'], 'string') && Validator.isInt(queryContent['page']))
                 || (Pieces.VariableBaseTypeChecking(queryContent['page'], 'number')) ){
@@ -686,8 +681,6 @@ module.exports = {
             where.profileId = data.profileId;
             where.resultId = data.resultId;
 
-            console.log(data.profileId)
-
             Matching.findOne({where: where}).then(result=>{
                 "use strict";
                 if ( result && (result.status !== 9 || result.status !== 10) ) {
@@ -767,27 +760,24 @@ module.exports = {
             query.step = updateData.step;
             query.mid = matchingId;
 
-            console.log(queryObj)
-            console.log(query)
-
             if (files !== "") {
                 if (files.length > 0) {
-                    query.contract = files[0].path;
+                    query.contract = "http://localhost:3000/v1/file/" + files[0].filename;
                  }
             }
                         
             Matching.update(
                 queryObj,
-                {where: where}).then(matching=>{
+                {where: where}).then(matching =>{
                     "use strict";
                     Processes.findOne({where: whereProcess}).then(result=>{
                         "use strict";
-                        if ( result && query.step !== 12 && query.step !== 3 && query.step !== 13 ) {
+                        if ( result && query.step != 12 && query.step != 3 && query.step != 13 ) {
                             return callback(4, 'processes_exist', 400, null);
                         } else {
                             Processes.create(query).then(result1 =>{
                                 "use strict";
-                                return callback(null, null, 200, null, matching);
+                                return callback(null, null, 200, null, result1);
                             }).catch(function(error){
                                 "use strict";
                                 return callback(4, 'create_processes_fail', 420, error, null);
