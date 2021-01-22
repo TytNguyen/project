@@ -727,7 +727,7 @@ module.exports = {
             let where = {};
             let match;
             let whereProcess = {};
-            let query = {}
+            let query = {};
 
             if ( !( Pieces.VariableBaseTypeChecking(matchingId,'string')
                     && Validator.isInt(matchingId) )
@@ -766,6 +766,9 @@ module.exports = {
 
             query.step = updateData.step;
             query.mid = matchingId;
+
+            console.log(queryObj)
+            console.log(query)
 
             if (files !== "") {
                 if (files.length > 0) {
