@@ -83,7 +83,8 @@ module.exports = {
                     order: sort
                 }).then(data=>{
                     "use strict";
-                    return callback(null, null, 200, null, data);
+                    let output = {data: data.rows}
+                    return callback(null, null, 200, null, output);
                 }).catch(function(error) {
                     "use strict";
                     return callback(3, 'find_hashtag_fail', 400, error, null);
