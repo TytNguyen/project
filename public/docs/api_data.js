@@ -2610,6 +2610,13 @@ define({ "api": [
             "optional": false,
             "field": "file",
             "description": "<p>labresult's images, can put multiple file</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "listArray",
+            "optional": false,
+            "field": "delete_ids",
+            "description": "<p>list images' location</p>"
           }
         ]
       }

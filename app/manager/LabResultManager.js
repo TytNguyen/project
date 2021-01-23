@@ -38,7 +38,7 @@ module.exports = {
                 return callback(3, 'invalid_labresult_id', 400, 'labresult id is incorrect', null);
             }
 
-            queryObj.file = file[0].path;
+            queryObj.file = "http://localhost:3000/v1/file/" + file[0].filename;
             queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now());
             where.id = labresultId;
@@ -627,28 +627,45 @@ module.exports = {
         }
     },
 
-
-    updateImage: function (accessUserId, accessUserType, resultId, file, callback) {
+    updateImage: function (accessUserId, accessUserType, resultId, file, delete_ids, callback) {
         try {
             let queryObj = {};
             let where = {};
+            let del_ids;
 
             where.id = resultId;
-            // queryObj.updatedBy = accessUserId;
+            queryObj.updatedBy = accessUserId;
             queryObj.updatedAt = moment(Date.now());
+
+            if ( Pieces.VariableBaseTypeChecking(delete_ids,'string')) {
+                del_ids = Pieces.safelyParseJSON(delete_ids);
+            }
 
             LabResult.findOne({
                 where: where,
-                attributes: ["img_location"]
+                attributes: ["img_location", "image"]
             }).then(result=>{
                 "use strict";
                 if (Pieces.VariableBaseTypeChecking(result.img_location, 'string')) {
                     let paths = result.img_location.replace(/,/g, ' ').split(' ');
-                    paths.pop()
-                    cloudinary.deleteImage(paths, result => {
+                    let location = result.image.replace(/,/g, ' ').split(' ');
+                    paths.pop();
+                    location.pop()
+                    cloudinary.deleteForResult(paths, del_ids, location, values => {
+                        let link = '';
+                        let path = '';
+
+                        console.log(values)
+                        values[0].forEach((val) => {
+                            path += val + ",";
+                        })
+
+                        values[1].forEach((val) => {
+                            link += val + ",";
+                        })
+
                         cloudinary.uploadMultiple(file, 'product', result => {
-                            let link = '';
-                            let path = '';
+                            
                             result.forEach((value) => {
                                 link += value[0] + ",";
                                 path += value[1] + ",";

@@ -357,6 +357,7 @@ module.exports = function(app) {
      *
      * @apiParam {string} resultId labresult's id
      * @apiParam {file} file labresult's images, can put multiple file
+     * @apiParam {listArray} delete_ids list images' location
      *
      * @apiExample Example usage:
      * curl -i http://localhost:3000/v1/auth/labresult/updateimage

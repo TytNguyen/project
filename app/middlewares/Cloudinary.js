@@ -1,6 +1,7 @@
 const cloudinary = require('cloudinary').v2;
 const Rest = require('../utils/Restware');
 const fs = require('fs');
+const Pieces = require('../utils/Pieces');
 
 cloudinary.config({
     cloud_name: `${process.env.CLOUDINARY_NAME}`,
@@ -16,6 +17,32 @@ module.exports = {
             })
         }
         callback('ok')
+    },
+
+    deleteForResult: async (file, delete_ids, location, callback) => {
+        if (file != undefined || file.length > 0) {
+            delete_ids.forEach (function(del, index) {
+                file.forEach (function(image, ind) {
+                    if (del == image) {
+                        file.splice(ind, 1);
+                    }
+                })
+
+                location.forEach (function(log, indx) {
+                    if (log.indexOf(del) !== -1) {
+                        location.splice(indx, 1);
+                    }
+                })
+            })
+        }
+
+        for (var image of delete_ids) {
+            await cloudinary.uploader.destroy(image).then(result => {
+                console.log(result)
+            })
+        }
+
+        callback([file, location])
     },
 
     uploadMultiple: async (files, folder, callback) => {

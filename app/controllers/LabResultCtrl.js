@@ -104,8 +104,9 @@ module.exports = {
         } else if ( id === 'updateimage' ){
             let image = req.files;
             let resultId = req.body.resultId || '';
+            let delete_ids = req.body.delete_ids || '';
             
-            LabResultManager.updateImage(accessUserId, accessUserType, resultId, image, function (errorCode, errorMessage, httpCode, errorDescription) {
+            LabResultManager.updateImage(accessUserId, accessUserType, resultId, image, delete_ids, function (errorCode, errorMessage, httpCode, errorDescription) {
                 if (errorCode) {
                     return Rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
                 }
