@@ -62,8 +62,7 @@ module.exports = {
         try {
             let queryObj = {};
 
-            if ( !Pieces.VariableBaseTypeChecking(data.title,'string')
-                || !Validator.isLength(data.title, {min: 4, max: 128}) ) {
+            if ( !Pieces.VariableBaseTypeChecking(data.title,'string')) {
             return callback(4, 'invalid_title_name', 400, 'title is not alphanumeric and 4 - 128 characters', null);
             } else {
                 queryObj.title = data.title;
