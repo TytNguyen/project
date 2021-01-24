@@ -772,7 +772,8 @@ module.exports = {
                     "use strict";
                     Processes.findOne({where: whereProcess}).then(result=>{
                         "use strict";
-                        if ( result && query.step != 12 && query.step != 3 && query.step != 13 && query.step != 4 && query.step != 15 && query.step != 17) {
+                        let list = [3, 12, 13, 4, 15, 18, 19, 20];
+                        if ( result && !list.includes(query.step)) {
                             return callback(4, 'processes_exist', 400, null);
                         } else {
                             Processes.create(query).then(result1 =>{
