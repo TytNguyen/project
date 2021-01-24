@@ -646,6 +646,7 @@ module.exports = {
                 attributes: ["img_location", "image"]
             }).then(result=>{
                 "use strict";
+                console.log(Pieces.VariableBaseTypeChecking(result.img_location, 'string'))
                 if (Pieces.VariableBaseTypeChecking(result.img_location, 'string')) {
                     let paths = result.img_location.replace(/,/g, ' ').split(' ');
                     let location = result.image.replace(/,/g, ' ').split(' ');

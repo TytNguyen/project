@@ -440,24 +440,7 @@ module.exports = {
 
             Attendance.create(queryObj).then(attendance => {
                 "use strict";
-                Attendance.count({
-                    where: where1
-                }).then(function (total) {
-                    "use strict";
-                    Meeting.update(
-                        {currentAttend: total},
-                        { where: { id: where.mid } }).then(result => {
-                            "use strict";
-                            // return callback(null, null, 200, null, result);
-                            return callback(null, null, 200, null, attendance);
-                        }).catch(function (error) {
-                            "use strict";
-                            return callback(4, 'update_meeting_fail', 420, error, null);
-                        });
-                }).catch(function (error) {
-                    "use strict";
-                    return callback(4, 'count_attendance_fail', 420, error, null);
-                });
+                return callback(null, null, 200, null, attendance);
             }).catch(function (error) {
                 "use strict";
                 return callback(4, 'create_attendance_fail', 400, error, null);
