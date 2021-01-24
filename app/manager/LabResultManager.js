@@ -402,7 +402,7 @@ module.exports = {
 
             this.parseFilter(accessUserId, accessUserType, where, queryContent.filter);
             if (Pieces.VariableBaseTypeChecking(queryContent.lid, 'string')) {
-                where.cid = queryContent.lid;
+                where.lid = queryContent.lid;
             }
 
             if (Pieces.VariableBaseTypeChecking(queryContent.subcategory_id, 'string')) {

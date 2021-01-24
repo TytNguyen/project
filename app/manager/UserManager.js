@@ -236,7 +236,7 @@ module.exports = {
 
             queryObj.updatedAt = moment(Date.now());
 
-            if (file === undefined || file.length === 0) {
+            if (file === undefined || file.length > 0) {
                 User.update(
                     queryObj,
                     { where: where }).then(result => {
