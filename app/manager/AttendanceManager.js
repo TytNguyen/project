@@ -376,7 +376,6 @@ module.exports = {
                             where: where1
                         }).then(function (total) {
                             "use strict";
-                            console.log(final.currentAttend)
                             Meeting.update(
                                 {currentAttend: total},
                                 { where: { id: where.mid } }).then(result => {
@@ -407,6 +406,9 @@ module.exports = {
 
     create: function (accessUserId, accessUserType, data, callback) {
         try {
+            let final = { limited: 0, currentAttend: 0 };
+            let where1 = { mid: data.mid, status: 2 }
+
             if (!(Pieces.VariableBaseTypeChecking(data.mid, 'string')
                 && Validator.isInt(data.mid))
                 && Pieces.VariableBaseTypeChecking(data.mid, 'number')) {
@@ -438,7 +440,24 @@ module.exports = {
 
             Attendance.create(queryObj).then(attendance => {
                 "use strict";
-                return callback(null, null, 200, null, attendance);
+                Attendance.count({
+                    where: where1
+                }).then(function (total) {
+                    "use strict";
+                    Meeting.update(
+                        {currentAttend: total},
+                        { where: { id: where.mid } }).then(result => {
+                            "use strict";
+                            // return callback(null, null, 200, null, result);
+                            return callback(null, null, 200, null, attendance);
+                        }).catch(function (error) {
+                            "use strict";
+                            return callback(4, 'update_meeting_fail', 420, error, null);
+                        });
+                }).catch(function (error) {
+                    "use strict";
+                    return callback(4, 'count_attendance_fail', 420, error, null);
+                });
             }).catch(function (error) {
                 "use strict";
                 return callback(4, 'create_attendance_fail', 400, error, null);
